@@ -1,0 +1,73 @@
+<app-navbar></app-navbar>
+
+<section class="py-12 flex flex-col items-center justify-center max-w-4xl mx-auto w-full animate-fade-in">
+    <!-- Status Badge -->
+    <div class="mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-primary/10 border border-cyber-primary/20 text-cyber-primary text-xs font-mono tracking-wider uppercase">
+         <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-primary opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-cyber-primary"></span>
+                </span>
+        System Online v2.4.0
+    </div>
+
+    <!-- Hero Text -->
+     <h1 class="text-4xl md:text-6xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 mb-6 leading-tight">
+                Advanced Threat Detection <br />
+                <span class="text-white">For The Modern Web</span>
+            </h1>
+     <p class="text-lg text-slate-400 text-center max-w-2xl mb-12 leading-relaxed">
+                Secure your infrastructure with vulnerability scanner. 
+                Detect some vulnerabilities before they become threats and generate detailed reports with AI
+                .</p>
+
+    <!-- Search Form -->
+    <form (ngSubmit)="onSubmit()" class="w-full max-w-md relative z-20 flex flex-col gap-4">
+        <div class="w-full">
+            <div class="relative group">
+                <div class="absolute inset-0 bg-gradient-to-r from-cyber-primary/20 to-cyber-secondary/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="relative flex items-center bg-cyber-dark rounded-lg border border-slate-700 focus-within:border-cyber-primary focus-within:ring-1 focus-within:ring-cyber-primary/50 transition-all duration-300">
+                    <div class="pl-3 text-slate-500 group-focus-within:text-cyber-primary transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+                    </div>
+                    <!-- Input binding -->
+                    <input [(ngModel)]="urlInput" name="url" type="text" 
+                           class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none" 
+                           placeholder="Enter company domain (e.g. acme-corp.com)" required>
+                </div>
+            </div>
+            @if (errorMessage) {
+                <p class="mt-1 text-xs text-cyber-accent ml-1 animate-fade-in">{{ errorMessage }}</p>
+            }
+        </div>
+        
+        <button type="submit" class="relative px-6 py-3 rounded-lg font-medium tracking-wide transition-all duration-300 bg-cyber-primary text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 w-full flex items-center justify-center gap-2 group cursor-pointer">
+            Start Free Scan
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </button>
+    </form>
+
+    <!-- Feature Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 w-full">
+        <!-- Card 1 -->
+        <div class="p-6 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+            <div class="mb-4 p-3 bg-black/30 rounded-lg w-fit text-cyber-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+            </div>
+            <h3 class="text-white font-semibold mb-2">Web vulnerability Detection</h3>
+        </div>
+        <!-- Card 2 -->
+        <div class="p-6 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+            <div class="mb-4 p-3 bg-black/30 rounded-lg w-fit text-cyber-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <h3 class="text-white font-semibold mb-2">Secure Scan</h3>
+        </div>
+        <!-- Card 3 -->
+        <div class="p-6 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+            <div class="mb-4 p-3 bg-black/30 rounded-lg w-fit text-cyber-success">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            </div>
+            <h3 class="text-white font-semibold mb-2">Generate Reports</h3>
+        </div>
+    </div>
+</section>

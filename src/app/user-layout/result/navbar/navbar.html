@@ -1,0 +1,24 @@
+<header class="relative z-20 w-full px-6 py-4 flex justify-between items-center border-b border-white/5 backdrop-blur-sm">
+    <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
+        <div class="p-1.5 bg-[#00f0ff]/10 rounded-lg border border-[#00f0ff]/20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#00f0ff]"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path><path d="m9 12 2 2 4-4"></path></svg>
+        </div>
+        <span class="text-xl font-bold tracking-tight text-white">
+            Vuln<span class="text-[#00f0ff]">Craft</span>
+        </span>
+    </div>
+    
+    <!-- معلومات الفحص وزر الخروج -->
+    @if (scanService.companyUrl()) {
+        <div class="flex items-center gap-6 animate-fade-in">
+             <div class="hidden md:block text-sm text-slate-400">
+                Scanning: <span class="text-[#00f0ff] font-mono">{{ scanService.companyUrl() }}</span>
+             </div>
+             <!-- زر الخروج: مربوط بدالة logout في السيرفس -->
+             <button (click)="scanService.logout()" class="text-sm font-medium text-slate-400 hover:text-white transition-colors cursor-pointer flex items-center gap-2 group">
+                Logout
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
+             </button>
+        </div>
+    }
+</header>
