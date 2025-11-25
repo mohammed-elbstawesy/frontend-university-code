@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms'; 
 import { Router, RouterLink } from '@angular/router';
 import { ScanService } from '../../../services/scan.service';
 
@@ -23,10 +23,13 @@ export class SignIn {
   };
 
   onSubmit() {
+    if (!this.formData.email || !this.formData.password) {
+        return;
+    }
+
     this.isLoading = true;
     setTimeout(() => {
       this.isLoading = false;
-      // تسجيل الدخول وتوجيه المستخدم
       this.scanService.login(this.formData.email, 'Admin User');
     }, 1500);
   }

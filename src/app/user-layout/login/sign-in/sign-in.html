@@ -17,12 +17,12 @@
             <p class="text-slate-400 text-sm">Access your security dashboard</p>
         </div>
 
-        <form (ngSubmit)="onSubmit()" class="space-y-4">
+        <form (ngSubmit)="onSubmit()" class="space-y-4" #signInForm="ngForm">
             <div class="w-full">
                 <label class="block text-sm font-medium text-slate-400 mb-1.5 ml-1">Email Address</label>
                 <div class="relative flex items-center bg-[#13131f] rounded-lg border border-slate-700 focus-within:border-[#00f0ff] transition-all duration-300">
                     <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></div>
-                    <input [(ngModel)]="formData.email" name="email" type="email" placeholder="name@company.com" required class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none">
+                    <input [(ngModel)]="formData.email" name="email" type="email" placeholder="name@company.com" required class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none invalid:border-red-500 focus:invalid:border-red-500">
                 </div>
             </div>
 
@@ -35,7 +35,7 @@
             </div>
 
             <div class="pt-2">
-                <button type="submit" [disabled]="isLoading" class="relative px-6 py-3 rounded-lg font-medium tracking-wide transition-all duration-300 bg-[#00f0ff] text-[#0a0a0f] hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 w-full flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer">
+                <button type="submit" [disabled]="isLoading || !signInForm.form.valid" class="relative px-6 py-3 rounded-lg font-medium tracking-wide transition-all duration-300 bg-[#00f0ff] text-[#0a0a0f] hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 w-full flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer">
                     @if (isLoading) {
                         <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                         Processing...
@@ -49,10 +49,16 @@
         <div class="mt-6 text-center">
             <p class="text-slate-400 text-sm">
                 Don't have an account? 
+                <!-- الرابط يوجه للابن الآخر -->
                 <a routerLink="/login/signup" class="text-[#00f0ff] hover:text-cyan-300 font-medium ml-1 outline-none focus:underline cursor-pointer">
                     Sign up
                 </a>
             </p>
         </div>
     </div>
+    
+    <p class="mt-8 text-xs text-slate-600 text-center max-w-sm">
+        By continuing, you agree to our Terms of Service and Privacy Policy. 
+        Authorized use only.
+    </p>
 </section>

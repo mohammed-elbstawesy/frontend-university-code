@@ -1,6 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms'; // ضروري للـ Two-way binding
 import { ScanService } from '../../services/scan.service';
 import { Navbar } from "./navbar/navbar";
@@ -8,7 +7,7 @@ import { Navbar } from "./navbar/navbar";
 @Component({
   selector: 'app-result',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, Navbar], // أضف FormsModule
+  imports: [CommonModule, FormsModule, Navbar], // أضف FormsModule
   templateUrl: './result.html',
   styles: []
 })

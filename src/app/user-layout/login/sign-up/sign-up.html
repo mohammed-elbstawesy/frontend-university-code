@@ -1,6 +1,5 @@
 <section class="flex flex-col items-center justify-center min-h-screen w-full animate-fade-in px-4 py-10 relative bg-[#0a0a0f]">
     
-    <!-- زر العودة -->
     <a routerLink="/" class="absolute top-6 left-4 md:left-10 flex items-center text-slate-500 hover:text-white transition-colors cursor-pointer z-10">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
         Back to Home
@@ -14,22 +13,22 @@
             <p class="text-slate-400 text-sm">Complete your profile to start scanning</p>
         </div>
 
-        <form (ngSubmit)="onSubmit()" class="space-y-5">
+        <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="space-y-5">
             
             <!-- Row 1: Name -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">First Name</label>
-                    <div class="relative flex items-center bg-[#13131f] rounded-lg border border-slate-700 focus-within:border-[#00f0ff] transition-all duration-300">
+                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('firstName')">
                         <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
-                        <input [(ngModel)]="formData.firstName" name="firstName" type="text" placeholder="John" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-2 rounded-lg outline-none text-sm" required>
+                        <input formControlName="firstName" type="text" placeholder="John" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-2 rounded-lg outline-none text-sm">
                     </div>
                 </div>
                 <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Last Name</label>
-                    <div class="relative flex items-center bg-[#13131f] rounded-lg border border-slate-700 focus-within:border-[#00f0ff] transition-all duration-300">
+                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('lastName')">
                         <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
-                        <input [(ngModel)]="formData.lastName" name="lastName" type="text" placeholder="Doe" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-2 rounded-lg outline-none text-sm" required>
+                        <input formControlName="lastName" type="text" placeholder="Doe" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-2 rounded-lg outline-none text-sm">
                     </div>
                 </div>
             </div>
@@ -38,16 +37,16 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Email Address</label>
-                    <div class="relative flex items-center bg-[#13131f] rounded-lg border border-slate-700 focus-within:border-[#00f0ff] transition-all duration-300">
+                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('email')">
                         <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></div>
-                        <input [(ngModel)]="formData.email" name="email" type="email" placeholder="name@company.com" required class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none text-sm">
+                        <input formControlName="email" type="email" placeholder="name@company.com" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
                     </div>
                 </div>
                 <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Phone Number</label>
-                    <div class="relative flex items-center bg-[#13131f] rounded-lg border border-slate-700 focus-within:border-[#00f0ff] transition-all duration-300">
+                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('phone')">
                         <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></div>
-                        <input [(ngModel)]="formData.phone" name="phone" type="tel" placeholder="+20 1xxxxxxxxx" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none text-sm" required>
+                        <input formControlName="phone" type="tel" placeholder="+20 1xxxxxxxxx" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
                     </div>
                 </div>
             </div>
@@ -56,16 +55,16 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Password</label>
-                    <div class="relative flex items-center bg-[#13131f] rounded-lg border border-slate-700 focus-within:border-[#00f0ff] transition-all duration-300">
+                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('password')">
                         <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
-                        <input [(ngModel)]="formData.password" name="password" type="password" placeholder="••••••••" required class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none text-sm">
+                        <input formControlName="password" type="password" placeholder="••••••••" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
                     </div>
                 </div>
                 <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Location</label>
-                    <div class="relative flex items-center bg-[#13131f] rounded-lg border border-slate-700 focus-within:border-[#00f0ff] transition-all duration-300">
+                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('location')">
                         <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
-                        <input [(ngModel)]="formData.location" name="location" type="text" placeholder="Cairo, Egypt" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none text-sm" required>
+                        <input formControlName="location" type="text" placeholder="Cairo, Egypt" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
                     </div>
                 </div>
             </div>
@@ -74,43 +73,45 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">National ID</label>
-                    <div class="relative flex items-center bg-[#13131f] rounded-lg border border-slate-700 focus-within:border-[#00f0ff] transition-all duration-300">
+                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('nationalID')">
                         <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg></div>
-                        <input [(ngModel)]="formData.nationalID" name="nationalID" type="text" placeholder="14 Digit ID" maxlength="14" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none text-sm" required>
+                        <input formControlName="nationalID" type="text" placeholder="14 Digit ID" maxlength="14" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
                     </div>
                 </div>
                 <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Age</label>
-                    <div class="relative flex items-center bg-[#13131f] rounded-lg border border-slate-700 focus-within:border-[#00f0ff] transition-all duration-300">
+                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('age')">
                         <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-                        <input [(ngModel)]="formData.age" name="age" type="number" placeholder="25" min="18" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none text-sm" required>
+                        <input formControlName="age" type="number" placeholder="25" min="18" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
                     </div>
                 </div>
             </div>
 
             <!-- Upload Image -->
             <div class="w-full">
-                <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">NationalID Image</label>
-                <div class="relative flex items-center bg-[#13131f] rounded-lg border border-slate-700 focus-within:border-[#00f0ff] transition-all duration-300 p-1">
+                <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">National ID Image</label>
+                <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 p-1 ' + getFieldClass('image')">
                     <input title="image" type="file" (change)="onFileSelected($event)" accept="image/*" class="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#00f0ff]/10 file:text-[#00f0ff] hover:file:bg-[#00f0ff]/20 cursor-pointer">
                 </div>
             </div>
 
-            <!-- Legal Agreement Checkbox (هام) -->
-            <div class="w-full bg-[#ff003c]/10 border border-[#ff003c]/30 rounded-lg p-4">
+            <!-- Agreement Checkbox -->
+            <!-- استخدمنا getCheckboxClass هنا لتغيير لون الإطار والنص بالكامل -->
+            <div [className]="'w-full border rounded-lg p-4 transition-all ' + getCheckboxClass()">
                 <label class="flex items-start gap-3 cursor-pointer">
-                    <!-- Checkbox مربوط بـ formData.agreement -->
-                    <input type="checkbox" [(ngModel)]="formData.agreement" name="agreement" required class="mt-1 w-5 h-5 rounded border-slate-600 text-[#ff003c] focus:ring-[#ff003c] bg-slate-800 cursor-pointer accent-[#ff003c]">
-                    <span class="text-xs text-slate-300 leading-relaxed">
-                        <span class="text-[#ff003c] font-bold block mb-1 uppercase tracking-wide">Legal Disclaimer:</span>
-                        All scanning operations are under your personal responsibility. In case of any unethical use or illegal activity, your personal data (including National ID & Location) will be handed over to the police authorities immediately.
+                    <input type="checkbox" formControlName="agreement" class="mt-1 w-5 h-5 rounded border-slate-600 text-green-500 focus:ring-green-500 bg-slate-800 cursor-pointer accent-green-500">
+                    <span class="text-xs leading-relaxed transition-colors">
+                        <span [className]="'font-bold block mb-1 uppercase tracking-wide ' + (signUpForm.get('agreement')?.value ? 'text-green-500' : 'text-[#ff003c]')">
+                            Legal Disclaimer:
+                        </span>
+                        All scanning operations are under your personal responsibility. In case of any unethical use or illegal activity, your personal data will be handed over to the authorities.
                     </span>
                 </label>
             </div>
 
-            <!-- Submit Button (معطل حتى يتم قبول الشروط) -->
+            <!-- Submit Button -->
             <div class="pt-4">
-                <button type="submit" [disabled]="isLoading || !formData.agreement" class="relative w-full px-6 py-3.5 rounded-lg font-bold tracking-wide transition-all duration-300 bg-[#00f0ff] text-[#0a0a0f] hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none cursor-pointer">
+                <button type="submit" [disabled]="isLoading || signUpForm.invalid" class="relative w-full px-6 py-3.5 rounded-lg font-bold tracking-wide transition-all duration-300 bg-[#00f0ff] text-[#0a0a0f] hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none cursor-pointer">
                     @if (isLoading) {
                         <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                         Creating Account...
