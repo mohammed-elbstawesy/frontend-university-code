@@ -92,8 +92,8 @@
                 <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">National ID Image</label>
                 <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 p-1 ' + getFieldClass('image')">
                 <!-- دي الصح -->
-                    <!-- دي الصح <input title="image" type="file" (change)="onFileSelected($event)" accept="image/*" class="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#00f0ff]/10 file:text-[#00f0ff] hover:file:bg-[#00f0ff]/20 cursor-pointer"> -->
-                    <input title="text" formControlName="image" type="text" class="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#00f0ff]/10 file:text-[#00f0ff] hover:file:bg-[#00f0ff]/20 cursor-pointer">
+                    <input title="image" type="file" (change)="onFileSelected($event)" accept="image/*" class="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#00f0ff]/10 file:text-[#00f0ff] hover:file:bg-[#00f0ff]/20 cursor-pointer">
+                    <!-- <input title="text" formControlName="image" type="text" class="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#00f0ff]/10 file:text-[#00f0ff] hover:file:bg-[#00f0ff]/20 cursor-pointer"> -->
                 </div>
             </div>
 
@@ -103,7 +103,7 @@
                 <label class="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox"  class="mt-1 w-5 h-5 rounded border-slate-600 text-green-500 focus:ring-green-500 bg-slate-800 cursor-pointer accent-green-500">
                     <span   class="text-xs leading-relaxed transition-colors">
-                        <span  [className]="'font-bold block mb-1 uppercase tracking-wide ' + (signUpForm.get('agreement')?.value ? 'text-green-500' : 'text-[#ff003c]')">
+                        <span   [className]="'font-bold block mb-1 uppercase tracking-wide ' + (signUpForm.get('agreement')?.value ? 'text-green-500' : 'text-[#ff003c]')">
                             Legal Disclaimer:
                         </span>
                         All scanning operations are under your personal responsibility. In case of any unethical use or illegal activity, your personal data will be handed over to the authorities.

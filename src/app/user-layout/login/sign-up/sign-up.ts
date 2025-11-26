@@ -76,41 +76,37 @@ export class SignUp {
 
   onSubmit() {
 
-    // إذا كان النموذج غير صالح، قم بلمس كل الحقول لإظهار الأخطاء
     if (this.signUpForm.invalid) {
       this.signUpForm.markAllAsTouched();
       return;
     }
-
-
-
-    if (this.signUpForm.valid) {
-      this._authService.signup(this.signUpForm.value as User).subscribe({
-        next: res => {
-          console.log('Signup success ✅', res);
-          // this.router.navigate(['/login']);
-        },
-        error: err => {
-          console.error('Signup failed ❌', err);
-          alert('Signup failed: ' + (err.error?.message || err.message));
-        }
-      });
+  
+    const formData = new FormData();
+  
+    formData.append('fristName', this.signUpForm.value.fristName);
+    formData.append('lastName', this.signUpForm.value.lastName);
+    formData.append('email', this.signUpForm.value.email);
+    formData.append('password', this.signUpForm.value.password);
+    formData.append('location', this.signUpForm.value.location);
+    formData.append('phone', this.signUpForm.value.phone);
+    formData.append('nationalID', this.signUpForm.value.nationalID);
+    formData.append('age', this.signUpForm.value.age);
+  
+    // أهم جزء
+    if (this.signUpForm.value.image) {
+      formData.append('image', this.signUpForm.value.image);
     }
   
-
-
-
-
-
-    this.isLoading = true;
-    const formData = this.signUpForm.value;
-
-    setTimeout(() => {
-      this.isLoading = false;
-      const fullName = `${formData.firstName} ${formData.lastName}`;
-      this.scanService.login(formData.email, fullName);
-    }, 1500);
+    this._authService.signup(formData).subscribe({
+      next: (res) => {
+        console.log("Signup success", res);
+      },
+      error: (err) => {
+        console.error("Signup failed", err);
+      }
+    });
   }
+  
 
 
 

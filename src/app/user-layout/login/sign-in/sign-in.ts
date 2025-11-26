@@ -15,9 +15,8 @@ import { jwtDecode } from 'jwt-decode';
   styles: []
 })
 export class SignIn {
-constructor(private _authService:AuthService){}
+constructor(private _authService:AuthService,private router:Router){}
 
-  router = inject(Router);
   scanService = inject(ScanService);
   isLoading = false;
 
@@ -70,17 +69,16 @@ constructor(private _authService:AuthService){}
     });
   
 
-    this.isLoading = true;
-    setTimeout(() => {
-      this.isLoading = false;
-      this.scanService.login(this.formData.email, 'Admin User');
-    }, 1500);
-  }
+  //   this.isLoading = true;
+  //   setTimeout(() => {
+  //     this.isLoading = false;
+  //     this.scanService.login(this.formData.email, 'Admin User');
+  //   }, 1500);
+  
 
 
 
-
-
+}
 
 
 

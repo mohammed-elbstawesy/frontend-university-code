@@ -56,9 +56,10 @@ export class AuthService {
   
 
 
-  signup(data: User): Observable<any> {
-    return this._http.post(environment.apiUrl+'users/user', data);
+  signup(data: FormData) {
+    return this._http.post(`${environment.apiUrl}users/user`, data);
   }
+  
 
 
 
