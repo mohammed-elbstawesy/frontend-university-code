@@ -21,30 +21,40 @@
                 .</p>
 
     <!-- Search Form -->
-    <form (ngSubmit)="onSubmit()" class="w-full max-w-md relative z-20 flex flex-col gap-4">
-        <div class="w-full">
-            <div class="relative group">
-                <div class="absolute inset-0 bg-gradient-to-r from-cyber-primary/20 to-cyber-secondary/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div class="relative flex items-center bg-cyber-dark rounded-lg border border-slate-700 focus-within:border-cyber-primary focus-within:ring-1 focus-within:ring-cyber-primary/50 transition-all duration-300">
-                    <div class="pl-3 text-slate-500 group-focus-within:text-cyber-primary transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
-                    </div>
-                    <!-- Input binding -->
-                    <input [(ngModel)]="urlInput" name="url" type="text" 
-                           class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none" 
-                           placeholder="Enter company domain (e.g. acme-corp.com)" required>
-                </div>
+    <!-- Search Form -->
+    <form [formGroup]="urlForm" (ngSubmit)="onSubmit()" class="w-full max-w-md relative z-20 flex flex-col gap-4">
+      <div class="w-full">
+        <div class="relative group">
+          <div class="absolute inset-0 bg-gradient-to-r from-cyber-primary/20 to-cyber-secondary/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div class="relative flex items-center bg-cyber-dark rounded-lg border border-slate-700 focus-within:border-cyber-primary focus-within:ring-1 focus-within:ring-cyber-primary/50 transition-all duration-300">
+            <div class="pl-3 text-slate-500 group-focus-within:text-cyber-primary transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                <path d="M2 12h20"></path>
+              </svg>
             </div>
-            @if (errorMessage) {
-                <p class="mt-1 text-xs text-cyber-accent ml-1 animate-fade-in">{{ errorMessage }}</p>
-            }
+    
+            <!-- Input binding -->
+            <input formControlName="originalUrl" type="text" 
+                   class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none" 
+                   placeholder="Enter company domain (e.g. acme-corp.com)" required>
+          </div>
         </div>
-        
-        <button type="submit" class="relative px-6 py-3 rounded-lg font-medium tracking-wide transition-all duration-300 bg-cyber-primary text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 w-full flex items-center justify-center gap-2 group cursor-pointer">
-            Start Free Scan
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-        </button>
+    
+        <!-- Error Message -->
+        <p *ngIf="errorMessage" class="mt-1 text-xs text-cyber-accent ml-1 animate-fade-in">{{ errorMessage }}</p>
+      </div>
+    
+      <button type="submit" class="relative px-6 py-3 rounded-lg font-medium tracking-wide transition-all duration-300 bg-cyber-primary text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 w-full flex items-center justify-center gap-2 group cursor-pointer">
+        Start Free Scan
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1">
+          <path d="M5 12h14"></path>
+          <path d="m12 5 7 7-7 7"></path>
+        </svg>
+      </button>
     </form>
+    
 
     <!-- Feature Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 w-full">

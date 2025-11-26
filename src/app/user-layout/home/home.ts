@@ -1,42 +1,64 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ScanService } from '../../services/scan.service';
+import { ScanService } from '../../core/services/scan.service';
 import { Navbar } from './navbar/navbar';
+import { Url } from '../../core/models/url.model';
+import { UrlService } from '../../core/services/url.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule,Navbar],
+  imports: [CommonModule, FormsModule,Navbar,ReactiveFormsModule,Navbar],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class Home implements OnInit {
-  scanService = inject(ScanService);
+export class Home implements OnInit { scanService = inject(ScanService);
   router = inject(Router);
 
-  urlInput: string = '';
+  urlForm!: FormGroup;
   errorMessage: string = '';
+  url: Url[] = [];
+
+  constructor(private _urlService: UrlService) {}
 
   ngOnInit() {
-    this.scanService.reset(); // تصفير البيانات عند الدخول
+    this.scanService.reset();
+
+    this.urlForm = new FormGroup({
+      originalUrl: new FormControl('', [Validators.required, Validators.minLength(4)])
+    });
+
+    this._urlService.getUrls().subscribe({
+      next: (response: Url[]) => {
+        this.url = response;
+        console.log('URLs:', this.url);
+      },
+      error: (error) => console.error('Error fetching URLs:', error)
+    });
   }
 
   onSubmit() {
-    // التحقق من صحة الرابط
-    if (!this.urlInput.includes('.') || this.urlInput.length < 4) {
-      this.errorMessage = 'Please enter a valid domain (e.g., example.com)';
+    if (this.urlForm.invalid) {
+      this.errorMessage = 'Please enter a valid domain';
       return;
     }
 
+    const urlInput = this.urlForm.value.originalUrl;
+
     this.errorMessage = '';
+
+    // بدء الفحص
+    this.scanService.startScan(urlInput);
     
-    // بدء الفحص (سيتم حفظ الرابط في السيرفس)
-    this.scanService.startScan(this.urlInput);
-    
-    // التوجيه إلى صفحة تسجيل الدخول بدلاً من النتائج
-    // المستخدم سيسجل دخوله ثم يرى النتائج
+
+    this._urlService.addUrl({ originalUrl: urlInput }).subscribe({
+      next: (response) => console.log('URL added successfully:', response),
+      error: (error) => console.error('Error adding URL:', error)
+    });
+
+    // التوجيه لصفحة تسجيل الدخول
     this.router.navigate(['/login']);
   }
 }

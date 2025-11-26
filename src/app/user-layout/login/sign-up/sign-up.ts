@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { ScanService } from '../../../services/scan.service';
+import { ScanService } from '../../../core/services/scan.service';
 
 @Component({
   selector: 'app-sign-up',

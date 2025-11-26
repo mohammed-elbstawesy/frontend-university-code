@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ScanService } from '../../../services/scan.service';
+import { ScanService } from '../../../core/services/scan.service';
 
 @Component({
   selector: 'app-navbar',

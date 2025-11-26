@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { ScanService } from './services/scan.service';
+import { ScanService } from './core/services/scan.service';
 import {  RouterOutlet } from "@angular/router";
 
 
