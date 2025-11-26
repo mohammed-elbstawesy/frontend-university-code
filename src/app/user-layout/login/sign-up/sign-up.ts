@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ScanService } from '../../../core/services/scan.service';
+import { User } from '../../../core/models/users.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -12,17 +14,17 @@ import { ScanService } from '../../../core/services/scan.service';
   styles: []
 })
 export class SignUp {
-  router = inject(Router);
+  // router = inject(Router);
   scanService = inject(ScanService);
   fb = inject(FormBuilder);
 
   isLoading = false;
   signUpForm: FormGroup;
+  
+  constructor(private _authService: AuthService) {    // تعريف النموذج وقواعد التحقق
 
-  constructor() {
-    // تعريف النموذج وقواعد التحقق
     this.signUpForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      fristName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -31,7 +33,7 @@ export class SignUp {
       nationalID: ['', [Validators.required, Validators.minLength(14), Validators.maxLength(14)]],
       age: ['', [Validators.required, Validators.min(18)]],
       image: [null], // اختياري أو يمكن جعله required
-      agreement: [false, Validators.requiredTrue] // شرط أساسي
+      // agreement: [false, Validators.requiredTrue] // شرط أساسي
     });
   }
 
@@ -73,11 +75,32 @@ export class SignUp {
   }
 
   onSubmit() {
+
     // إذا كان النموذج غير صالح، قم بلمس كل الحقول لإظهار الأخطاء
     if (this.signUpForm.invalid) {
       this.signUpForm.markAllAsTouched();
       return;
     }
+
+
+
+    if (this.signUpForm.valid) {
+      this._authService.signup(this.signUpForm.value as User).subscribe({
+        next: res => {
+          console.log('Signup success ✅', res);
+          // this.router.navigate(['/login']);
+        },
+        error: err => {
+          console.error('Signup failed ❌', err);
+          alert('Signup failed: ' + (err.error?.message || err.message));
+        }
+      });
+    }
+  
+
+
+
+
 
     this.isLoading = true;
     const formData = this.signUpForm.value;
@@ -88,4 +111,7 @@ export class SignUp {
       this.scanService.login(formData.email, fullName);
     }, 1500);
   }
+
+
+
 }
