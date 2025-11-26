@@ -56,11 +56,11 @@ constructor(private _authService:AuthService,private router:Router){}
           console.log(role);
           
         }
-        // if (role === 'admin') {
-        //   this.router.navigate(['/dashboard']);
-        // } else {
-        //   this.router.navigate(['/']);
-        // }
+        if (role === 'admin') {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/']);
+        }
       },
       error: (err) => {
 
