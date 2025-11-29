@@ -6,6 +6,16 @@
         <span class="text-xl font-bold tracking-tight text-white">
             Vuln<span class="text-cyber-primary">Craft</span>
         </span>
+        @if(isadmin && islogin) {
+             <!-- <span class="ml-4 px-2 py-1 text-xs font-medium bg-cyber-accent/20 text-cyber-accent rounded-full">Admin</span> -->
+            <button (click)="routeAdmin()" class="ml-4 px-2 py-1 text-xs font-medium bg-cyber-accent/20 text-cyber-accent rounded-full ">Dashboard</button>
+
+        }
+        
+        @if(islogin) {
+             <!-- <span class="ml-4 px-2 py-1 text-xs font-medium bg-cyber-accent/20 text-cyber-accent rounded-full">Admin</span> -->
+            <button (click)="logout()" class="ml-4 px-2 py-1 text-xs font-medium bg-cyber-accent/20 text-cyber-accent rounded-full ">Logout</button>
+        }
     </div>
     
    

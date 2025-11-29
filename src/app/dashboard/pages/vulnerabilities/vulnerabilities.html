@@ -47,44 +47,56 @@
                     </tr>
                 </thead>
                 <tbody class="text-sm text-slate-200">
-                    @for (vuln of filteredVulns; track vuln.id) {
-                        <tr class="group hover:bg-white/5 transition-colors duration-200">
-                            <td class="p-4 border-b border-slate-800">
-                                <div [className]="'inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold capitalize border ' + getStatusClass(vuln.status)">
-                                    <span [className]="'w-1.5 h-1.5 rounded-full ' + getStatusDotClass(vuln.status)"></span>
-                                    {{ vuln.status }}
-                                </div>
-                            </td>
-                            <td class="p-4 border-b border-slate-800">
-                                <div class="flex flex-col gap-1">
-                                    <span class="font-semibold text-white">{{ vuln.title }}</span>
-                                    <span class="text-xs text-slate-400">{{ vuln.desc }}</span>
-                                </div>
-                            </td>
-                            <td class="p-4 border-b border-slate-800">
-                                <span [className]="'px-2.5 py-1 rounded-md text-[11px] font-bold uppercase border ' + getSeverityClass(vuln.severity)">
-                                    {{ vuln.severity }}
-                                </span>
-                            </td>
-                            <td class="p-4 border-b border-slate-800">
-                                <span class="font-mono text-xs text-[#4c6ef5] opacity-90 bg-[#4c6ef5]/10 px-2 py-1 rounded cursor-pointer hover:underline" [title]="vuln.url">
-                                    {{ vuln.url }}
-                                </span>
-                            </td>
-                            <td class="p-4 border-b border-slate-800 text-slate-400">{{ vuln.date }}</td>
-                            <td class="p-4 border-b border-slate-800">
-                                <div class="flex gap-2">
-                                    @if (vuln.status === 'available') {
-                                        <button (click)="resolve(vuln.id)" class="px-3 py-1.5 bg-green-500/10 text-green-500 border border-green-500/20 rounded text-xs font-bold hover:bg-green-500 hover:text-white hover:translate-y-0.5 hover:shadow-lg transition-all cursor-pointer">Resolve</button>
-                                        <button (click)="cancel(vuln.id)" class="px-3 py-1.5 bg-red-500/10 text-red-500 border border-red-500/20 rounded text-xs font-bold hover:bg-red-500 hover:text-white hover:translate-y-0.5 hover:shadow-lg transition-all cursor-pointer">Cancel</button>
-                                    } @else {
-                                        <button (click)="reopen(vuln.id)" class="px-3 py-1.5 bg-orange-500/10 text-orange-500 border border-orange-500/20 rounded text-xs font-bold hover:bg-orange-500 hover:text-white hover:translate-y-0.5 hover:shadow-lg transition-all cursor-pointer">Re-open</button>
-                                    }
-                                </div>
-                            </td>
-                        </tr>
+                    @for (vuln of filteredVulns; track vuln._id) {
+                      <tr class="group hover:bg-white/5 transition-colors duration-200">
+                        
+                        <td class="p-4 border-b border-slate-800">
+                          <div [class]="'inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold capitalize border ' + getStatusClass(vuln.isActive)">
+                            <span [class]="'w-1.5 h-1.5 rounded-full ' + getStatusDotClass(vuln.isActive)"></span>
+                            {{ vuln.isActive ? 'available' : 'cancelled' }}
+                          </div>
+                        </td>
+                  
+                        <td class="p-4 border-b border-slate-800">
+                          <div class="flex flex-col gap-1">
+                            <span class="font-semibold text-white">{{ vuln.name }}</span>
+                            <span class="text-xs text-slate-400">{{ vuln.smallDescription || vuln.description }}</span>
+                          </div>
+                        </td>
+                  
+                        <td class="p-4 border-b border-slate-800">
+                          <span [class]="'px-2.5 py-1 rounded-md text-[11px] font-bold uppercase border ' + getSeverityClass(vuln.severity)">
+                            {{ vuln.severity }}
+                          </span>
+                        </td>
+                  
+                        <td class="p-4 border-b border-slate-800">
+                          <span class="font-mono text-xs text-[#4c6ef5] opacity-90 bg-[#4c6ef5]/10 px-2 py-1 rounded cursor-pointer hover:underline" [title]="vuln.scriptFile">
+                            {{ vuln.scriptFile || '-' }}
+                          </span>
+                        </td>
+                  
+                        <td class="p-4 border-b border-slate-800 text-slate-400">
+                          {{ vuln.date | date:'medium' }}
+                        </td>
+                  
+                        <td class="p-4 border-b border-slate-800">
+                          <div class="flex gap-2">
+                            @if (vuln.isActive) {
+                              <button (click)="resolve(vuln._id)" class="px-3 py-1.5 bg-green-500/10 text-green-500 border border-green-500/20 rounded text-xs font-bold hover:bg-green-500 hover:text-white transition-all cursor-pointer">Resolve</button>
+                              <button (click)="cancel(vuln._id)" class="px-3 py-1.5 bg-red-500/10 text-red-500 border border-red-500/20 rounded text-xs font-bold hover:bg-red-500 hover:text-white transition-all cursor-pointer">Cancel</button>
+                            } @else {
+                              <button (click)="reopen(vuln._id)" class="px-3 py-1.5 bg-orange-500/10 text-orange-500 border border-orange-500/20 rounded text-xs font-bold hover:bg-orange-500 hover:text-white transition-all cursor-pointer">Re-open</button>
+                            }
+                          </div>
+                        </td>
+                  
+                      </tr>
                     }
-                </tbody>
+                  </tbody>
+                  
+                  
+                  
             </table>
         </div>
     </div>

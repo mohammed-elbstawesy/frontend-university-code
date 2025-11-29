@@ -53,13 +53,13 @@ constructor(private _authService:AuthService,private router:Router){}
         if (token) {
           const decoded: any = jwtDecode(token);
           role = decoded.role;
-          console.log(role);
+          // console.log(role);
           
         }
         if (role === 'admin') {
           this.router.navigate(['/dashboard']);
         } else {
-          this.router.navigate(['/']);
+          this.router.navigate(['/result']);
         }
       },
       error: (err) => {

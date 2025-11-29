@@ -21,7 +21,7 @@ export class SignUp {
   isLoading = false;
   signUpForm: FormGroup;
   
-  constructor(private _authService: AuthService) {    // تعريف النموذج وقواعد التحقق
+  constructor(private _authService: AuthService, private router: Router) {    // تعريف النموذج وقواعد التحقق
 
     this.signUpForm = this.fb.group({
       fristName: ['', [Validators.required, Validators.minLength(2)]],
@@ -100,12 +100,16 @@ export class SignUp {
     this._authService.signup(formData).subscribe({
       next: (res) => {
         console.log("Signup success", res);
+        this.router.navigate(['/login']);
+
       },
       error: (err) => {
         console.error("Signup failed", err);
       }
     });
   }
+
+
   
 
 

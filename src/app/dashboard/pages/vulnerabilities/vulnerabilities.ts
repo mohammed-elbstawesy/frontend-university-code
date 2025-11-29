@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { VulnService } from '../../../core/services/vuln.service';
+import { Vulnerability } from '../../../core/models/vuln.model';
 
 @Component({
   selector: 'app-vulnerabilities',
@@ -9,70 +11,98 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './vulnerabilities.html',
   styles: []
 })
-export class Vulnerabilities {
-  searchTerm = '';
-  severityFilter = 'all';
-  statusFilter = 'all';
+export class Vulnerabilities implements OnInit {
+  // بيانات وفلتر
+  vulns: Vulnerability[] = [];
 
-  vulnerabilities = [
-    { id: 1, title: 'SQL Injection in Login', desc: 'User input not sanitized in login form', severity: 'critical', url: 'https://api.example.com/auth', status: 'available', date: '2024-01-15' },
-    { id: 2, title: 'XSS in Comment Section', desc: 'Reflected XSS vulnerability in comments', severity: 'high', url: 'https://app.example.com/blog', status: 'available', date: '2024-01-14' },
-    { id: 3, title: 'IDOR Profile Endpoint', desc: 'Insecure direct object reference in profile', severity: 'high', url: 'https://api.example.com/user', status: 'resolved', date: '2024-01-13' },
-    { id: 4, title: 'Missing Rate Limiting', desc: 'No rate limiting on password reset', severity: 'medium', url: 'https://api.example.com/reset', status: 'available', date: '2024-01-12' },
-    { id: 5, title: 'Outdated SSL Cert', desc: 'SSL certificate using weak cipher', severity: 'low', url: 'https://staging.example.com', status: 'cancelled', date: '2024-01-10' }
-  ];
+  // المتغيرات اللي القالب طالبها
+  searchTerm: string = '';
+  severityFilter: string = 'all';
+  statusFilter: string = 'all';
 
-  get filteredVulns() {
-    return this.vulnerabilities.filter(v => {
-      const matchSearch = v.title.toLowerCase().includes(this.searchTerm.toLowerCase()) || v.desc.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchSev = this.severityFilter === 'all' || v.severity === this.severityFilter;
-      const matchStatus = this.statusFilter === 'all' || v.status === this.statusFilter;
-      return matchSearch && matchSev && matchStatus;
+  constructor(private _vulnService: VulnService) {}
+
+  ngOnInit(): void {
+    this._vulnService.getVuln().subscribe({
+      next: (response) => {
+        this.vulns = response?.data || [];
+        console.log('vulns', this.vulns);
+      },
+      error: (err) => console.error('Error fetching Vulnerabilities:', err)
     });
   }
-  
-  getSeverityClass(severity: string) {
-      const map: {[key: string]: string} = {
-          'critical': 'bg-red-500/15 text-red-500 border-red-500/30',
-          'high': 'bg-orange-500/15 text-orange-500 border-orange-500/30',
-          'medium': 'bg-blue-500/15 text-blue-500 border-blue-500/30',
-          'low': 'bg-slate-500/15 text-slate-400 border-slate-500/30'
-      };
-      return map[severity] || map['low'];
-  }
-  
-  getStatusClass(status: string) {
-      const map: {[key: string]: string} = {
-          'available': 'bg-orange-500/10 text-orange-500 border-orange-500/20',
-          'resolved': 'bg-green-500/10 text-green-500 border-green-500/20',
-          'cancelled': 'bg-slate-500/10 text-slate-400 border-slate-500/20'
-      };
-      return map[status] || map['available'];
-  }
-  
-  getStatusDotClass(status: string) {
-      const map: {[key: string]: string} = {
-          'available': 'bg-orange-500 shadow-[0_0_8px_rgba(255,140,66,0.6)] animate-pulse',
-          'resolved': 'bg-green-500',
-          'cancelled': 'bg-slate-400'
-      };
-      return map[status] || map['available'];
+
+  // Getter للفلترة — القالب يستخدم filteredVulns.length
+  get filteredVulns(): Vulnerability[] {
+    return this.vulns.filter(v => {
+      // نص البحث (بسيط، على name و smallDescription و description)
+      const q = this.searchTerm.trim().toLowerCase();
+      const matchesSearch = !q ||
+        (v.name && v.name.toLowerCase().includes(q)) ||
+        (v.smallDescription && v.smallDescription.toLowerCase().includes(q)) ||
+        (v.description && v.description.toLowerCase().includes(q));
+
+      // فلتر الشدة — نقارن case-insensitive، ونقبل 'all'
+      const sev = this.severityFilter.toLowerCase();
+      const matchesSeverity = sev === 'all' || (v.severity && v.severity.toLowerCase() === sev);
+
+      // فلتر الحالة — نتعامل مع isActive boolean
+      const status = this.statusFilter.toLowerCase();
+      let matchesStatus = true;
+      if (status !== 'all') {
+        if (status === 'available') matchesStatus = v.isActive === true;
+        else if (status === 'resolved') matchesStatus = v.isActive === false && v.isActive !== undefined && /* example */ false; 
+        // ملاحظة: عندكم مفهوم الـ status قد يختلف — لو عندكم حقل status نصي استبدل الشروط بسهولة
+        else if (status === 'cancelled') matchesStatus = v.isActive === false;
+      }
+
+      return matchesSearch && matchesSeverity && matchesStatus;
+    });
   }
 
-  resolve(id: number) {
-      const v = this.vulnerabilities.find(x => x.id === id);
-      if(v) v.status = 'resolved';
+  // ارجع كلاسات حسب الشدة
+  getSeverityClass(severity: string | undefined): string {
+    const map: { [k: string]: string } = {
+      'critical': 'bg-red-500/15 text-red-500 border-red-500/30',
+      'high': 'bg-orange-500/15 text-orange-500 border-orange-500/30',
+      'medium': 'bg-blue-500/15 text-blue-500 border-blue-500/30',
+      'low': 'bg-slate-500/15 text-slate-400 border-slate-500/30'
+    };
+    return map[(severity || '').toLowerCase()] || map['low'];
   }
-  
-  cancel(id: number) {
-      if(confirm('Cancel this vulnerability?')) {
-          const v = this.vulnerabilities.find(x => x.id === id);
-          if(v) v.status = 'cancelled';
-      }
+
+  getStatusClass(isActive?: boolean): string {
+    if (isActive === undefined) return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+    return isActive ? 'bg-orange-500/10 text-orange-500 border-orange-500/20' : 'bg-slate-500/10 text-slate-400 border-slate-500/20';
   }
-  
-  reopen(id: number) {
-      const v = this.vulnerabilities.find(x => x.id === id);
-      if(v) v.status = 'available';
+
+  getStatusDotClass(isActive?: boolean): string {
+    if (isActive === undefined) return 'bg-slate-400';
+    return isActive ? 'bg-orange-500 shadow-[0_0_8px_rgba(255,140,66,0.6)] animate-pulse' : 'bg-slate-400';
+  }
+
+  // عميل الأفعال — لاحقًا توصلها للـ service (هنا مجرد console/log)
+  resolve(id: string | undefined) {
+    if (!id) return;
+    console.log('Resolve', id);
+    // this._vulnService.resolve(id).subscribe(...)
+  }
+
+  cancel(id: string | undefined) {
+    if (!id) return;
+    if (!confirm('Cancel this vulnerability?')) return;
+    console.log('Cancel', id);
+    // this._vulnService.cancel(id).subscribe(...)
+  }
+
+  reopen(id: string | undefined) {
+    if (!id) return;
+    console.log('Reopen', id);
+    // this._vulnService.reopen(id).subscribe(...)
+  }
+
+
+  trackById(index: number, item: Vulnerability): string {
+    return item._id ?? String(index);
   }
 }

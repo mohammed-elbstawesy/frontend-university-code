@@ -5,14 +5,14 @@ export interface Auth {
 
 
   export interface User {
-    _id?: string;            // بيرجع من MongoDB تلقائيًا
-    fristName: string;       // (لاحظ إنها frist في الـ backend)
+    _id?: string;           
+    fristName: string;       
     lastName: string;
   
     email: string;
-    password?: string;       // بنخليها optional عشان مش بترجع في GET
+    password?: string;     
   
-    role: 'user' | 'admin';  // enum
+    role: 'user' | 'admin';  
     isAdmin: boolean;
   
     location: string;

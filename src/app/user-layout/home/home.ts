@@ -6,6 +6,7 @@ import { ScanService } from '../../core/services/scan.service';
 import { Navbar } from './navbar/navbar';
 import { Url } from '../../core/models/url.model';
 import { UrlService } from '../../core/services/url.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -21,9 +22,16 @@ export class Home implements OnInit { scanService = inject(ScanService);
   errorMessage: string = '';
   url: Url[] = [];
 
-  constructor(private _urlService: UrlService) {}
-
+  constructor(private _urlService: UrlService, private _authService: AuthService) {}
+  islogin:boolean=false;
+  isadmin:boolean=false;
   ngOnInit() {
+    this.islogin=this._authService.isLogin();
+    this.isadmin=this._authService.getRole() === 'admin';
+    console.log(this.islogin);
+    console.log('this admin :'+this.isadmin);
+    
+    
     this.scanService.reset();
 
     this.urlForm = new FormGroup({
@@ -37,8 +45,11 @@ export class Home implements OnInit { scanService = inject(ScanService);
       },
       error: (error) => console.error('Error fetching URLs:', error)
     });
-  }
+  
+  
+  
 
+  }
   onSubmit() {
     if (this.urlForm.invalid) {
       this.errorMessage = 'Please enter a valid domain';
@@ -59,6 +70,14 @@ export class Home implements OnInit { scanService = inject(ScanService);
     });
 
     // التوجيه لصفحة تسجيل الدخول
-    this.router.navigate(['/login']);
+    if (this.islogin&&this.isadmin) {
+      this.router.navigate(['/dashboard']);
+    }
+    if (this.islogin&&!this.isadmin) {
+      this.router.navigate(['/result']);
+    }
+    else{
+      this.router.navigate(['/login']);
+    }
   }
 }
