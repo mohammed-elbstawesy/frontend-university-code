@@ -19,10 +19,10 @@ constructor(private _authService:AuthService,private router:Router){}
 
   scanService = inject(ScanService);
   isLoading = false;
-
+  errorMessage: string = '';
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', Validators.required)
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
 
@@ -63,8 +63,15 @@ constructor(private _authService:AuthService,private router:Router){}
         }
       },
       error: (err) => {
-
+        this.isLoading = false; // وقف التحميل حتى لو فشل
         console.log(err);
+
+        // 2. خزن رسالة الخطأ اللي جاية من الباك إند
+        if (err.error && err.error.message) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Login failed. Please check your email or password.';
+        }
       },
     });
   

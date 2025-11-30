@@ -17,7 +17,7 @@ export class SignUp {
   // router = inject(Router);
   scanService = inject(ScanService);
   fb = inject(FormBuilder);
-
+readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   isLoading = false;
   signUpForm: FormGroup;
   
@@ -27,16 +27,23 @@ export class SignUp {
       fristName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
       location: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern('^[0-9+]+$'),Validators.minLength(7)]],
-      nationalID: ['', [Validators.required, Validators.minLength(14), Validators.maxLength(14)]],
+      nationalID: ['', [Validators.required, Validators.minLength(10)]],
       age: ['', [Validators.required, Validators.min(21)]],
       image: [null], // اختياري أو يمكن جعله required
       // agreement: [false, Validators.requiredTrue] // شرط أساسي
       agreement: [false, Validators.requiredTrue]
     });
   }
+  get pass() { return this.signUpForm.get('password'); }
+  
+  hasLowerCase() { return /[a-z]/.test(this.pass?.value || ''); }
+  hasUpperCase() { return /[A-Z]/.test(this.pass?.value || ''); }
+  hasNumber() { return /\d/.test(this.pass?.value || ''); }
+  hasSpecial() { return /[@$!%*?&]/.test(this.pass?.value || ''); }
+  hasMinLength() { return (this.pass?.value || '').length >= 8; }
 
   // دالة تحديد لون الحقل (أخضر/أحمر/عادي)
   getFieldClass(fieldName: string): string {
