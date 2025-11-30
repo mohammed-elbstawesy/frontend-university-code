@@ -31,4 +31,8 @@ get isadmin(): boolean {
   routeAdmin(){
     this._router.navigate(['/dashboard']);
   }
+  routelogin(){
+    this._router.navigate(['/login']);
+
+  }
 }

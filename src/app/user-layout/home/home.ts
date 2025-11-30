@@ -24,12 +24,12 @@ export class Home implements OnInit { scanService = inject(ScanService);
 
   constructor(private _urlService: UrlService, private _authService: AuthService) {}
   islogin:boolean=false;
-  isadmin:boolean=false;
+  role:string='admin';
   ngOnInit() {
     this.islogin=this._authService.isLogin();
-    this.isadmin=this._authService.getRole() === 'admin';
+    this.role=this._authService.getRole() === 'admin' ? 'admin' : 'user';
     console.log(this.islogin);
-    console.log('this admin :'+this.isadmin);
+    console.log('this admin :'+this.role);
     
     
     this.scanService.reset();
@@ -70,10 +70,11 @@ export class Home implements OnInit { scanService = inject(ScanService);
     });
 
     // التوجيه لصفحة تسجيل الدخول
-    if (this.islogin&&this.isadmin) {
+    if (this.islogin&&this.role==='admin') {
       this.router.navigate(['/dashboard']);
+      console.log('admin it me');
     }
-    if (this.islogin&&!this.isadmin) {
+    else if (this.islogin&&this.role!=='admin') {
       this.router.navigate(['/result']);
     }
     else{
