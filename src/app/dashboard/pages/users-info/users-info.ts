@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/users.model';
-
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-users-info',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './users-info.html',
   styles: []
 })
@@ -16,35 +16,29 @@ allUsersCount: number = 0;
 users :User[]=[]
 
 
-  // approvedUsers = [
-  //   { id: 1, name: 'Alice Brown', email: 'alice@example.com', role: 'Admin', status: 'Active', lastActive: '5 min ago' },
-  //   { id: 2, name: 'Bob Wilson', email: 'bob@example.com', role: 'Security Analyst', status: 'Active', lastActive: '1 hour ago' },
-  //   { id: 3, name: 'Charlie Taylor', email: 'charlie@example.com', role: 'Developer', status: 'Active', lastActive: '3 hours ago' },
-  //   { id: 4, name: 'Diana Martinez', email: 'diana@example.com', role: 'Penetration Tester', status: 'Active', lastActive: '1 day ago' }
-  // ];
+roleFilter: string = 'all';   
+statusFilter: string = 'all'; 
+searchTerm: string = '';
+get filteredUsers(): User[] {
+  return this.users.filter(u => {
+    // 1. منطق البحث (زي ما عملناه المرة اللي فاتت)
+    const q = this.searchTerm.trim().toLowerCase();
+    const matchesSearch = !q ||
+      (u.fristName && u.fristName.toLowerCase().includes(q)) ||
+      (u.lastName && u.lastName.toLowerCase().includes(q)) ||
+      (u.email && u.email.toLowerCase().includes(q)) ||
+      (u.nationalID && u.nationalID.toString().includes(q));
 
-  // edit(id?: string) {
-  //   const user = this.users.find(u => u._id === id);
-  //   alert(`✏️ Editing user: ${user?.fristName } ${user?.lastName}`);
-  // }
+    // 2. منطق فلتر الرتبة (Role)
+    const matchesRole = this.roleFilter === 'all' || u.role === this.roleFilter;
 
-  // delete(id?: string) {
-  //   const user = this.users.find(u => u._id === id);
-  //   if (user) {
-  //       if (confirm(`Delete user ${user.fristName}?`)) {
-  //           // this.users = this.users.filter(u => u._id !== id);
-  //           this._userService.editUserStatus(id!, { userActive: 'notActive' }).subscribe({
-  //               next: (res) => {
-  //                   console.log('User deleted:', res);
-  //                   this.users = this.users.filter(u => u._id !== id);
-  //               },
-  //               error: (err) => console.error('Error deleting user:', err)
-  //           })
-  //           alert(`🗑️ User ${user.fristName} deleted.`);
-  //       }
-  //   }
-  // }
+    // 3. منطق فلتر الحالة (Status)
+    const matchesStatus = this.statusFilter === 'all' || u.userActive === this.statusFilter;
 
+    // لازم التلاتة يتحققوا مع بعض
+    return matchesSearch && matchesRole && matchesStatus;
+  });
+}
   delete(userId?: string) {
     if (!userId) return alert('User id missing');
     if (confirm(`you are sure to stop ${this.users.find(u => u._id === userId)?.fristName} account's ?` )) {
