@@ -12,6 +12,8 @@ import { Vulnerabilities } from './dashboard/pages/vulnerabilities/vulnerabiliti
 import { Overview } from './dashboard/pages/overview/overview';
 import { UsersInfo } from './dashboard/pages/users-info/users-info';
 import { Users } from './dashboard/pages/users/users';
+import { adminGuard } from './core/guards/admin.guard';
+import { userGuard } from './core/guards/user-guard';
 
 
 export const routes: Routes = [
@@ -20,7 +22,7 @@ export const routes: Routes = [
         component: UserLayout,
         children: [
             { path: '', component: Home },
-            { path: 'result', component: Result},
+            { path: 'result', component: Result,canActivate:[userGuard]},
             { 
                 path: 'login', 
                 component: Login,
@@ -43,6 +45,8 @@ export const routes: Routes = [
             { path: 'vulnerabilities', component: Vulnerabilities },
             { path: 'users', component: Users },
             { path: 'users-info', component: UsersInfo }
-        ]
+        ],
+    canActivate: [adminGuard],
+
     }
 ];
