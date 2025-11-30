@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../../core/services/user.service';
+import { User } from '../../../core/models/users.model';
 
 @Component({
   selector: 'app-users',
@@ -8,8 +10,40 @@ import { CommonModule } from '@angular/common';
   templateUrl: './users.html',
   styles: []
 })
-export class Users {
-  
+export class Users implements OnInit {
+    constructor(private _userService:UserService){}
+    users :User[]=[]
+    allUsersCount: number = 0;
+    
+    pending(id?:String){
+      return this.users.find(u => u._id === id)?.userPending ==='pending'
+    }
+    
+
+
+
+
+    acceptPending(userId?: string) {
+      if (!userId) return alert('User id missing');
+      if (confirm(`you are sure to accept ${this.users.find(u => u._id === userId)?.fristName} account's ?` )) {
+      this._userService.editUserStatus(userId, { userPending: 'accepted' })
+        .subscribe({
+          next: updated => {
+            // alert(`User updated: ${updated.email}`);
+            this.ngOnInit(); 
+          },
+          error: err => {
+            console.error(err);
+            alert('Failed to update user');
+          }
+        });
+      }
+    }
+
+
+
+
+
   pendingUsers = [
     { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Security Analyst', requested: '2 hours ago', photo: 'https://i.pravatar.cc/150?img=1' },
     { id: 2, name: 'Sarah Smith', email: 'sarah@example.com', role: 'Penetration Tester', requested: '5 hours ago', photo: 'https://i.pravatar.cc/150?img=5' },
@@ -17,23 +51,41 @@ export class Users {
     { id: 4, name: 'Emily Davis', email: 'emily@example.com', role: 'Security Manager', requested: '2 days ago', photo: 'https://i.pravatar.cc/150?img=9' }
   ];
 
-  approve(id: number) {
-    const user = this.pendingUsers.find(u => u.id === id);
-    if (user) {
-        if(confirm(`Approve ${user.name}?`)) {
-            this.pendingUsers = this.pendingUsers.filter(u => u.id !== id);
-            alert(`✅ User ${user.name} has been approved!`);
-        }
-    }
-  }
+  // approve(id: number) {
+  //   const user = this.pendingUsers.find(u => u.id === id);
+  //   if (user) {
+  //       if(confirm(`Approve ${user.name}?`)) {
+  //           this.pendingUsers = this.pendingUsers.filter(u => u.id !== id);
+  //           alert(`✅ User ${user.name} has been approved!`);
+  //       }
+  //   }
+  // }
 
-  reject(id: number) {
-    const user = this.pendingUsers.find(u => u.id === id);
-    if (user) {
-        if(confirm(`Reject ${user.name}?`)) {
-            this.pendingUsers = this.pendingUsers.filter(u => u.id !== id);
-            alert(`❌ User ${user.name} has been rejected.`);
-        }
+  // reject(id: number) {
+  //   const user = this.pendingUsers.find(u => u.id === id);
+  //   if (user) {
+  //       if(confirm(`Reject ${user.name}?`)) {
+  //           this.pendingUsers = this.pendingUsers.filter(u => u.id !== id);
+  //           alert(`❌ User ${user.name} has been rejected.`);
+  //       }
+  //   }
+  // }
+
+
+
+  ngOnInit() {
+    this._userService.getAllUsers().subscribe({
+      next:(res)=>{
+        this.users=res;
+
+        this.allUsersCount=res.length;
+        console.log(this.users);
+        
+        console.log('All users:',res);
+      },
+        error:(err)=>console.error('Error fetching users:',err)
     }
+  );
+
   }
 }
