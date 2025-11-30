@@ -16,77 +16,144 @@
         <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="space-y-5">
             
             <!-- Row 1: Name -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="w-full">
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">First Name</label>
-                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('firstName')">
-                        <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
-                        <input formControlName="fristName" type="text" placeholder="John" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-2 rounded-lg outline-none text-sm">
-                    </div>
-                </div>
-                <div class="w-full">
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Last Name</label>
-                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('lastName')">
-                        <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
-                        <input formControlName="lastName" type="text" placeholder="Doe" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-2 rounded-lg outline-none text-sm">
-                    </div>
-                </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="w-full">
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">First Name</label>
+        <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('fristName')">
+            <div class="pl-3 text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </div>
+            <input formControlName="fristName" type="text" placeholder="John" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-2 rounded-lg outline-none text-sm">
+        </div>
+        @if (signUpForm.get('fristName')?.invalid && (signUpForm.get('fristName')?.touched || signUpForm.get('fristName')?.dirty)) {
+            <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
+                @if (signUpForm.get('fristName')?.errors?.['required']) { Please enter first name }
+                @if (signUpForm.get('fristName')?.errors?.['minlength']) { Name must be at least 2 chars }
+            </div>
+        }
+    </div>
+
+    <div class="w-full">
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Last Name</label>
+        <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('lastName')">
+            <div class="pl-3 text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <input formControlName="lastName" type="text" placeholder="Doe" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-2 rounded-lg outline-none text-sm">
+        </div>
+        @if (signUpForm.get('lastName')?.invalid && (signUpForm.get('lastName')?.touched || signUpForm.get('lastName')?.dirty)) {
+            <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
+                @if (signUpForm.get('lastName')?.errors?.['required']) { Please enter last name }
+                @if (signUpForm.get('lastName')?.errors?.['minlength']) { Name must be at least 2 chars }
+            </div>
+        }
+    </div>
+</div>
 
             <!-- Row 2: Email & Phone -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="w-full">
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Email Address</label>
-                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('email')">
-                        <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></div>
-                        <input formControlName="email" type="email" placeholder="name@company.com" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
-                    </div>
-                </div>
-                <div class="w-full">
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Phone Number</label>
-                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('phone')">
-                        <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></div>
-                        <input formControlName="phone" type="tel" placeholder="+20 1xxxxxxxxx" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
-                    </div>
-                </div>
+           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="w-full">
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Email Address</label>
+        <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('email')">
+            <div class="pl-3 text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
             </div>
+            <input formControlName="email" type="email" placeholder="name@company.com" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
+        </div>
+        @if (signUpForm.get('email')?.invalid && (signUpForm.get('email')?.touched || signUpForm.get('email')?.dirty)) {
+            <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
+                @if (signUpForm.get('email')?.errors?.['required']) { Please enter email address }
+                @if (signUpForm.get('email')?.errors?.['email']) { Please enter a valid email }
+            </div>
+        }
+    </div>
+
+    <div class="w-full">
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Phone Number</label>
+        <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('phone')">
+            <div class="pl-3 text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </div>
+            <input formControlName="phone" type="tel" placeholder="+20 1xxxxxxxxx" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
+        </div>
+        @if (signUpForm.get('phone')?.invalid && (signUpForm.get('phone')?.touched || signUpForm.get('phone')?.dirty)) {
+            <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
+                @if (signUpForm.get('phone')?.errors?.['required']) { Please enter phone number }
+                @if (signUpForm.get('phone')?.errors?.['pattern']) { Phone must contain numbers only }
+                @if (signUpForm.get('phone')?.errors?.['minlength']) { Phone number must be at least 7 digits }
+            </div>
+        }
+    </div>
+</div>
 
             <!-- Row 3: Password & Location -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="w-full">
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Password</label>
-                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('password')">
-                        <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
-                        <input formControlName="password" type="password" placeholder="••••••••" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
-                    </div>
-                </div>
-                <div class="w-full">
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Location</label>
-                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('location')">
-                        <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
-                        <input formControlName="location" type="text" placeholder="Cairo, Egypt" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
-                    </div>
-                </div>
+    <div class="w-full">
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Password</label>
+        <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('password')">
+            <div class="pl-3 text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
             </div>
+            <input formControlName="password" type="password" placeholder="••••••••" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
+        </div>
+        @if (signUpForm.get('password')?.invalid && (signUpForm.get('password')?.touched || signUpForm.get('password')?.dirty)) {
+            <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
+                @if (signUpForm.get('password')?.errors?.['required']) { Password is required }
+                @if (signUpForm.get('password')?.errors?.['minlength']) { Password must be at least 6 characters }
+            </div>
+        }
+    </div>
+
+    <div class="w-full">
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Location</label>
+        <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('location')">
+            <div class="pl-3 text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+            <input formControlName="location" type="text" placeholder="Cairo, Egypt" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
+        </div>
+        @if (signUpForm.get('location')?.invalid && (signUpForm.get('location')?.touched || signUpForm.get('location')?.dirty)) {
+            <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
+                @if (signUpForm.get('location')?.errors?.['required']) { Please enter your location }
+            </div>
+        }
+    </div>
+</div>
 
             <!-- Row 4: National ID & Age -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="w-full">
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">National ID</label>
-                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('nationalID')">
-                        <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg></div>
-                        <input formControlName="nationalID" type="text" placeholder="14 Digit ID" maxlength="14" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
-                    </div>
-                </div>
-                <div class="w-full">
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Age</label>
-                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('age')">
-                        <div class="pl-3 text-slate-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-                        <input formControlName="age" type="number" placeholder="25" min="18" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
-                    </div>
-                </div>
+    <div class="w-full">
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">National ID</label>
+        <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('nationalID')">
+            <div class="pl-3 text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
             </div>
+            <input formControlName="nationalID" type="text" placeholder="14 Digit ID" maxlength="14" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
+        </div>
+        @if (signUpForm.get('nationalID')?.invalid && (signUpForm.get('nationalID')?.touched || signUpForm.get('nationalID')?.dirty)) {
+            <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
+                @if (signUpForm.get('nationalID')?.errors?.['required']) { National ID is required }
+                @if (signUpForm.get('nationalID')?.errors?.['minlength'] || signUpForm.get('nationalID')?.errors?.['maxlength']) { ID must be exactly 14 digits }
+            </div>
+        }
+    </div>
 
+    <div class="w-full">
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Age</label>
+        <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('age')">
+            <div class="pl-3 text-slate-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <input formControlName="age" type="number" placeholder="25" min="18" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
+        </div>
+        @if (signUpForm.get('age')?.invalid && (signUpForm.get('age')?.touched || signUpForm.get('age')?.dirty)) {
+            <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
+                @if (signUpForm.get('age')?.errors?.['required']) { Please enter your age }
+                @if (signUpForm.get('age')?.errors?.['min']) { You must be at least 18 years old }
+            </div>
+        }
+    </div>
+</div>
             <!-- Upload Image -->
             <div class="w-full">
                 <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">National ID Image</label>
@@ -99,18 +166,28 @@
 
             <!-- Agreement Checkbox -->
             <!-- استخدمنا getCheckboxClass هنا لتغيير لون الإطار والنص بالكامل -->
-            <div [className]="'w-full border rounded-lg p-4 transition-all ' + getCheckboxClass()">
-                <label class="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox"  class="mt-1 w-5 h-5 rounded border-slate-600 text-green-500 focus:ring-green-500 bg-slate-800 cursor-pointer accent-green-500">
-                    <span   class="text-xs leading-relaxed transition-colors">
-                        <span   [className]="'font-bold block mb-1 uppercase tracking-wide ' + (signUpForm.get('agreement')?.value ? 'text-green-500' : 'text-[#ff003c]')">
-                            Legal Disclaimer:
-                        </span>
-                        All scanning operations are under your personal responsibility. In case of any unethical use or illegal activity, your personal data will be handed over to the authorities.
-                    </span>
-                </label>
-            </div>
-
+           <div>
+    <div [className]="'w-full border rounded-lg p-4 transition-all ' + getCheckboxClass()">
+        <label class="flex items-start gap-3 cursor-pointer">
+            <input 
+                formControlName="agreement" 
+                type="checkbox" 
+                class="mt-1 w-5 h-5 rounded border-slate-600 text-green-500 focus:ring-green-500 bg-slate-800 cursor-pointer accent-green-500"
+            >
+            <span class="text-xs leading-relaxed transition-colors">
+                <span [className]="'font-bold block mb-1 uppercase tracking-wide ' + (signUpForm.get('agreement')?.value ? 'text-green-500' : 'text-[#ff003c]')">
+                    Legal Disclaimer:
+                </span>
+                All scanning operations are under your personal responsibility. In case of any unethical use or illegal activity, your personal data will be handed over to the authorities.
+            </span>
+        </label>
+    </div>
+    @if (signUpForm.get('agreement')?.invalid && signUpForm.get('agreement')?.touched) {
+        <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse text-center">
+            You must accept the legal disclaimer to continue.
+        </div>
+    }
+</div>
             <!-- Submit Button -->
             <div class="pt-4">
                 <button type="submit" [disabled]="isLoading || signUpForm.invalid" class="relative w-full px-6 py-3.5 rounded-lg font-bold tracking-wide transition-all duration-300 bg-[#00f0ff] text-[#0a0a0f] hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none cursor-pointer">

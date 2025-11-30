@@ -21,7 +21,9 @@ export class Home implements OnInit { scanService = inject(ScanService);
   urlForm!: FormGroup;
   errorMessage: string = '';
   url: Url[] = [];
-
+  /////////////////////////////////////////////////////validation regex
+readonly urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-])\/?$/;
+///////////////////////////////////////////////////////
   constructor(private _urlService: UrlService, private _authService: AuthService) {}
   islogin:boolean=false;
   role:string='admin';
@@ -35,7 +37,7 @@ export class Home implements OnInit { scanService = inject(ScanService);
     this.scanService.reset();
 
     this.urlForm = new FormGroup({
-      originalUrl: new FormControl('', [Validators.required, Validators.minLength(4)])
+      originalUrl: new FormControl('', [Validators.required, Validators.pattern(this.urlRegex)])
     });
 
     this._urlService.getUrls().subscribe({
@@ -52,7 +54,7 @@ export class Home implements OnInit { scanService = inject(ScanService);
   }
   onSubmit() {
     if (this.urlForm.invalid) {
-      this.errorMessage = 'Please enter a valid domain';
+      this.errorMessage = 'Please enter a valid domain (e.g. google.com or https://example.com)';
       return;
     }
 

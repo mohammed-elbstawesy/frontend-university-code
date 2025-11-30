@@ -1,4 +1,6 @@
 <header class="relative z-20 w-full px-6 py-4 flex justify-between items-center border-b border-white/5 backdrop-blur-sm">
+    
+    
     <div class="flex items-center gap-2 cursor-pointer" routerLink="">
         <div class="p-1.5 bg-cyber-primary/10 rounded-lg border border-cyber-primary/20">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyber-primary"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path><path d="m9 12 2 2 4-4"></path></svg>
@@ -6,22 +8,33 @@
         <span class="text-xl font-bold tracking-tight text-white">
             Vuln<span class="text-cyber-primary">Craft</span>
         </span>
-        @if(!islogin) {
-            <!-- <span class="ml-4 px-2 py-1 text-xs font-medium bg-cyber-accent/20 text-cyber-accent rounded-full">Admin</span> -->
-           <button (click)="routelogin()" class="ml-4 px-2 py-1 text-xs font-medium bg-cyber-accent/20 text-cyber-accent rounded-full ">login</button>
-
-       }
-        @if(isadmin && islogin) {
-             <!-- <span class="ml-4 px-2 py-1 text-xs font-medium bg-cyber-accent/20 text-cyber-accent rounded-full">Admin</span> -->
-            <button (click)="routeAdmin()" class="ml-4 px-2 py-1 text-xs font-medium bg-cyber-accent/20 text-cyber-accent rounded-full ">Dashboard</button>
-
-        }
-        
-        @if(islogin) {
-             <!-- <span class="ml-4 px-2 py-1 text-xs font-medium bg-cyber-accent/20 text-cyber-accent rounded-full">Admin</span> -->
-            <button (click)="logout()" class="ml-4 px-2 py-1 text-xs font-medium bg-cyber-accent/20 text-cyber-accent rounded-full ">Logout</button>
-        }
     </div>
+
+
     
-   
+    <div class="flex items-center gap-3">
+
+        @if(!islogin) {
+            <button (click)="routelogin()" 
+                class="bg-opacity-50 relative px-3 py-1 rounded-lg font-medium tracking-wide transition-all duration-300 bg-purple-600 hover:bg-purple-500 text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 flex items-center justify-center gap-2 group cursor-pointer">
+                Login
+            </button>
+        }
+
+        @if(isadmin && islogin) {
+            <button (click)="routeAdmin()" 
+                class="bg-opacity-50 bg-purple-600 hover:bg-purple-500 relative px-3 py-1 rounded-lg font-medium tracking-wide transition-all duration-300 text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] flex items-center justify-center gap-2 group cursor-pointer">
+                Dashboard
+            </button>
+        }
+
+        @if(islogin) {
+            <button (click)="logout()" 
+                class="bg-opacity-50 bg-cyber-primary relative px-3 py-1 rounded-lg font-medium tracking-wide transition-all duration-300 text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 flex items-center justify-center gap-2 group cursor-pointer">
+                Logout
+            </button>
+        }
+
+    </div>
+
 </header>

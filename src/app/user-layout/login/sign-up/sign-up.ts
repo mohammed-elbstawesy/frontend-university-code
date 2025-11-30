@@ -29,11 +29,12 @@ export class SignUp {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       location: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9+]+$')]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9+]+$'),Validators.minLength(7)]],
       nationalID: ['', [Validators.required, Validators.minLength(14), Validators.maxLength(14)]],
-      age: ['', [Validators.required, Validators.min(18)]],
+      age: ['', [Validators.required, Validators.min(21)]],
       image: [null], // اختياري أو يمكن جعله required
       // agreement: [false, Validators.requiredTrue] // شرط أساسي
+      agreement: [false, Validators.requiredTrue]
     });
   }
 
