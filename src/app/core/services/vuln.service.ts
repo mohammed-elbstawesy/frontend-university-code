@@ -15,6 +15,8 @@ export class VulnService {
   getVuln():Observable<ApiResponse<Vulnerability[]>>{
     return this._http.get<ApiResponse<Vulnerability[]>>(`${this.url}/`);
   }
-
+createVuln(data: any): Observable<any> {
+    return this._http.post(`${this.url}/`, data);
+  }
 
 }

@@ -14,6 +14,7 @@ import { UsersInfo } from './dashboard/pages/users-info/users-info';
 import { Users } from './dashboard/pages/users/users';
 import { adminGuard } from './core/guards/admin.guard';
 import { userGuard } from './core/guards/user-guard';
+import { AddVulnerability } from './dashboard/pages/vulnerabilities/add-vulnerability/add-vulnerability';
 
 
 export const routes: Routes = [
@@ -39,7 +40,8 @@ export const routes: Routes = [
         path: 'dashboard',
         component: Dashboard, 
         children: [
-            { path: '', component: Overview }, 
+            { path: '', component: Overview },
+            { path: 'vulnerabilities/add', component: AddVulnerability },  
             { path: 'urls', component: Urls },
             { path: 'reports', component: Reports },
             { path: 'vulnerabilities', component: Vulnerabilities },

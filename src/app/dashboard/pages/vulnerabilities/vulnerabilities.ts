@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VulnService } from '../../../core/services/vuln.service';
 import { Vulnerability } from '../../../core/models/vuln.model';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-vulnerabilities',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './vulnerabilities.html',
   styles: []
 })
