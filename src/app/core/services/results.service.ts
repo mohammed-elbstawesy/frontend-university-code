@@ -8,12 +8,7 @@ import { results } from '../models/results.model';
   providedIn: 'root',
 })
 export class ResultsService {
-  // constructor(private _http:HttpClient){}
-  // url = environment.apiUrl + 'vuln'
 
-  // getVuln():Observable<ApiResponse<Vulnerability[]>>{
-  //   return this._http.get<ApiResponse<Vulnerability[]>>(`${this.url}/`);
-  // }
 
 
   constructor(private _http:HttpClient){}
@@ -26,6 +21,11 @@ export class ResultsService {
     map(resp => resp.data || []) // نرجّع المصفوفة فقط
   );
   }
+
+    getResult(): Observable<results[]> {
+      return this._http.get<results[]>(`${this.url}`);
+    }
+
 
   // .get<{ message: string; data: Results[] }>(`${this.url}/${id}`)
   // .pipe(
