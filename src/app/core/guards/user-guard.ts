@@ -13,6 +13,12 @@ export const userGuard: CanActivateFn = (route, state) => {
   if (role === 'user') {
     return true;
   }
+  else if (role === 'admin') {
+    auth.logout();
+    // return true;
+  return router.createUrlTree(['/login']);
+
+  }
   
   return router.createUrlTree(['/login']);
 };
