@@ -32,13 +32,9 @@ export class Result implements OnInit {
   numberOfvuln:number=0
   numberOfCritical:number=0
   numberOfHigh:number=0
-
-
-
-  // scanService = inject(ScanService);
-  
-  // متغير البحث (Signal)
-  searchTerm = signal<string>('');
+  searchTerm:string='';
+  isFilterOpen: boolean = false; // للتحكم في فتح وغلق القائمة
+  selectedSeverity: string = 'All';
 
   // قائمة مصفاة (Filtered List) تعتمد على البحث
   // filteredVulnerabilities = computed(() => {
@@ -53,8 +49,36 @@ export class Result implements OnInit {
   //     v.description.toLowerCase().includes(term)
   //   );
   // });
+  toggleFilter() {
+    this.isFilterOpen = !this.isFilterOpen;
+  }
 
-  
+selectSeverity(severity: string) {
+    this.selectedSeverity = severity;
+    this.isFilterOpen = false; // اقفل القائمة بعد الاختيار
+  }
+
+  get filteredVulns(): Vulnerability[] {
+    let vulns = this.vulns;
+
+    // أولاً: تطبيق فلتر البحث (Search)
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase().trim();
+      vulns = vulns.filter(v => 
+        (v.name && v.name.toLowerCase().includes(term)) || 
+        (v.severity && v.severity.toLowerCase().includes(term)) ||
+        (v.description && v.description.toLowerCase().includes(term)) ||
+        (v.smallDescription && v.smallDescription.toLowerCase().includes(term))
+      );
+    }
+
+    // ثانياً: تطبيق فلتر الشدة (Severity)
+    if (this.selectedSeverity !== 'All') {
+      vulns = vulns.filter(v => v.severity.toLowerCase() === this.selectedSeverity.toLowerCase());
+    }
+
+    return vulns;
+  }
   getSeverityClass(severity: string): string {
     switch (severity) {
         case 'Critical': return 'text-[#ff003c] border-[#ff003c]/30 bg-[#ff003c]/10 shadow-[0_0_10px_rgba(255,0,60,0.2)]';
