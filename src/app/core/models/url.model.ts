@@ -1,7 +1,7 @@
 export interface Url {
     _id: string;
     originalUrl: string;
-    user: {
+    user?: {
       _id: string;
       email: string;
     };

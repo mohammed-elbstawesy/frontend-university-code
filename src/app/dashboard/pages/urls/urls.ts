@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Url } from '../../../core/models/url.model';
 import { UrlService } from '../../../core/services/url.service';
+import { VulnService } from '../../../core/services/vuln.service';
+import { ResultsService } from '../../../core/services/results.service';
+import { results } from '../../../core/models/results.model';
 
 @Component({
   selector: 'app-urls',
@@ -12,7 +15,10 @@ import { UrlService } from '../../../core/services/url.service';
  
 })
 export class Urls implements OnInit {
-  constructor(private _url:UrlService){}
+  constructor(
+    private _url:UrlService,
+    private _result:ResultsService
+  ){}
   searchTerm = '';
   
   
@@ -66,26 +72,49 @@ export class Urls implements OnInit {
 
 
 
-
-    URLS:Url[]=[]
-
-
-    ngOnInit(){
+    // عرف متغير يشيل النتائج مربوطة بالـ ID
+    vulnCountsMap: { [key: string]: number } = {};
+    URLS: Url[] = [];
+    
+    ngOnInit() {
       this._url.getUrls().subscribe({
-        next:(res:Url[])=>{
-          this.URLS=res
-          console.log(res);
+        next: (res: Url[]) => {
+          this.URLS = res;
           
-        },      
-        error: (err) => console.error('Error fetching Vulnerabilities:', err)
-      })
-
-      
-      
-
+          // بمجرد ما الـ URLs توصل، نجيب عدد الثغرات لكل واحد فيهم
+          this.URLS.forEach(url => {
+            this.fetchVulnCount(url._id);
+          });
+        },
+        error: (err) => console.error('Error fetching URLs:', err)
+      });
+    }
+    
+    // دالة مساعدة بتجيب العدد وتخزنه في المتغير
+    fetchVulnCount(id: string) {
+      this._result.getResultsByIdUrl(id).subscribe({
+        next: (res) => {
+          // نحسب العدد
+          const count = res.filter(r => r.detected).length;
+          // نخزنه في الـ Map باستخدام الـ ID كـ مفتاح
+          this.vulnCountsMap[id] = count;
+        },
+        error: (err) => console.error(`Error fetching count for ${id}`, err)
+      });
     }
 
 
+
+
+  extractSiteName(url: string): string {
+    if (!url) return '';
+
+    let domain = url.replace(/(^\w+:|^)\/\//, '');
+
+    domain = domain.replace('www.', '');
+
+    return domain.split('.')[0]; 
+  }
 
 
 }
