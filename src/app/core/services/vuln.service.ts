@@ -21,5 +21,8 @@ export class VulnService {
   }
   
 
+createVuln(data: any): Observable<any> {
+    return this._http.post(`${this.url}/`, data);
+  }
 
 }
