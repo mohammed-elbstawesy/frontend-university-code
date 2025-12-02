@@ -16,5 +16,10 @@ export class VulnService {
     return this._http.get<ApiResponse<Vulnerability[]>>(`${this.url}/`);
   }
 
+  getVulnsByIds(ids: string[]): Observable<Vulnerability[]> {
+    return this._http.post<Vulnerability[]>(`${this.url}/getByIds`, { ids });
+  }
+  
+
 
 }

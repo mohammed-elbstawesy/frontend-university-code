@@ -19,6 +19,9 @@ export class UrlService {
     return this._http.post<Url>(`${this.url}url`, urlData);
   }
   
+  getUrlById(id:string):Observable<Url[]>{
+    return this._http.get<Url[]>(`${this.url}url/${id}`);
+  }
   
 
 //   url :Url[]= [];

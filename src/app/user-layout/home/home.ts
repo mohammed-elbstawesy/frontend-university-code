@@ -74,7 +74,7 @@ readonly urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-])\/?
     // التوجيه لصفحة تسجيل الدخول
     if (this.islogin&&this.role==='admin') {
       this.router.navigate(['/dashboard']);
-      console.log('admin it me');
+      // console.log('admin it me');
     }
     else if (this.islogin&&this.role!=='admin') {
       this.router.navigate(['/result']);
