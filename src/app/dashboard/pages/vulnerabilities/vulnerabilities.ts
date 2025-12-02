@@ -106,4 +106,35 @@ export class Vulnerabilities implements OnInit {
   trackById(index: number, item: Vulnerability): string {
     return item._id ?? String(index);
   }
+
+
+
+
+
+
+
+
+  toggleActive(vuln: Vulnerability) {
+    if (!vuln._id) return;
+
+    const newStatus = !vuln.isActive;
+
+    const updateData: any = { isActive: newStatus };
+
+    this._vulnService.editVulnerability(vuln._id, updateData).subscribe({
+      next: (res) => {
+        vuln.isActive = newStatus;
+        console.log('Status changed to:', newStatus);
+      },
+      error: (err) => {
+        console.error('Error toggling status:', err);
+        vuln.isActive = !newStatus; 
+      }
+    });
+  }
+
+
+
+
+
 }
