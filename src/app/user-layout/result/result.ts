@@ -64,14 +64,6 @@ export class Result implements OnInit {
     }
   }
 
-  // // (تأكد أن مصفوفة statCards موجودة هنا كما في الكود السابق)
-  // readonly statCards = computed(() => [
-  //   { title: 'Total', value: this.scanService.stats().total, styleClass: 'text-white', borderClass: 'border-slate-700' },
-  //   { title: 'Critical', value: this.scanService.stats().critical, styleClass: 'text-[#ff003c]', borderClass: 'border-l-4 border-[#ff003c]' },
-  //   { title: 'High', value: this.scanService.stats().high, styleClass: 'text-orange-500', borderClass: 'border-l-4 border-orange-500' },
-  //   { title: 'Medium', value: this.scanService.stats().medium, styleClass: 'text-yellow-400', borderClass: 'border-l-4 border-yellow-400' },
-  //   { title: 'Low', value: this.scanService.stats().low, styleClass: 'text-blue-400', borderClass: 'border-l-4 border-blue-400' }
-  // ]);
 
   downloadReport(btn: HTMLButtonElement) {
     // ... (نفس كود التحميل السابق)

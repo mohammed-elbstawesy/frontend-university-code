@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Url } from '../../../core/models/url.model';
+import { UrlService } from '../../../core/services/url.service';
 
 @Component({
   selector: 'app-urls',
@@ -9,7 +11,8 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './urls.html',
  
 })
-export class Urls {
+export class Urls implements OnInit {
+  constructor(private _url:UrlService){}
   searchTerm = '';
   
   
@@ -26,7 +29,7 @@ export class Urls {
   }
 
   
-  rescan(id: number) {
+  rescan(id: any) {
     const url = this.urls.find(u => u.id === id);
     if (url) {
         url.status = 'scanning';
@@ -38,13 +41,13 @@ export class Urls {
     }
   }
 
-  delete(id: number) {
+  delete(id: any) {
     if(confirm('Are you sure you want to delete this URL?')) {
       this.urls = this.urls.filter(u => u.id !== id);
     }
   }
   
-  getStatusBadgeClass(status: string) {
+  getStatusBadgeClass(status: any) {
         const statusMap: {[key: string]: string} = {
             'active': 'bg-green-500/10 text-green-500',
             'scanning': 'bg-blue-500/10 text-blue-500',
@@ -53,9 +56,36 @@ export class Urls {
         return statusMap[status] || 'bg-green-500/10 text-green-500';
     }
     
-    getVulnCountClass(count: number) {
+    getVulnCountClass(count: any) {
         if (count >= 5) return 'bg-red-500/10 text-red-500';
         if (count > 0) return 'bg-orange-500/10 text-orange-500';
         return 'bg-[#121829] text-slate-400'; 
     }
+
+
+
+
+
+
+    URLS:Url[]=[]
+
+
+    ngOnInit(){
+      this._url.getUrls().subscribe({
+        next:(res:Url[])=>{
+          this.URLS=res
+          console.log(res);
+          
+        },      
+        error: (err) => console.error('Error fetching Vulnerabilities:', err)
+      })
+
+      
+      
+
+    }
+
+
+
+
 }

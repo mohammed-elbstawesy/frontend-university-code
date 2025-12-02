@@ -39,6 +39,7 @@ get filteredUsers(): User[] {
     return matchesSearch && matchesRole && matchesStatus;
   });
 }
+
   delete(userId?: string) {
     if (!userId) return alert('User id missing');
     if (confirm(`you are sure to stop ${this.users.find(u => u._id === userId)?.fristName} account's ?` )) {
