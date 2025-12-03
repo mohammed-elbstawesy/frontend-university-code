@@ -12,36 +12,96 @@
 
 
     
-    <div class="flex items-center gap-3">
+   
+
+    <div class="flex items-center gap-3 relative">
 
         @if(!islogin) {
             <button (click)="routelogin()" 
-                class="bg-opacity-50 bg-cyber-primary relative px-3 py-1 rounded-3xl font-medium tracking-wide transition-all duration-300 text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 flex items-center justify-center gap-2 group cursor-pointer">
+                class="px-5 py-2 rounded-full font-medium text-sm bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500 hover:text-white transition-all duration-300">
                 Login
             </button>
         }
 
-        @if(isadmin && islogin) {
-            <button (click)="routeAdmin()" 
-                class="bg-opacity-50 bg-purple-600 hover:bg-purple-500 relative px-3 py-1 rounded-3xl font-medium tracking-wide transition-all duration-300 text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] flex items-center justify-center gap-2 group cursor-pointer">
-                Dashboard
-            </button>
-        }
-
-        @if(islogin){
-            <button (click)="routeProfile()" 
-            class="bg-opacity-50 bg-cyber-primary relative px-3 py-1 rounded-3xl font-medium tracking-wide transition-all duration-300 text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 flex items-center justify-center gap-2 group cursor-pointer">
-            Profile
-            </button>
-            }
-            
         @if(islogin) {
-            <button (click)="logout()" 
-                class="bg-opacity-50 bg-cyber-primary relative px-3 py-1 rounded-3xl font-medium tracking-wide transition-all duration-300 text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 flex items-center justify-center gap-2 group cursor-pointer">
-                Logout
+           
+
+            <button (click)="toggleMenu()" class="relative group outline-none">
+                <div class="h-10 w-10 rounded-full bg-slate-700 border-2 border-transparent group-hover:border-cyan-500/50 flex items-center justify-center text-lg text-white font-medium overflow-hidden transition-all duration-300 ring-2 ring-transparent group-focus:ring-cyan-500/30">
+                     {{ user?.fristName ? user.fristName[0].toUpperCase() : 'U' }}
+                </div>
             </button>
+
+            @if(isMenuOpen) {
+                <div (click)="closeMenu()" class="fixed inset-0 z-40 bg-transparent cursor-default"></div>
+            }
+
+            @if(isMenuOpen) {
+                <div class="absolute right-0 top-14 w-[350px] bg-[#1e2329] rounded-3xl shadow-2xl border border-slate-700/50 z-50 overflow-hidden animate-fade-in origin-top-right">
+                    
+                    <div class="flex items-center justify-between px-4 py-3 relative">
+                        <div class="text-xs text-slate-400 font-mono truncate max-w-[250px] mx-auto bg-[#16191d] px-3 py-1 rounded-full border border-slate-700">
+                            {{ user?.email }}
+                        </div>
+                        <button title="emg" (click)="closeMenu()" class="absolute right-4 text-slate-400 hover:text-white transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col items-center pb-6 pt-2">
+                        <div class="relative mb-3">
+                            <div class="absolute inset-0 rounded-full border-t-2 border-r-2 border-cyan-500 animate-spin opacity-50"></div>
+                            <div class="h-20 w-20 rounded-full bg-slate-800 flex items-center justify-center text-3xl text-cyan-400 font-bold border-4 border-[#1e2329] relative z-10">
+                                {{ user?.fristName ? user.fristName[0].toUpperCase() : 'U' }}
+                                <div class="absolute bottom-1 right-1 h-5 w-5 bg-[#1e2329] rounded-full flex items-center justify-center">
+                                    <div class="h-3 w-3 bg-cyan-500 rounded-full cursor-pointer hover:scale-110 transition-transform">
+                                        <svg class="w-2 h-2 text-[#1e2329]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl text-slate-100 font-medium mb-1">Hi, {{ user?.fristName }}!</h3>
+                        
+                        <button (click)="routeProfile()" class="mt-4 px-6 py-2 rounded-full border border-slate-600 text-cyan-400 text-sm font-medium hover:bg-slate-800 transition-colors">
+                            Manage your Account
+                        </button>
+                    </div>
+
+                    <div class="bg-[#16191d] px-2 py-2">
+                        @if(user?.isAdmin) {
+                        <button (click)="routeAdmin()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-colors text-left group">
+                            <div class="h-8 w-8 rounded-full border border-slate-600 flex items-center justify-center text-slate-400 group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </div>
+                            <span class="text-slate-300 text-sm font-medium">Dashboard</span>
+                        </button>
+                    }
+                    @else {
+                         <button (click)="routelogin()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-colors text-left group">
+                            <div class="h-8 w-8 rounded-full border border-slate-600 flex items-center justify-center text-slate-400 group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </div>
+                            <span class="text-slate-300 text-sm font-medium">urls</span>
+                        </button>
+                    }
+                        <button (click)="logout()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-colors text-left group">
+                            <div class="h-8 w-8 rounded-full border border-slate-600 flex items-center justify-center text-slate-400 group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                            </div>
+                            <span class="text-slate-300 text-sm font-medium">Sign out</span>
+                        </button>
+                    </div>
+                    
+                    <div class="py-3 bg-[#16191d] border-t border-slate-800 flex justify-center gap-4 text-[10px] text-slate-500">
+                        <span class="hover:text-slate-300 cursor-pointer">Privacy Policy</span>
+                        <span class="w-1 h-1 rounded-full bg-slate-600 mt-1.5"></span>
+                        <span class="hover:text-slate-300 cursor-pointer">Terms of Service</span>
+                    </div>
+
+                </div>
+            }
         }
-        
 
     </div>
 

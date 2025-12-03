@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { UserService } from '../../../core/services/user.service';
+import { jwtDecode } from 'jwt-decode';
+
 
 @Component({
   selector: 'app-navbar',
@@ -10,8 +13,40 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
-export class Navbar {
-  constructor(private _authService:AuthService,private _router: Router){}
+export class Navbar implements OnInit {
+  isMenuOpen: boolean = false;
+  user: any = null;
+  constructor(
+    private _authService: AuthService,
+    private _router: Router,
+    private _userService: UserService 
+  ) {}
+  ngOnInit(): void {
+    if (this.islogin) {
+      this.getUserData();
+    }
+  }
+
+  getUserData() {
+    const token = this._authService.getToken();
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      this._userService.getUser(decoded.id).subscribe({
+        next: (res: any) => {
+          this.user = res.data || res;
+        },
+        error: (err) => console.error(err)
+      });
+    }
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu() {
+    this.isMenuOpen = false;
+  }
 
 get isadmin(): boolean {
     return this._authService.getRole() === 'admin';
@@ -25,12 +60,17 @@ get isadmin(): boolean {
   logout() {   
     this._authService.logout()
     localStorage.removeItem('token');
+<<<<<<< Updated upstream
     localStorage.removeItem('pendingData');
+=======
+    this.isMenuOpen = false;
+>>>>>>> Stashed changes
     window.location.reload();
   }
 
   routeAdmin(){
     this._router.navigate(['/dashboard']);
+    this.isMenuOpen = false;
   }
   routelogin(){
     this._router.navigate(['/login']);
@@ -39,6 +79,7 @@ get isadmin(): boolean {
 
   routeProfile(){
   this._router.navigate(['/profile']);
+  this.isMenuOpen = false;
   }
 
 

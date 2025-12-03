@@ -14,7 +14,7 @@ import { jwtDecode } from 'jwt-decode';
 export class Profile implements OnInit {
   profileForm: FormGroup;
   isEditMode: boolean = false;
-  userId: string = '674...'; 
+  userId: string = ''; 
   user: any = {}; 
   readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -23,7 +23,7 @@ export class Profile implements OnInit {
     private userService: UserService,
     private _authService:AuthService
   ) {
-    // تهيئة الفورم
+
     this.profileForm = this.fb.group({
       fristName: ['', Validators.required], 
       lastName: ['', Validators.required],
