@@ -43,7 +43,7 @@ readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\
   hasUpperCase() { return /[A-Z]/.test(this.pass?.value || ''); }
   hasNumber() { return /\d/.test(this.pass?.value || ''); }
   hasSpecial() { return /[@$!%*?&]/.test(this.pass?.value || ''); }
-  hasMinLength() { return (this.pass?.value || '').length >= 8; }
+  hasMinLength() { return (this.pass?.value || '').length >= 12; }
 
   // دالة تحديد لون الحقل (أخضر/أحمر/عادي)
   getFieldClass(fieldName: string): string {
