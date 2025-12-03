@@ -35,11 +35,11 @@ export class Profile implements OnInit {
 
   // تحميل بيانات المستخدم من السيرفر
   loadUserData() {
-    this.userService.getUser(this.userId).subscribe({
+    this.userService.getUser('692b50768c878221d0164239').subscribe({
       next: (res: any) => {
         this.user = res.data || res; // حسب شكل الـ Response بتاعك
         // تحديث قيم الفورم بالبيانات اللي جت
-        console.log('Res :'+this.user);
+        console.log('Res :'+this.user.data);
         
         this.profileForm.patchValue({
           fristName: this.user.fristName,
