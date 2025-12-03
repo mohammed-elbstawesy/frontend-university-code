@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../core/services/auth.service';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +19,8 @@ export class Profile implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private _authService:AuthService
   ) {
     // تهيئة الفورم
     this.profileForm = this.fb.group({
@@ -30,12 +33,30 @@ export class Profile implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.userIdByToken()
+
+
+
+
     this.loadUserData();
+  }
+
+
+
+  token:any=''
+
+  userIdByToken(){
+    this.token = this._authService.getToken() 
+    if(this.token){
+      this.token = jwtDecode(this.token)
+      this.userId = this.token.id
+    }
   }
 
   // تحميل بيانات المستخدم من السيرفر
   loadUserData() {
-    this.userService.getUser('692b50768c878221d0164239').subscribe({
+    this.userService.getUser(this.userId).subscribe({
       next: (res: any) => {
         this.user = res.data || res; // حسب شكل الـ Response بتاعك
         // تحديث قيم الفورم بالبيانات اللي جت
