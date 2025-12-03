@@ -30,8 +30,8 @@ readonly urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-])\/?
   ngOnInit() {
     this.islogin=this._authService.isLogin();
     this.role=this._authService.getRole() === 'admin' ? 'admin' : 'user';
-    console.log(this.islogin);
-    console.log('this admin :'+this.role);
+    console.log('is login :'+this.islogin);
+    // console.log('this admin :'+this.role);
     
     
     this.scanService.reset();
@@ -40,13 +40,13 @@ readonly urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-])\/?
       originalUrl: new FormControl('', [Validators.required, Validators.pattern(this.urlRegex)])
     });
 
-    this._urlService.getUrls().subscribe({
-      next: (response: Url[]) => {
-        this.url = response;
-        console.log('URLs:', this.url);
-      },
-      error: (error) => console.error('Error fetching URLs:', error)
-    });
+    // this._urlService.getUrls().subscribe({
+    //   next: (response: Url[]) => {
+    //     this.url = response;
+    //     console.log('URLs:', this.url);
+    //   },
+    //   error: (error) => console.error('Error fetching URLs:', error)
+    // });
   
   
   
@@ -58,18 +58,33 @@ readonly urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-])\/?
       return;
     }
 
-    const urlInput = this.urlForm.value.originalUrl;
+    if(this.islogin){
+      const urlInput = this.urlForm.value.originalUrl;
 
+      this._urlService.addUrl({ originalUrl: urlInput }).subscribe({
+        next: (response) => console.log('URL added successfully:', response),
+        error: (error) => console.error('Error adding URL:', error)
+      });
+      
+      console.log('is login');
+       if (this.islogin&&this.role!=='admin') {
+        this.router.navigate(['/result']);
+      }
+
+    }else{
+          localStorage.setItem('pendingData', this.urlForm.value.originalUrl);
+      this.router.navigate(['/login']);
+
+    }
+
+    console.log('not login');
+    
     this.errorMessage = '';
 
     // بدء الفحص
-    this.scanService.startScan(urlInput);
+    // this.scanService.startScan(urlInput);
     
 
-    this._urlService.addUrl({ originalUrl: urlInput }).subscribe({
-      next: (response) => console.log('URL added successfully:', response),
-      error: (error) => console.error('Error adding URL:', error)
-    });
 
     // التوجيه لصفحة تسجيل الدخول
     if (this.islogin&&this.role==='admin') {
@@ -82,5 +97,10 @@ readonly urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-])\/?
     else{
       this.router.navigate(['/login']);
     }
+
   }
+
+
+
+
 }

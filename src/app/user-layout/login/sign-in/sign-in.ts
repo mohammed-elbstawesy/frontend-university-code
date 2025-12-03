@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ScanService } from '../../../core/services/scan.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
+import { UrlService } from '../../../core/services/url.service';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { jwtDecode } from 'jwt-decode';
   styles: []
 })
 export class SignIn {
-constructor(private _authService:AuthService,private router:Router){}
+constructor(private _authService:AuthService,private router:Router,private _urlService:UrlService){}
 
   scanService = inject(ScanService);
   isLoading = false;
@@ -56,17 +57,44 @@ constructor(private _authService:AuthService,private router:Router){}
           // console.log(role);
           
         }
-        if (role === 'admin') {
-          this.router.navigate(['/dashboard']);
+
+        const pendingUrl = localStorage.getItem('pendingData');
+
+        // لو فيه رابط معلق واليوزر مش أدمن (الأدمن بيروح الداشبورد)
+        if (pendingUrl && role !== 'admin') {
+          
+          // ابعت الرابط للسيرفر
+          this._urlService.addUrl({ originalUrl: pendingUrl }).subscribe({
+            next: (res) => {
+              console.log('Pending URL saved successfully');
+              
+              // 1. امسح الداتا عشان متتكررش
+              localStorage.removeItem('pendingData');
+              
+              // 2. وديه لصفحة النتيجة
+              this.router.navigate(['/result']);
+            },
+            error: (err) => {
+              console.error('Failed to save pending URL', err);
+              // حتى لو فشل الحفظ، وديه صفحة النتيجة أو الهوم بدل ما يعلق في اللوجين
+              this.router.navigate(['']);
+            }
+          });
+
         } else {
-          this.router.navigate(['/result']);
+          // ==========================================
+          // السيناريو الطبيعي (مفيش داتا معلقة)
+          // ==========================================
+          if (role === 'admin') {
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.router.navigate(['']); // أو home حسب رغبتك
+          }
         }
       },
       error: (err) => {
-        this.isLoading = false; // وقف التحميل حتى لو فشل
+        this.isLoading = false;
         console.log(err);
-
-        // 2. خزن رسالة الخطأ اللي جاية من الباك إند
         if (err.error && err.error.message) {
           this.errorMessage = err.error.message;
         } else {
@@ -74,23 +102,5 @@ constructor(private _authService:AuthService,private router:Router){}
         }
       },
     });
-  
-
-  //   this.isLoading = true;
-  //   setTimeout(() => {
-  //     this.isLoading = false;
-  //     this.scanService.login(this.formData.email, 'Admin User');
-  //   }, 1500);
-  
-
-
-
-}
-
-
-
-
-
-
-
+  }
 }

@@ -25,6 +25,7 @@ get isadmin(): boolean {
   logout() {   
     this._authService.logout()
     localStorage.removeItem('token');
+    localStorage.removeItem('pendingData');
     window.location.reload();
   }
 
