@@ -61,9 +61,6 @@ get isadmin(): boolean {
     this._authService.logout()
     localStorage.removeItem('token');
     localStorage.removeItem('pendingData');
-    this.isMenuOpen = false;
-    this.isMenuOpen = false;
-    window.location.reload();
   }
 
   routeAdmin(){
