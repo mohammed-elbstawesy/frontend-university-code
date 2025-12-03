@@ -62,7 +62,6 @@ get isadmin(): boolean {
     localStorage.removeItem('token');
     localStorage.removeItem('pendingData');
     this.isMenuOpen = false;
-
     this.isMenuOpen = false;
     window.location.reload();
   }
