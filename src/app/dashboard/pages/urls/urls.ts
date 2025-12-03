@@ -22,35 +22,51 @@ export class Urls implements OnInit {
   searchTerm = '';
   
   
-  urls = [
-    { id: 1, name: 'Main API', url: 'https://api.example.com', status: 'active', lastScanned: '2024-01-15', vulnerabilities: 3 },
-    { id: 2, name: 'Web App', url: 'https://app.example.com', status: 'scanning', lastScanned: '2024-01-14', vulnerabilities: 0 },
-    { id: 3, name: 'Admin Panel', url: 'https://admin.example.com', status: 'active', lastScanned: '2024-01-13', vulnerabilities: 5 },
-    { id: 4, name: 'Staging', url: 'https://staging.example.com', status: 'error', lastScanned: '2024-01-10', vulnerabilities: 2 }
-  ];
+  // urls = [
+  //   { id: 1, name: 'Main API', url: 'https://api.example.com', status: 'active', lastScanned: '2024-01-15', vulnerabilities: 3 },
+  //   { id: 2, name: 'Web App', url: 'https://app.example.com', status: 'scanning', lastScanned: '2024-01-14', vulnerabilities: 0 },
+  //   { id: 3, name: 'Admin Panel', url: 'https://admin.example.com', status: 'active', lastScanned: '2024-01-13', vulnerabilities: 5 },
+  //   { id: 4, name: 'Staging', url: 'https://staging.example.com', status: 'error', lastScanned: '2024-01-10', vulnerabilities: 2 }
+  // ];
 
   
-  get filteredUrls() {
-    return this.urls.filter(u => u.name.toLowerCase().includes(this.searchTerm.toLowerCase()) || u.url.toLowerCase().includes(this.searchTerm.toLowerCase()));
+  // get filteredUrls() {
+  //   // return this.urls.filter(u => u..toLowerCase().includes(this.searchTerm.toLowerCase()) || u.url.toLowerCase().includes(this.searchTerm.toLowerCase()));
+  //   return this.URLS.filter(u => u.originalUrl.toLowerCase().includes(this.searchTerm.toLowerCase()) || u.originalUrl.toLowerCase().includes(this.searchTerm.toLowerCase()));
+  // }
+ get filteredUrls(): Url[] {
+  const q = this.searchTerm.trim().toLowerCase();
+
+  if (!q) {
+    return this.URLS;
   }
+
+  return this.URLS.filter(u => {
+    const matchUrl = u.originalUrl && u.originalUrl.toLowerCase().includes(q);
+    const matchEmail = u.user?.email && u.user.email.toLowerCase().includes(q);
+
+    return matchUrl || matchEmail;
+  });
+}
+  
 
   
   rescan(id: any) {
-    const url = this.urls.find(u => u.id === id);
-    if (url) {
-        url.status = 'scanning';
-        alert(`Rescanning ${url.name}...`);
-        setTimeout(() => {
-            url.status = 'active';
-            alert(`Scan completed for ${url.name}`);
-        }, 2000);
-    }
+    // const url = this.urls.find(u => u.id === id);
+    // if (url) {
+    //     url.status = 'scanning';
+    //     alert(`Rescanning ${url.name}...`);
+    //     setTimeout(() => {
+    //         url.status = 'active';
+    //         alert(`Scan completed for ${url.name}`);
+    //     }, 2000);
+    // }
   }
 
   delete(id: any) {
-    if(confirm('Are you sure you want to delete this URL?')) {
-      this.urls = this.urls.filter(u => u.id !== id);
-    }
+    // if(confirm('Are you sure you want to delete this URL?')) {
+    //   this.urls = this.urls.filter(u => u.id !== id);
+    // }
   }
   
   getStatusBadgeClass(status: any) {
