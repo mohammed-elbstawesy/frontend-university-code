@@ -1,0 +1,117 @@
+.profile-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: #f4f7f6;
+    min-height: 100vh;
+  }
+  
+  .profile-card {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+    text-align: right; /* عشان المحتوى عربي */
+  }
+  
+  .profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .avatar-circle {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+  }
+  
+  /* تنسيقات عرض المعلومات */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .label {
+    font-weight: bold;
+    color: #666;
+  }
+  
+  .value {
+    color: #333;
+    font-weight: 500;
+  }
+  
+  /* تنسيقات الفورم */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .form-control:focus {
+    border-color: #667eea;
+    outline: none;
+  }
+  
+  /* الأزرار */
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    width: 100%;
+  }
+  
+  .btn-primary {
+    background-color: #4a90e2;
+    color: white;
+  }
+  
+  .buttons-row {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    color: white;
+    flex: 1;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    flex: 1;
+  }
+  
+  .mt-3 { margin-top: 1rem; }
+  .text-muted { color: #888; font-size: 0.9em; }

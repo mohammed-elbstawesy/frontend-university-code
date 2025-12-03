@@ -35,4 +35,11 @@ get isadmin(): boolean {
     this._router.navigate(['/login']);
 
   }
+
+  routeProfile(){
+  this._router.navigate(['/profile']);
+  }
+
+
+
 }

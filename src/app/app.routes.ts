@@ -15,6 +15,7 @@ import { Users } from './dashboard/pages/users/users';
 import { adminGuard } from './core/guards/admin.guard';
 import { userGuard } from './core/guards/user-guard';
 import { AddVulnerability } from './dashboard/pages/vulnerabilities/add-vulnerability/add-vulnerability';
+import { Profile } from './user-layout/profile/profile';
 
 
 export const routes: Routes = [
@@ -24,6 +25,7 @@ export const routes: Routes = [
         children: [
             { path: '', component: Home },
             { path: 'result', component: Result,canActivate:[userGuard]},
+            {path: 'profile',component:Profile},
             { 
                 path: 'login', 
                 component: Login,

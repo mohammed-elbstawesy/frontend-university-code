@@ -32,4 +32,16 @@ export class UserService {
   
 
   
+  // دالة جلب بيانات المستخدم (عشان تعرضها أول ما يفتح)
+  getUser(id: string): Observable<any> {
+    return this._http.get(`${this.url}/${id}`);
+  }
+
+  // دالة التعديل (نفس الـ Backend اللي بعته)
+  updateUser(id: string, userData: any): Observable<any> {
+    return this._http.put(`${this.url}/edit/${id}`, userData);
+  }
+  
+
+
 }
