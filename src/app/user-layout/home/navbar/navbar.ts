@@ -61,7 +61,11 @@ get isadmin(): boolean {
     this._authService.logout()
     localStorage.removeItem('token');
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     localStorage.removeItem('pendingData');
+=======
+    this.isMenuOpen = false;
+>>>>>>> Stashed changes
 =======
     this.isMenuOpen = false;
 >>>>>>> Stashed changes
