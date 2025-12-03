@@ -14,8 +14,9 @@ import { jwtDecode } from 'jwt-decode';
 export class Profile implements OnInit {
   profileForm: FormGroup;
   isEditMode: boolean = false;
-  userId: string = '674...'; // هنا لازم تجيب الـ ID الحقيقي لليوزر المسجل دخول
-  user: any = {}; // لتخزين البيانات المعروضة
+  userId: string = '674...'; 
+  user: any = {}; 
+  readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   constructor(
     private fb: FormBuilder,
@@ -24,13 +25,20 @@ export class Profile implements OnInit {
   ) {
     // تهيئة الفورم
     this.profileForm = this.fb.group({
-      fristName: ['', Validators.required], // لاحظ: fristName نفس الباك اند
+      fristName: ['', Validators.required], 
       lastName: ['', Validators.required],
-      location: [''],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // مثال لفاليديشن أرقام فقط
-      password: [''] // اختياري
+      password: ['', [ Validators.pattern(this.passwordRegex)]],
+      location: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
     });
   }
+    get pass() { return this.profileForm.get('password'); }
+  hasLowerCase() { return /[a-z]/.test(this.pass?.value || ''); }
+  hasUpperCase() { return /[A-Z]/.test(this.pass?.value || ''); }
+  hasNumber() { return /\d/.test(this.pass?.value || ''); }
+  hasSpecial() { return /[@$!%*?&]/.test(this.pass?.value || ''); }
+  hasMinLength() { return (this.pass?.value || '').length >= 12; }
+
 
   ngOnInit(): void {
 
