@@ -102,7 +102,7 @@ export class Profile implements OnInit {
 
     this.userService.updateUser(this.userId, formData).subscribe({
       next: (res) => {
-        alert('تم تحديث البيانات بنجاح');
+        // alert('تم تحديث البيانات بنجاح');
         this.user = { ...this.user, ...formData }; // تحديث البيانات المعروضة فوراً
         this.isEditMode = false; // الخروج من وضع التعديل
       },
