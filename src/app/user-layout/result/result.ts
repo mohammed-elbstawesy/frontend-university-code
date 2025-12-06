@@ -23,6 +23,7 @@ export class Result implements OnInit {
     private _urlService:UrlService,
     private _results:ResultsService
   ){}
+  selectedVuln: Vulnerability | null = null;
   vulns:Vulnerability[]=[]
   url: Url[] = [];
   urlName:any=''
@@ -49,6 +50,16 @@ export class Result implements OnInit {
   //     v.description.toLowerCase().includes(term)
   //   );
   // });
+  openModal(vuln: Vulnerability) {
+    this.selectedVuln = vuln;
+    document.body.style.overflow = 'hidden'; // لمنع التمرير في الخلفية
+  }
+
+  closeModal() {
+    this.selectedVuln = null;
+    document.body.style.overflow = 'auto'; // إعادة التمرير
+  }
+
   toggleFilter() {
     this.isFilterOpen = !this.isFilterOpen;
   }
