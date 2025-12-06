@@ -69,6 +69,10 @@ get isadmin(): boolean {
   }
   routelogin(){
     this._router.navigate(['/login']);
+  }
+
+  routeUrlUser(){
+    this._router.navigate(['/user-urls'])
 
   }
 

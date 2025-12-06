@@ -16,6 +16,7 @@ import { adminGuard } from './core/guards/admin.guard';
 import { userGuard } from './core/guards/user-guard';
 import { AddVulnerability } from './dashboard/pages/vulnerabilities/add-vulnerability/add-vulnerability';
 import { Profile } from './user-layout/profile/profile';
+import { UserUrls } from './user-layout/user-urls/user-urls';
 
 
 export const routes: Routes = [
@@ -26,6 +27,7 @@ export const routes: Routes = [
             { path: '', component: Home },
             { path: 'result', component: Result,canActivate:[userGuard]},
             {path: 'profile',component:Profile},
+            {path:'user-urls',component:UserUrls,canActivate:[userGuard]},
             { 
                 path: 'login', 
                 component: Login,
