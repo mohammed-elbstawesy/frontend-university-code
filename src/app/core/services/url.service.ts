@@ -22,6 +22,10 @@ export class UrlService {
   getUrlById(id:string):Observable<Url[]>{
     return this._http.get<Url[]>(`${this.url}url/${id}`);
   }
+
+  getUrlByUserId(userId:string):Observable<Url[]>{
+    return this._http.get<Url[]>(`${this.url}user/urls/${userId}`);
+  }
   
 
 

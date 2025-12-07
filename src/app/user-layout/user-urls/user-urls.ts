@@ -3,6 +3,9 @@ import { Router, RouterLink } from '@angular/router';
 import { Navbar } from '../home/navbar/navbar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UrlService } from '../../core/services/url.service';
+import { jwtDecode } from 'jwt-decode';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-user-urls',
@@ -11,56 +14,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './user-urls.css',
 })
 export class UserUrls {
-  // دي داتا وهمية، المفروض هتجيبها من الـ API بتاعك
-//   userUrls = [
-//     { 
-//       id: 1, 
-//       url: 'acme-corp.com', 
-//       date: '2023-10-25', 
-//       status: 'High Risk', 
-//       vulnCount: 5,
-//       isScanning: false 
-//     },
-//     { 
-//       id: 2, 
-//       url: 'my-startup.io', 
-//       date: '2023-11-01', 
-//       status: 'Secure', 
-//       vulnCount: 0,
-//       isScanning: false 
-//     },
-//     { 
-//       id: 3, 
-//       url: 'test-server.net', 
-//       date: '2023-11-02', 
-//       status: 'Scanning', 
-//       vulnCount: 0,
-//       isScanning: true 
-//     }
-//   ];
 
-//   constructor(private router: Router) {}
-
-//   // دالة الذهاب لصفحة النتائج
-//   goToResult(urlItem: any) {
-//     // لو لسه بيعمل سكان مش هننقله (اختياري)
-//     if (urlItem.isScanning) return;
-
-//     // بنبعت الـ ID أو الـ URL كـ Parameter
-//     this.router.navigate(['/result', urlItem.id]); 
-//     // أو: this.router.navigate(['/result'], { queryParams: { url: urlItem.url } });
-//   }
-
-//   // دالة مساعدة لتحديد لون الحالة
-//   getStatusColor(status: string): string {
-//     switch (status) {
-//       case 'High Risk': return 'text-red-500 bg-red-500/10 border-red-500/20';
-//       case 'Secure': return 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20';
-//       case 'Scanning': return 'text-cyber-primary bg-cyber-primary/10 border-cyber-primary/20';
-//       default: return 'text-slate-400';
-//     }
-//   }
-// }
 userUrls = [
   { 
     id: 1, 
@@ -130,11 +84,27 @@ stats = {
   totalVulns: 0
 };
 
-constructor(private router: Router) {}
-
+token:any=''
 ngOnInit(): void {
   this.calculateStats();
   this.applyFilters();
+  
+   userIdByToken(){
+      this.token = this._authService.getToken() 
+      if(this.token){
+        this.token = jwtDecode(this.token)
+        this.userId = this.token.id
+      }
+    }
+
+  this._urlService.getUrlByUserId('').subscribe({
+    next: (response: any) => {
+      this.userUrls = response;
+     
+    },
+    error: (error) => console.error('Error fetching user URLs:', error)
+  });
+
 }
 
 // حساب الإحصائيات
@@ -288,4 +258,9 @@ getThreatClass(vulnCount: number): string {
 getStatusConfig(status: string): string {
   return this.getStatusColor(status);
 }
+
+constructor(private _urlService: UrlService, private router: Router, private _authService: AuthService) {}
+
+
+
 }
