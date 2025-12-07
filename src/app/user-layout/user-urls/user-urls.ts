@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Navbar } from '../home/navbar/navbar';
 import { CommonModule } from '@angular/common';
@@ -10,57 +10,8 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './user-urls.html',
   styleUrl: './user-urls.css',
 })
-export class UserUrls {
-  // دي داتا وهمية، المفروض هتجيبها من الـ API بتاعك
-//   userUrls = [
-//     { 
-//       id: 1, 
-//       url: 'acme-corp.com', 
-//       date: '2023-10-25', 
-//       status: 'High Risk', 
-//       vulnCount: 5,
-//       isScanning: false 
-//     },
-//     { 
-//       id: 2, 
-//       url: 'my-startup.io', 
-//       date: '2023-11-01', 
-//       status: 'Secure', 
-//       vulnCount: 0,
-//       isScanning: false 
-//     },
-//     { 
-//       id: 3, 
-//       url: 'test-server.net', 
-//       date: '2023-11-02', 
-//       status: 'Scanning', 
-//       vulnCount: 0,
-//       isScanning: true 
-//     }
-//   ];
-
-//   constructor(private router: Router) {}
-
-//   // دالة الذهاب لصفحة النتائج
-//   goToResult(urlItem: any) {
-//     // لو لسه بيعمل سكان مش هننقله (اختياري)
-//     if (urlItem.isScanning) return;
-
-//     // بنبعت الـ ID أو الـ URL كـ Parameter
-//     this.router.navigate(['/result', urlItem.id]); 
-//     // أو: this.router.navigate(['/result'], { queryParams: { url: urlItem.url } });
-//   }
-
-//   // دالة مساعدة لتحديد لون الحالة
-//   getStatusColor(status: string): string {
-//     switch (status) {
-//       case 'High Risk': return 'text-red-500 bg-red-500/10 border-red-500/20';
-//       case 'Secure': return 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20';
-//       case 'Scanning': return 'text-cyber-primary bg-cyber-primary/10 border-cyber-primary/20';
-//       default: return 'text-slate-400';
-//     }
-//   }
-// }
+export class UserUrls implements OnInit {
+  // دي داتا وهمية، المفروض هتجيبها من الـ API بت
 userUrls = [
   { 
     id: 1, 
@@ -135,6 +86,7 @@ constructor(private router: Router) {}
 ngOnInit(): void {
   this.calculateStats();
   this.applyFilters();
+  
 }
 
 // حساب الإحصائيات
