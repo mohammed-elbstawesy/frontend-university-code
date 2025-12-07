@@ -61,6 +61,8 @@ get isadmin(): boolean {
     this._authService.logout()
     localStorage.removeItem('token');
     localStorage.removeItem('pendingData');
+    this._router.navigate(['']);
+
   }
 
   routeAdmin(){
