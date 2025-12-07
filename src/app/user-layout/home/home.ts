@@ -30,7 +30,7 @@ export class Home implements OnInit {
   url: Url[] = [];
   /////////////////////////////////////////////////////validation regex
   readonly urlRegex =
-    /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-])\/?$/;
+    /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/
   ///////////////////////////////////////////////////////
   constructor(
     private _urlService: UrlService,
