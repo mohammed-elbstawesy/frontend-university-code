@@ -13,6 +13,7 @@ import { Navbar } from './navbar/navbar';
 import { Url } from '../../core/models/url.model';
 import { UrlService } from '../../core/services/url.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ResultsService } from '../../core/services/results.service';
 
 @Component({
   selector: 'app-home',
@@ -34,7 +35,8 @@ export class Home implements OnInit {
   ///////////////////////////////////////////////////////
   constructor(
     private _urlService: UrlService,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private _scanService: ResultsService
   ) {}
   islogin: boolean = false;
   role: string = 'admin';
@@ -68,13 +70,28 @@ export class Home implements OnInit {
       return;
     }
 
+
     if (this.islogin) {
       const urlInput = this.urlForm.value.originalUrl;
 
       this._urlService.addUrl({ originalUrl: urlInput }).subscribe({
-        next: (response) => console.log('URL added successfully:', response),
+        next: (response) =>{ console.log('URL added successfully:', response)
+
+          const url_name:string = response.originalUrl;
+          
+
+          this._scanService.postScan(url_name).subscribe({
+            next: (response) => console.log('URL start scanning successfully'),
+            error: (error) => console.error('Error scanning URL:', error),
+          }
+          )
+
+        },
         error: (error) => console.error('Error adding URL:', error),
       });
+
+      
+
 
       console.log('is login');
       if (this.islogin && this.role !== 'admin') {
