@@ -1,0 +1,12 @@
+/* حركة دوران مخصصة بطيئة */
+.animate-spin-slow {
+    animation: spin 8s linear infinite;
+}
+
+/* تأثير وميض التيرمينال */
+/* تم استخدامه في الـ HTML مباشرة عبر: animate-[pulse_1s_steps(2)_infinite] */
+/* ولكن هذا هو الكود لو أردت استخدامه ككلاس منفصل */
+@keyframes terminal-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
