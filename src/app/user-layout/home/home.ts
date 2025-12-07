@@ -114,7 +114,7 @@ export class Home implements OnInit {
       this.router.navigate(['/dashboard']);
       // console.log('admin it me');
     } else if (this.islogin && this.role !== 'admin') {
-      this.router.navigate(['/result']);
+      this.router.navigate(['/scanning-wait']);
     } else {
       this.router.navigate(['/login']);
     }
