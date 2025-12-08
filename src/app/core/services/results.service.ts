@@ -12,11 +12,15 @@ export class ResultsService {
 
 
   constructor(private _http:HttpClient){}
-  url = environment.apiUrl + 'results'
+  url = environment.apiUrl + 'results/'
 
   getResultsByIdUrl(_id:string | number):Observable<results[]>{
   // return this._http.get<results[]>(this.url+`/`+_id)
+
   return this._http.get<{ message: string; data: results[] }>(`${this.url}/url/${_id}`)
+
+
+
   .pipe(
     map(resp => resp.data || []) // نرجّع المصفوفة فقط
   );
@@ -24,6 +28,18 @@ export class ResultsService {
 
     getResult(): Observable<results[]> {
       return this._http.get<results[]>(`${this.url}`);
+    }
+
+
+    // results.service.ts
+
+    postScan(originalUrl: string | number): Observable<results[]> {
+      // 1. نجهز الجسم (Body) ليكون JSON Object
+      // Backend expects: req.body.url
+      const body = { url: originalUrl };
+    
+      // 2. نرسل الـ body بدلاً من originalUrl المباشر
+      return this._http.post<results[]>(`${this.url}scan-all`, body);
     }
 
 
