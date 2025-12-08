@@ -16,7 +16,7 @@ import { map, of, switchMap } from 'rxjs';
   standalone: true,
   imports: [CommonModule, FormsModule, Navbar], // أضف FormsModule
   templateUrl: './result.html',
-  styles: []
+  styleUrls: ["./result.css"]
 })
 export class Result implements OnInit {
   constructor(private _vuln:VulnService,

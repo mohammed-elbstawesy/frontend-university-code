@@ -16,7 +16,7 @@ export class ResultsService {
 
   getResultsByIdUrl(_id:string | number):Observable<results[]>{
   // return this._http.get<results[]>(this.url+`/`+_id)
-  return this._http.get<{ message: string; data: results[] }>(`${this.url}/${_id}`)
+  return this._http.get<{ message: string; data: results[] }>(`${this.url}/url/${_id}`)
   .pipe(
     map(resp => resp.data || []) // نرجّع المصفوفة فقط
   );

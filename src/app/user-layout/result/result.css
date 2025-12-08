@@ -1,0 +1,92 @@
+/* --- 1. تعريف الحركة (Animation) --- */
+@keyframes electric-rotate {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* --- 2. الإعدادات الأساسية للإطار الكهربائي --- */
+/* يضاف هذا الكلاس للبطاقة نفسها */
+.electric-border {
+    position: relative;
+    overflow: hidden;
+    z-index: 1; /* لضمان ترتيب الطبقات */
+}
+
+/* العنصر الذي يدور في الخلفية */
+.electric-border::before,
+.electric-border::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%; /* حجم كبير ليغطي المستطيل أثناء الدوران */
+    height: 400%; /* الطول مضاعف لتغطية الأركان */
+    transform: translate(-50%, -50%);
+    animation: electric-rotate 8s linear infinite;
+    z-index: -2; /* خلف المحتوى */
+}
+
+/* التوهج (Glow) */
+.electric-border::after {
+    filter: blur(25px);
+    z-index: -1;
+}
+
+/* --- 3. ضبط خلفية المحتوى الداخلي --- */
+/* مهم جداً: هذا الكود يغطي وسط البطاقة ليبقى الإطار فقط ظاهراً */
+.electric-border > div {
+    background-color: #1c1c2e; /* نفس لون خلفية البطاقة */
+    position: relative;
+    z-index: 2;
+    /* التعديل هنا: استخدام inherit ليرث الـ rounded-2xl من الـ HTML */
+    border-radius: inherit; 
+    height: 100%;
+    width: 100%;
+    /* مسافة صغيرة لإظهار الإطار */
+    margin: 2px; 
+    height: calc(100% - 4px);
+    width: calc(100% - 4px);
+}
+
+
+/* --- 4. الألوان حسب درجة الخطورة --- */
+
+/* 🔴 Critical - أحمر */
+.electric-critical::before,
+.electric-critical::after {
+    background-image: conic-gradient(
+        transparent 0deg, 
+        transparent 50deg, 
+        #ff003c 360deg /* لون البرق الأحمر */
+    );
+}
+
+/* 🟠 High - برتقالي */
+.electric-high::before,
+.electric-high::after {
+    background-image: conic-gradient(
+        transparent 0deg, 
+        transparent 50deg, 
+        #f97316 360deg /* لون البرق البرتقالي */
+    );
+}
+
+/* 🟡 Medium - أصفر */
+.electric-medium::before,
+.electric-medium::after {
+    background-image: conic-gradient(
+        transparent 0deg, 
+        transparent 50deg, 
+        #facc15 360deg /* لون البرق الأصفر */
+    );
+}
+
+/* 🔵 Low - أزرق */
+.electric-low::before,
+.electric-low::after {
+    background-image: conic-gradient(
+        transparent 0deg, 
+        transparent 50deg, 
+        #60a5fa 360deg /* لون البرق الأزرق */
+    );
+}
