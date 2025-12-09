@@ -1,262 +1,249 @@
- <div class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+<div class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
   
-    <!-- Animated Background Grid with Perspective -->
-    <div class="absolute inset-0 opacity-30">
-      <div class="absolute inset-0 perspective-grid"></div>
-      <div class="absolute inset-0" ></div>
-    </div>
-  
-    <!-- Floating Particles -->
-    <div class="absolute inset-0 overflow-hidden">
-      <div class="particle particle-1"></div>
-      <div class="particle particle-2"></div>
-      <div class="particle particle-3"></div>
-      <div class="particle particle-4"></div>
-      <div class="particle particle-5"></div>
-      <div class="particle particle-6"></div>
-    </div>
-  
-    <!-- Hexagonal Pattern Overlay -->
-    <div class="absolute inset-0 opacity-10">
-      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="hexagons" x="0" y="0" width="56" height="100" patternUnits="userSpaceOnUse">
-            <polygon points="28,0 56,16 56,48 28,64 0,48 0,16" fill="none" stroke="rgba(0,240,255,0.3)" stroke-width="1"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#hexagons)" class="animate-hex-drift"/>
-      </svg>
-    </div>
-  
-    <!-- Multiple Scanning Lines -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="scan-line-horizontal scan-h-1"></div>
-      <div class="scan-line-horizontal scan-h-2"></div>
-      <div class="scan-line-vertical scan-v-1"></div>
-      <div class="scan-line-vertical scan-v-2"></div>
-    </div>
-  
-    <!-- Corner Brackets -->
-    <div class="absolute top-8 left-8 w-20 h-20 border-l-2 border-t-2 border-cyan-400/40 animate-corner-pulse"></div>
-    <div class="absolute top-8 right-8 w-20 h-20 border-r-2 border-t-2 border-cyan-400/40 animate-corner-pulse-delayed"></div>
-    <div class="absolute bottom-8 left-8 w-20 h-20 border-l-2 border-b-2 border-cyan-400/40 animate-corner-pulse"></div>
-    <div class="absolute bottom-8 right-8 w-20 h-20 border-r-2 border-b-2 border-cyan-400/40 animate-corner-pulse-delayed"></div>
-  
-    <!-- Main Loading Container -->
-    <div class="relative z-10 max-w-3xl w-full">
-      
-      <!-- Holographic Shield with 3D Effect -->
-      <div class="flex justify-center mb-10">
-        <div class="relative">
-          <!-- Multiple Rotating Rings -->
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="w-48 h-48 border border-cyan-400/20 rounded-full animate-orbit-ring-1"></div>
-          </div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="w-40 h-40 border border-cyan-300/30 rounded-full animate-orbit-ring-2"></div>
-          </div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="w-32 h-32 border-2 border-cyan-500/40 rounded-full animate-orbit-ring-3"></div>
-          </div>
-          
-          <!-- Pulsing Outer Rings -->
-          <div class="absolute inset-0 flex items-center justify-center animate-ping-mega-slow">
-            <div class="w-56 h-56 border border-cyan-400/20 rounded-full"></div>
-          </div>
-          <div class="absolute inset-0 flex items-center justify-center animate-ping-ultra-slow">
-            <div class="w-64 h-64 border border-cyan-400/10 rounded-full"></div>
-          </div>
-          
-          <!-- Central Shield with Glass Effect -->
-          <div class="relative w-48 h-48 flex items-center justify-center">
-            <div class="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-blue-500/10 rounded-full blur-xl animate-pulse-slow"></div>
-            
-            <div class="relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-full p-8 border border-cyan-400/30 shadow-[0_0_50px_rgba(34,211,238,0.3)]">
-              <!-- Shield Icon -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400 animate-pulse-glow-intense">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
-                <path d="M12 8v4" class="animate-dash-draw"></path>
-                <path d="M12 16h.01" class="animate-dash-draw-delayed"></path>
-              </svg>
-              
-              <!-- Radar Sweep -->
-              <div class="absolute inset-0 flex items-center justify-center">
-                <div class="relative w-full h-full animate-rotate-radar-smooth">
-                  <div class="absolute top-1/2 left-1/2 w-1 h-16 bg-gradient-to-t from-cyan-400 via-cyan-300 to-transparent origin-bottom -translate-x-1/2 -translate-y-full opacity-70"></div>
-                  <div class="absolute top-1/2 left-1/2 w-1 h-12 bg-gradient-to-t from-cyan-500 to-transparent origin-bottom -translate-x-1/2 -translate-y-full opacity-40 rotate-45"></div>
-                </div>
-              </div>
-  
-              <!-- Inner Pulse Circle -->
-              <div class="absolute inset-0 flex items-center justify-center">
-                <div class="w-6 h-6 bg-cyan-400/30 rounded-full animate-inner-pulse"></div>
-              </div>
-            </div>
-          </div>
-  
-          <!-- Data Streams -->
-          <div class="absolute inset-0 pointer-events-none">
-            <div class="data-stream data-stream-1">010101</div>
-            <div class="data-stream data-stream-2">110011</div>
-            <div class="data-stream data-stream-3">101010</div>
-            <div class="data-stream data-stream-4">001100</div>
-          </div>
+  <div class="absolute inset-0 opacity-30">
+    <div class="absolute inset-0 perspective-grid"></div>
+    <div class="absolute inset-0" ></div>
+  </div>
+
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+    <div class="particle particle-6"></div>
+  </div>
+
+  <div class="absolute inset-0 opacity-10">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="hexagons" x="0" y="0" width="56" height="100" patternUnits="userSpaceOnUse">
+          <polygon points="28,0 56,16 56,48 28,64 0,48 0,16" fill="none" stroke="rgba(0,240,255,0.3)" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#hexagons)" class="animate-hex-drift"/>
+    </svg>
+  </div>
+
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="scan-line-horizontal scan-h-1"></div>
+    <div class="scan-line-horizontal scan-h-2"></div>
+    <div class="scan-line-vertical scan-v-1"></div>
+    <div class="scan-line-vertical scan-v-2"></div>
+  </div>
+
+  <div class="absolute top-8 left-8 w-20 h-20 border-l-2 border-t-2 border-cyan-400/40 animate-corner-pulse"></div>
+  <div class="absolute top-8 right-8 w-20 h-20 border-r-2 border-t-2 border-cyan-400/40 animate-corner-pulse-delayed"></div>
+  <div class="absolute bottom-8 left-8 w-20 h-20 border-l-2 border-b-2 border-cyan-400/40 animate-corner-pulse"></div>
+  <div class="absolute bottom-8 right-8 w-20 h-20 border-r-2 border-b-2 border-cyan-400/40 animate-corner-pulse-delayed"></div>
+
+  <div class="relative z-10 max-w-3xl w-full">
+    
+    <div class="flex justify-center mb-10">
+      <div class="relative">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-48 h-48 border border-cyan-400/20 rounded-full animate-orbit-ring-1"></div>
         </div>
-      </div>
-  
-      <!-- Glitch Text Effect -->
-      <div class="text-center space-y-6 mb-10">
-        <div class="relative inline-block">
-          <h2 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-300 to-blue-400 animate-gradient-shift glitch-text" data-text="Waiting to Scanning">
-            Waiting to Scanning
-          </h2>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-40 h-40 border border-cyan-300/30 rounded-full animate-orbit-ring-2"></div>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-32 h-32 border-2 border-cyan-500/40 rounded-full animate-orbit-ring-3"></div>
         </div>
         
-        <div class="flex items-center justify-center gap-3">
-          <div class="flex gap-1">
-            <div class="w-2 h-2 bg-cyan-400 rounded-full animate-dot-1"></div>
-            <div class="w-2 h-2 bg-cyan-400 rounded-full animate-dot-2"></div>
-            <div class="w-2 h-2 bg-cyan-400 rounded-full animate-dot-3"></div>
+        <div class="absolute inset-0 flex items-center justify-center animate-ping-mega-slow">
+          <div class="w-56 h-56 border border-cyan-400/20 rounded-full"></div>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center animate-ping-ultra-slow">
+          <div class="w-64 h-64 border border-cyan-400/10 rounded-full"></div>
+        </div>
+        
+        <div class="relative w-48 h-48 flex items-center justify-center">
+          <div class="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-blue-500/10 rounded-full blur-xl animate-pulse-slow"></div>
+          
+          <div class="relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-full p-8 border border-cyan-400/30 shadow-[0_0_50px_rgba(34,211,238,0.3)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400 animate-pulse-glow-intense">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+              <path d="M12 8v4" class="animate-dash-draw"></path>
+              <path d="M12 16h.01" class="animate-dash-draw-delayed"></path>
+            </svg>
+            
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="relative w-full h-full animate-rotate-radar-smooth">
+                <div class="absolute top-1/2 left-1/2 w-1 h-16 bg-gradient-to-t from-cyan-400 via-cyan-300 to-transparent origin-bottom -translate-x-1/2 -translate-y-full opacity-70"></div>
+                <div class="absolute top-1/2 left-1/2 w-1 h-12 bg-gradient-to-t from-cyan-500 to-transparent origin-bottom -translate-x-1/2 -translate-y-full opacity-40 rotate-45"></div>
+              </div>
+            </div>
+
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-6 h-6 bg-cyan-400/30 rounded-full animate-inner-pulse"></div>
+            </div>
           </div>
-          <p class="text-slate-400 text-lg font-mono tracking-wider">
-            <span class="inline-block animate-type-writer">INITIALIZING_SECURITY_PROTOCOLS</span>
-          </p>
+        </div>
+
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="data-stream data-stream-1">010101</div>
+          <div class="data-stream data-stream-2">110011</div>
+          <div class="data-stream data-stream-3">101010</div>
+          <div class="data-stream data-stream-4">001100</div>
         </div>
       </div>
-  
-      <!-- Advanced Progress Bar with Segments -->
-      <div class="mb-10 space-y-2">
-        <div class="flex justify-between text-xs font-mono text-slate-500 mb-2">
-          <span>SCAN PROGRESS</span>
-          <span class="text-cyan-400 animate-pulse"><span class="counter">0</span>%</span>
-        </div>
-        <div class="relative h-3 bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm border border-slate-700/50">
-          <!-- Segments -->
-          <div class="absolute inset-0 flex">
-            <div class="flex-1 border-r border-slate-700/50"></div>
-            <div class="flex-1 border-r border-slate-700/50"></div>
-            <div class="flex-1 border-r border-slate-700/50"></div>
-            <div class="flex-1"></div>
-          </div>
-          <!-- Shimmer Effect -->
-          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent animate-shimmer-fast"></div>
-          <!-- Progress Fill -->
-          <div class="h-full bg-gradient-to-r from-cyan-600 via-cyan-400 to-cyan-500 rounded-full animate-progress-advanced shadow-[0_0_20px_rgba(34,211,238,0.6)] relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer-internal"></div>
-          </div>
-          <!-- Scan Indicator -->
-          <div class="absolute top-0 h-full w-1 bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-scan-indicator"></div>
-        </div>
-      </div>
-  
-      <!-- Matrix-Style Status Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        <!-- Active Scan -->
-        <div class="relative group">
-          <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-transparent rounded-lg blur-sm group-hover:blur-md transition-all"></div>
-          <div class="relative flex items-start gap-4 p-4 bg-gradient-to-r from-slate-800/80 to-slate-900/80 border border-cyan-400/40 rounded-lg backdrop-blur-sm animate-slide-in-1">
-            <div class="flex-shrink-0 mt-1">
-              <div class="relative w-8 h-8">
-                <div class="absolute inset-0 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
-                <div class="absolute inset-1 border-2 border-cyan-300 border-b-transparent rounded-full animate-spin-reverse"></div>
-                <div class="absolute inset-2 bg-cyan-400/20 rounded-full animate-pulse"></div>
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-cyan-300 text-sm font-bold mb-1 tracking-wide">ANALYZING TARGET</h3>
-              <p class="text-slate-400 text-xs font-mono truncate">Domain infrastructure mapping...</p>
-              <div class="mt-2 h-1 bg-slate-700/50 rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full animate-progress-sub-1"></div>
-              </div>
-            </div>
-            <div class="flex-shrink-0">
-              <span class="text-xs font-mono text-cyan-400">87%</span>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Queued Scan -->
-        <div class="relative group">
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent rounded-lg blur-sm opacity-0 group-hover:opacity-100 transition-all"></div>
-          <div class="relative flex items-start gap-4 p-4 bg-gradient-to-r from-slate-800/60 to-slate-900/60 border border-slate-600/40 rounded-lg backdrop-blur-sm opacity-70 animate-slide-in-2">
-            <div class="flex-shrink-0 mt-1">
-              <div class="w-8 h-8 border-2 border-slate-600 rounded-full flex items-center justify-center">
-                <div class="w-2 h-2 bg-slate-600 rounded-full animate-pulse-slow"></div>
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-slate-400 text-sm font-bold mb-1 tracking-wide">VULNERABILITY CHECKS</h3>
-              <p class="text-slate-500 text-xs font-mono">Waiting for initialization...</p>
-              <div class="mt-2 h-1 bg-slate-700/50 rounded-full">
-                <div class="h-full w-0 bg-slate-600 rounded-full"></div>
-              </div>
-            </div>
-            <div class="flex-shrink-0">
-              <span class="text-xs font-mono text-slate-600">0%</span>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Future Scan -->
-        <div class="relative group">
-          <div class="relative flex items-start gap-4 p-4 bg-gradient-to-r from-slate-800/40 to-slate-900/40 border border-slate-700/30 rounded-lg backdrop-blur-sm opacity-50 animate-slide-in-3">
-            <div class="flex-shrink-0 mt-1">
-              <div class="w-8 h-8 border-2 border-slate-700 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-700">
-                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                </svg>
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-slate-500 text-sm font-bold mb-1 tracking-wide">GENERATING REPORT</h3>
-              <p class="text-slate-600 text-xs font-mono">Pending...</p>
-              <div class="mt-2 h-1 bg-slate-700/30 rounded-full"></div>
-            </div>
-            <div class="flex-shrink-0">
-              <span class="text-xs font-mono text-slate-700">0%</span>
-            </div>
-          </div>
-        </div>
-  
-        <!-- AI Analysis -->
-        <div class="relative group">
-          <div class="relative flex items-start gap-4 p-4 bg-gradient-to-r from-slate-800/40 to-slate-900/40 border border-slate-700/30 rounded-lg backdrop-blur-sm opacity-50 animate-slide-in-4">
-            <div class="flex-shrink-0 mt-1">
-              <div class="w-8 h-8 border-2 border-slate-700 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-700">
-                  <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h-1.73c.34.6.73 1.26.73 2a2 2 0 0 1-2 2c-.74 0-1.39-.4-1.73-1H14v1.27c.6.34 1 .99 1 1.73a2 2 0 0 1-2 2 2 2 0 0 1-2-2c0-.74.4-1.39 1-1.73V17H9.73A2 2 0 0 1 8 18a2 2 0 0 1-2-2c0-.74.4-1.39 1-1.73V14H5a7 7 0 0 1 7-7h1V5.73A2 2 0 0 1 12 4a2 2 0 0 1 2-2z"/>
-                </svg>
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-slate-500 text-sm font-bold mb-1 tracking-wide">AI THREAT ANALYSIS</h3>
-              <p class="text-slate-600 text-xs font-mono">Queued...</p>
-              <div class="mt-2 h-1 bg-slate-700/30 rounded-full"></div>
-            </div>
-            <div class="flex-shrink-0">
-              <span class="text-xs font-mono text-slate-700">0%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <div class="flex items-center justify-between p-4 bg-slate-800/20 border border-cyan-400/20 rounded-lg backdrop-blur-sm">
-        <div class="flex items-center gap-3">
-          <span class="relative flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-400"></span>
-          </span>
-          <span class="text-xs font-mono text-slate-400">SECURE CONNECTION ESTABLISHED</span>
-        </div>
-        <div class="flex items-center gap-2 text-xs font-mono text-slate-600">
-          <span>SYS v2.4.0</span>
-          <span class="text-slate-700">|</span>
-          <span class="text-cyan-400/60 animate-pulse">ONLINE</span>
-        </div>
-      </div>
-  
     </div>
+
+    <div class="text-center space-y-4 mb-10">
+      <div class="relative inline-block">
+        <h2 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-300 to-blue-400 animate-gradient-shift glitch-text" data-text="System Scanning">
+          System Scanning
+        </h2>
+      </div>
+      
+      <div class="flex flex-col items-center justify-center gap-3">
+          <div class="flex items-center gap-3">
+              <div class="flex gap-1">
+                  <div class="w-2 h-2 bg-cyan-400 rounded-full animate-dot-1"></div>
+                  <div class="w-2 h-2 bg-cyan-400 rounded-full animate-dot-2"></div>
+                  <div class="w-2 h-2 bg-cyan-400 rounded-full animate-dot-3"></div>
+              </div>
+              
+              <p class="text-slate-400 text-lg font-mono tracking-wider">
+                  <span class="inline-block animate-type-writer">{{ statusMessage }}</span>
+              </p>
+          </div>
+
+          <div class="mt-2 px-4 py-2 bg-slate-800/40 border border-slate-700 rounded-lg backdrop-blur-sm animate-pulse">
+              <p class="text-slate-400 text-sm font-mono flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  A detailed report will be sent to your Gmail upon completion.
+              </p>
+          </div>
+      </div>
+    </div>
+
+    <div class="mb-10 space-y-2">
+      <div class="flex justify-between text-xs font-mono text-slate-500 mb-2">
+        <span>SCAN PROGRESS</span>
+        <span class="text-cyan-400 animate-pulse"><span class="counter">{{ progress }}</span>%</span>
+      </div>
+      <div class="relative h-3 bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm border border-slate-700/50">
+        <div class="absolute inset-0 flex">
+          <div class="flex-1 border-r border-slate-700/50"></div>
+          <div class="flex-1 border-r border-slate-700/50"></div>
+          <div class="flex-1 border-r border-slate-700/50"></div>
+          <div class="flex-1"></div>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent animate-shimmer-fast"></div>
+        
+        <div [style.width.%]="progress" 
+             class="h-full bg-gradient-to-r from-cyan-600 via-cyan-400 to-cyan-500 rounded-full animate-progress-advanced shadow-[0_0_20px_rgba(34,211,238,0.6)] relative overflow-hidden transition-all duration-300 ease-linear">
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer-internal"></div>
+        </div>
+        
+        <div class="absolute top-0 h-full w-1 bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-scan-indicator"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+      <div class="relative group">
+        <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-transparent rounded-lg blur-sm group-hover:blur-md transition-all"></div>
+        <div class="relative flex items-start gap-4 p-4 bg-gradient-to-r from-slate-800/80 to-slate-900/80 border border-cyan-400/40 rounded-lg backdrop-blur-sm animate-slide-in-1">
+          <div class="flex-shrink-0 mt-1">
+            <div class="relative w-8 h-8">
+              <div class="absolute inset-0 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+              <div class="absolute inset-1 border-2 border-cyan-300 border-b-transparent rounded-full animate-spin-reverse"></div>
+              <div class="absolute inset-2 bg-cyan-400/20 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-cyan-300 text-sm font-bold mb-1 tracking-wide">ANALYZING TARGET</h3>
+            <p class="text-slate-400 text-xs font-mono truncate">Domain infrastructure mapping...</p>
+            <div class="mt-2 h-1 bg-slate-700/50 rounded-full overflow-hidden">
+              <div [style.width.%]="progress" class="h-full bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full animate-progress-sub-1 transition-all duration-300"></div>
+            </div>
+          </div>
+          <div class="flex-shrink-0">
+            <span class="text-xs font-mono text-cyan-400">{{ progress }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent rounded-lg blur-sm opacity-0 group-hover:opacity-100 transition-all"></div>
+        <div class="relative flex items-start gap-4 p-4 bg-gradient-to-r from-slate-800/60 to-slate-900/60 border border-slate-600/40 rounded-lg backdrop-blur-sm opacity-70 animate-slide-in-2">
+          <div class="flex-shrink-0 mt-1">
+            <div class="w-8 h-8 border-2 border-slate-600 rounded-full flex items-center justify-center">
+              <div class="w-2 h-2 bg-slate-600 rounded-full animate-pulse-slow"></div>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-slate-400 text-sm font-bold mb-1 tracking-wide">VULNERABILITY CHECKS</h3>
+            <p class="text-slate-500 text-xs font-mono">
+              {{ progress > 50 ? 'In Progress...' : 'Waiting for initialization...' }}
+            </p>
+            <div class="mt-2 h-1 bg-slate-700/50 rounded-full">
+              <div [style.width.%]="progress > 50 ? (progress - 50) * 2 : 0" class="h-full bg-slate-600 rounded-full transition-all duration-300"></div>
+            </div>
+          </div>
+          <div class="flex-shrink-0">
+            <span class="text-xs font-mono text-slate-600">{{ progress > 50 ? ((progress - 50) * 2 | number:'1.0-0') : 0 }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group">
+        <div class="relative flex items-start gap-4 p-4 bg-gradient-to-r from-slate-800/40 to-slate-900/40 border border-slate-700/30 rounded-lg backdrop-blur-sm opacity-50 animate-slide-in-3">
+          <div class="flex-shrink-0 mt-1">
+            <div class="w-8 h-8 border-2 border-slate-700 rounded-full flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-700">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+              </svg>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-slate-500 text-sm font-bold mb-1 tracking-wide">GENERATING REPORT</h3>
+            <p class="text-slate-600 text-xs font-mono">Pending...</p>
+            <div class="mt-2 h-1 bg-slate-700/30 rounded-full"></div>
+          </div>
+          <div class="flex-shrink-0">
+            <span class="text-xs font-mono text-slate-700">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group">
+        <div class="relative flex items-start gap-4 p-4 bg-gradient-to-r from-slate-800/40 to-slate-900/40 border border-slate-700/30 rounded-lg backdrop-blur-sm opacity-50 animate-slide-in-4">
+          <div class="flex-shrink-0 mt-1">
+            <div class="w-8 h-8 border-2 border-slate-700 rounded-full flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-700">
+                <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h-1.73c.34.6.73 1.26.73 2a2 2 0 0 1-2 2c-.74 0-1.39-.4-1.73-1H14v1.27c.6.34 1 .99 1 1.73a2 2 0 0 1-2 2 2 2 0 0 1-2-2c0-.74.4-1.39 1-1.73V17H9.73A2 2 0 0 1 8 18a2 2 0 0 1-2-2c0-.74.4-1.39 1-1.73V14H5a7 7 0 0 1 7-7h1V5.73A2 2 0 0 1 12 4a2 2 0 0 1 2-2z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-slate-500 text-sm font-bold mb-1 tracking-wide">AI THREAT ANALYSIS</h3>
+            <p class="text-slate-600 text-xs font-mono">Queued...</p>
+            <div class="mt-2 h-1 bg-slate-700/30 rounded-full"></div>
+          </div>
+          <div class="flex-shrink-0">
+            <span class="text-xs font-mono text-slate-700">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between p-4 bg-slate-800/20 border border-cyan-400/20 rounded-lg backdrop-blur-sm">
+      <div class="flex items-center gap-3">
+        <span class="relative flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-400"></span>
+        </span>
+        <span class="text-xs font-mono text-slate-400">SECURE CONNECTION ESTABLISHED</span>
+      </div>
+      <div class="flex items-center gap-2 text-xs font-mono text-slate-600">
+        <span>SYS v2.4.0</span>
+        <span class="text-slate-700">|</span>
+        <span class="text-cyan-400/60 animate-pulse">ONLINE</span>
+      </div>
+    </div>
+
   </div>
-  
-  
-   
+</div>

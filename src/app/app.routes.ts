@@ -18,6 +18,7 @@ import { AddVulnerability } from './dashboard/pages/vulnerabilities/add-vulnerab
 import { Profile } from './user-layout/profile/profile';
 import { UserUrls } from './user-layout/user-urls/user-urls';
 import { ScaningWait } from './user-layout/scaning-wait/scaning-wait';
+import { notloginGuard } from './core/guards/notlogin-guard';
 
 
 export const routes: Routes = [
@@ -27,15 +28,15 @@ export const routes: Routes = [
         children: [
             { path: '', component: Home },
             { path: 'result', component: Result,canActivate:[userGuard]},
-            { path: 'scanning-wait', component: ScaningWait,canActivate:[userGuard]},
+            { path: 'scanning-wait/:id', component: ScaningWait, canActivate: [userGuard] },
             {path: 'profile',component:Profile},
             {path:'user-urls',component:UserUrls,canActivate:[userGuard]},
-            { path: 'result/:id', component: Result },
+            { path: 'result/:id', component: Result,canActivate:[userGuard] },
             { 
                 path: 'login', 
                 component: Login,
                 children: [
-                    { path: 'signin', component: SignIn },
+                    { path: 'signin', component: SignIn,canActivate:[notloginGuard] },
                     { path: 'signup', component: SignUp },
                     { path: '', redirectTo: 'signin', pathMatch: 'full' }
                 ]

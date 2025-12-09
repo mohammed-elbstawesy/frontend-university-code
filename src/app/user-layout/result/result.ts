@@ -9,7 +9,7 @@ import { UrlService } from '../../core/services/url.service';
 import { ResultsService } from '../../core/services/results.service';
 import { ScanReport, ScanDetail } from '../../core/models/results.model';
 import { map, of, switchMap } from 'rxjs';
-import { ActivatedRoute } from '@angular/router'; // 1. استدعاء ActivatedRoute
+import { ActivatedRoute, Router } from '@angular/router'; // 1. Added Router
 
 @Component({
   selector: 'app-result',
@@ -24,10 +24,11 @@ export class Result implements OnInit {
     private _vuln: VulnService,
     private _urlService: UrlService,
     private _results: ResultsService,
-    private _route: ActivatedRoute // 2. حقن الـ ActivatedRoute
+    private _route: ActivatedRoute,
+    private router: Router // 2. Injected Router for redirection
   ) {}
 
-  // المتغيرات
+  // Variables
   selectedVuln: Vulnerability | null = null;
   vulns: Vulnerability[] = [];
   url: Url[] = [];
@@ -44,21 +45,19 @@ export class Result implements OnInit {
   isFilterOpen: boolean = false;
   selectedSeverity: string = 'All';
 
-  targetUrlId: string = ''; // 3. نجعلها فارغة في البداية
+  targetUrlId: string = ''; 
 
   ngOnInit() {
-    // 4. جلب الـ ID من الرابط (الديناميكية)
-    // نفترض أن الرابط سيكون شكله: /result/65df...
+    // Get ID from URL
     this.targetUrlId = this._route.snapshot.paramMap.get('id') || '';
 
     if (!this.targetUrlId) {
         console.error('No ID provided in the URL');
-        return; // نوقف التنفيذ لو مفيش ID
+        this.router.navigate(['/user-urls']); // Redirect if no ID
+        return; 
     }
 
-    // --- باقي اللوجيك كما هو تماماً ---
-
-    // 1. جلب بيانات الرابط
+    // 1. Fetch URL Data
     this._urlService.getUrlById(this.targetUrlId).subscribe({
       next: (response: any) => {
         this.url = response;
@@ -67,7 +66,7 @@ export class Result implements OnInit {
       error: (error) => console.error('Error fetching URL:', error)
     });
 
-    // 2. جلب التقارير
+    // 2. Fetch Reports & Handle Permissions
     this._results.getReportsByUrlId(this.targetUrlId).pipe(
       map((reports: ScanReport[]) => {
         if (!reports || reports.length === 0) return [];
@@ -91,11 +90,24 @@ export class Result implements OnInit {
         
         console.log('Final Vulnerabilities loaded:', this.vulns);
       },
-      error: (err) => console.error('Error fetching report/vulns:', err)
+      // 🔥 Updated Error Handling Logic
+      error: (err) => {
+        console.error('Error fetching report:', err);
+        
+        // Check for 403 Forbidden (Ownership check failed)
+        if (err.status === 403) {
+          alert("⛔ Access Denied: You do not own this report.");
+          this.router.navigate(['/user-urls']); 
+        } else {
+          // Handle other errors (e.g., 404 Not Found)
+          this.router.navigate(['/']);
+        }
+      }
     });
   }
 
-  // ... باقي الدوال (openModal, closeModal, etc.) كما هي ...
+  // ... HTML Helpers ...
+
   openModal(vuln: Vulnerability) {
     this.selectedVuln = vuln;
     document.body.style.overflow = 'hidden';

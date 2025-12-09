@@ -28,24 +28,25 @@ export class Home implements OnInit {
 
   urlForm!: FormGroup;
   errorMessage: string = '';
-  url: Url[] = [];
-  /////////////////////////////////////////////////////validation regex
-  readonly urlRegex =
-    /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/
-  ///////////////////////////////////////////////////////
+  
+  readonly urlRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
+
+
+
+  
+
   constructor(
     private _urlService: UrlService,
     private _authService: AuthService,
     private _scanService: ResultsService
   ) {}
+
   islogin: boolean = false;
   role: string = 'admin';
+
   ngOnInit() {
     this.islogin = this._authService.isLogin();
     this.role = this._authService.getRole() === 'admin' ? 'admin' : 'user';
-    console.log('is login :' + this.islogin);
-    // console.log('this admin :'+this.role);
-
     this.scanService.reset();
 
     this.urlForm = new FormGroup({
@@ -54,69 +55,50 @@ export class Home implements OnInit {
         Validators.pattern(this.urlRegex),
       ]),
     });
-
-    // this._urlService.getUrls().subscribe({
-    //   next: (response: Url[]) => {
-    //     this.url = response;
-    //     console.log('URLs:', this.url);
-    //   },
-    //   error: (error) => console.error('Error fetching URLs:', error)
-    // });
   }
+
   onSubmit() {
     if (this.urlForm.invalid) {
-      this.errorMessage =
-        'Please enter a valid domain (e.g. google.com or https://example.com)';
+      this.errorMessage = 'Please enter a valid domain (e.g. google.com or https://example.com)';
       return;
     }
 
+    const urlInput = this.urlForm.value.originalUrl;
 
     if (this.islogin) {
-      const urlInput = this.urlForm.value.originalUrl;
-
+      
+      // 1. إضافة الرابط للداتا بيس أولاً
       this._urlService.addUrl({ originalUrl: urlInput }).subscribe({
-        next: (response) =>{ console.log('URL added successfully:', response)
-
-          const url_name:string = response.originalUrl;
+        next: (response: any) => { 
+          console.log('URL added successfully:', response);
           
+          // 🔥 التعديل هنا: نأخذ الـ ID من الاستجابة لبدء الفحص
+          const urlId = response._id; 
+          
+          // 2. بدء الفحص باستخدام الـ ID
+          this._scanService.runNewScan(urlId).subscribe({
+            next: () => console.log('Scan started successfully'),
+            error: (err) => console.error('Error starting scan:', err),
+          });
 
-          this._scanService.runNewScan(url_name).subscribe({
-            next: (response) => console.log('URL start scanning successfully'),
-            error: (error) => console.error('Error scanning URL:', error),
+          // 3. التوجيه
+          if (this.role === 'admin') {
+            this.router.navigate(['/dashboard/urls']); // الأفضل توجيهه لصفحة الروابط
+          } else {
+            // توجيه اليوزر لصفحة الانتظار أو النتيجة (حسب اللوجيك بتاعك)
+            // هنا ممكن تبعت الـ ID كمان عشان الصفحة تعرض تفاصيله
+            this.router.navigate(['/scanning-wait', response._id]);
           }
-          )
-
         },
         error: (error) => console.error('Error adding URL:', error),
       });
 
-      
-
-
-      console.log('is login');
-      if (this.islogin && this.role !== 'admin') {
-        this.router.navigate(['/result']);
-      }
     } else {
-      localStorage.setItem('pendingData', this.urlForm.value.originalUrl);
+      // لو مش مسجل دخول، احفظ الرابط في اللوكال ستوريج ووديه يسجل
+      localStorage.setItem('pendingData', urlInput);
       this.router.navigate(['/login']);
     }
-
-    console.log('not login');
 
     this.errorMessage = '';
-
-    // بدء الفحص
-    // this.scanService.startScan(urlInput);
-
-    // التوجيه لصفحة تسجيل الدخول
-    if (this.islogin && this.role === 'admin') {
-      this.router.navigate(['/dashboard']);
-      // console.log('admin it me');
-    } else if (this.islogin && this.role !== 'admin') {
-      this.router.navigate(['/scanning-wait']);
-    } else {
-      this.router.navigate(['/login']);
-    }
   }
 }

@@ -1,51 +1,45 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'; 
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router'; // 1. استدعاء ActivatedRoute
 import { ScanService } from '../../../core/services/scan.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
 import { UrlService } from '../../../core/services/url.service';
 
-
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [CommonModule, RouterLink,ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule],
   templateUrl: './sign-in.html',
   styles: []
 })
 export class SignIn {
-constructor(private _authService:AuthService,private router:Router,private _urlService:UrlService){}
+  
+  constructor(
+    private _authService: AuthService,
+    private router: Router,
+    private _urlService: UrlService,
+    private route: ActivatedRoute // 2. حقن ActivatedRoute
+  ) {}
 
   scanService = inject(ScanService);
   isLoading = false;
   errorMessage: string = '';
+  
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
-
-
-
-
-
-  formData = {
-    email: '',
-    password: ''
-  };
-
   onSubmit() {
-    // if (!this.formData.email || !this.formData.password) {
-    //     return;
-    // }
+    if (this.loginForm.invalid) return;
+
     const email = this.loginForm.get('email')!.value;
     const password = this.loginForm.get('password')!.value;
     const data = { email: email!, password: password! };
-    if (!data.email || !data.password) {
-      return;
-    }
+
+    this.isLoading = true; // تشغيل اللودينج
 
     this._authService.login(data).subscribe({
       next: () => {
@@ -54,41 +48,40 @@ constructor(private _authService:AuthService,private router:Router,private _urlS
         if (token) {
           const decoded: any = jwtDecode(token);
           role = decoded.role;
-          // console.log(role);
-          
         }
 
-        const pendingUrl = localStorage.getItem('pendingData');
+        // 🔥 3. المنطق الجديد: التحقق من Return URL أولاً
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'];
 
-        // لو فيه رابط معلق واليوزر مش أدمن (الأدمن بيروح الداشبورد)
-        if (pendingUrl && role !== 'admin') {
+        if (returnUrl) {
+          // لو جاي من رابط معين (زي الإيميل)، وديه هناك فوراً
+          this.router.navigateByUrl(returnUrl);
+        } 
+        else {
+          // --- اللوجيك القديم (Pending Data & Default Redirect) ---
           
-          // ابعت الرابط للسيرفر
-          this._urlService.addUrl({ originalUrl: pendingUrl }).subscribe({
-            next: (res) => {
-              console.log('Pending URL saved successfully');
-              
-              // 1. امسح الداتا عشان متتكررش
-              localStorage.removeItem('pendingData');
-              
-              // 2. وديه لصفحة النتيجة
-              this.router.navigate(['/result']);
-            },
-            error: (err) => {
-              console.error('Failed to save pending URL', err);
-              // حتى لو فشل الحفظ، وديه صفحة النتيجة أو الهوم بدل ما يعلق في اللوجين
-              this.router.navigate(['']);
-            }
-          });
+          const pendingUrl = localStorage.getItem('pendingData');
 
-        } else {
-          // ==========================================
-          // السيناريو الطبيعي (مفيش داتا معلقة)
-          // ==========================================
-          if (role === 'admin') {
-            this.router.navigate(['/dashboard']);
+          if (pendingUrl && role !== 'admin') {
+            this._urlService.addUrl({ originalUrl: pendingUrl }).subscribe({
+              next: (res) => {
+                console.log('Pending URL saved');
+                localStorage.removeItem('pendingData');
+                // هنا ممكن نستخدم ال ID من res._id عشان نوديه لصفحة الانتظار لو حابب
+                this.router.navigate(['/result']); 
+              },
+              error: (err) => {
+                console.error('Failed to save pending URL', err);
+                this.router.navigate(['']);
+              }
+            });
           } else {
-            this.router.navigate(['']); // أو home حسب رغبتك
+            // التوجيه الطبيعي
+            if (role === 'admin') {
+              this.router.navigate(['/dashboard']);
+            } else {
+              this.router.navigate(['']); 
+            }
           }
         }
       },

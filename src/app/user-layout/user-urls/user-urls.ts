@@ -374,7 +374,7 @@ export class UserUrls implements OnInit {
     // إرسال الطلبات للباك إند
     // (يمكن تحسينها بـ Promise.all لو العدد كبير، لكن الـ Loop تفي بالغرض حالياً)
     this.filteredUrls.forEach(urlItem => {
-      this._resultService.runNewScan(urlItem.url).subscribe({
+      this._resultService.runNewScan(urlItem.id).subscribe({
         next: () => console.log(`Started scan for ${urlItem.url}`),
         error: (err) => console.error(err)
       });
@@ -388,7 +388,7 @@ export class UserUrls implements OnInit {
     urlItem.isScanning = true;
     urlItem.status = 'Scanning';
     
-    this._resultService.runNewScan(urlItem.url).subscribe({
+    this._resultService.runNewScan(urlItem.id).subscribe({
       next: () => {
         // لا نحتاج لعمل شيء، الباك إند شغال
         // يمكنك عمل reload للداتا بعد فترة أو ترك المستخدم يعمل refresh

@@ -18,12 +18,14 @@ export class ResultsService {
 
   // --- 1. بدء فحص جديد ---
   // Backend Route: POST /api/results/scan-all
-  runNewScan(targetUrl: string): Observable<any> {
-    const body = { url: targetUrl };
-    // الرد هنا بيكون فيه { message, reportId, summary, results }
-    return this._http.post<any>(`${this.url}scan-all`, body);
+  runNewScan(urlId: string): Observable<any> {
+    // Backend expects: req.body.urlId
+    const body = { urlId: urlId }; 
+    return this._http.post(`${this.url}scan-all`, body);
   }
 
+
+  
   // --- 2. جلب تاريخ الفحوصات لرابط معين ---
   // Backend Route: GET /api/results/url/:id/reports
   getReportsByUrlId(urlId: string | number): Observable<ScanReport[]> {
