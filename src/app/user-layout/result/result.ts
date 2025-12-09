@@ -7,8 +7,9 @@ import { Vulnerability } from '../../core/models/vuln.model';
 import { Url } from '../../core/models/url.model';
 import { UrlService } from '../../core/services/url.service';
 import { ResultsService } from '../../core/services/results.service';
-import { ScanReport, ScanDetail } from '../../core/models/results.model'; // الموديل الجديد
+import { ScanReport, ScanDetail } from '../../core/models/results.model';
 import { map, of, switchMap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router'; // 1. استدعاء ActivatedRoute
 
 @Component({
   selector: 'app-result',
@@ -22,34 +23,42 @@ export class Result implements OnInit {
   constructor(
     private _vuln: VulnService,
     private _urlService: UrlService,
-    private _results: ResultsService
+    private _results: ResultsService,
+    private _route: ActivatedRoute // 2. حقن الـ ActivatedRoute
   ) {}
 
   // المتغيرات
   selectedVuln: Vulnerability | null = null;
-  vulns: Vulnerability[] = []; // دي القائمة النهائية اللي هتتعرض في الـ HTML
+  vulns: Vulnerability[] = [];
   url: Url[] = [];
   urlName: any = '';
   
-  // متغيرات التقرير الجديد
   latestReport: ScanReport | null = null;
   detectedDetails: ScanDetail[] = [];
   
-  // الإحصائيات
   numberOfvuln: number = 0;
   numberOfCritical: number = 0;
   numberOfHigh: number = 0;
   
-  // الفلاتر والبحث
   searchTerm: string = '';
   isFilterOpen: boolean = false;
   selectedSeverity: string = 'All';
 
-  // ID الرابط (يمكنك جعله ديناميكي لاحقاً من الـ Router)
-  targetUrlId: string = '6935aea46d225db9a9d73ce4'; 
+  targetUrlId: string = ''; // 3. نجعلها فارغة في البداية
 
   ngOnInit() {
-    // 1. جلب بيانات الرابط (الاسم، إلخ)
+    // 4. جلب الـ ID من الرابط (الديناميكية)
+    // نفترض أن الرابط سيكون شكله: /result/65df...
+    this.targetUrlId = this._route.snapshot.paramMap.get('id') || '';
+
+    if (!this.targetUrlId) {
+        console.error('No ID provided in the URL');
+        return; // نوقف التنفيذ لو مفيش ID
+    }
+
+    // --- باقي اللوجيك كما هو تماماً ---
+
+    // 1. جلب بيانات الرابط
     this._urlService.getUrlById(this.targetUrlId).subscribe({
       next: (response: any) => {
         this.url = response;
@@ -58,34 +67,24 @@ export class Result implements OnInit {
       error: (error) => console.error('Error fetching URL:', error)
     });
 
-    // 2. جلب التقارير ومعالجة البيانات
+    // 2. جلب التقارير
     this._results.getReportsByUrlId(this.targetUrlId).pipe(
-      // الخطوة الأولى: استلام التقارير واستخراج أحدث واحد
       map((reports: ScanReport[]) => {
         if (!reports || reports.length === 0) return [];
 
-        // نأخذ أول تقرير (الأحدث لأن الباك إند مرتبهم بالتاريخ)
         this.latestReport = reports[0];
-        
-        // نأخذ التفاصيل المصابة فقط
         this.detectedDetails = this.latestReport.details.filter(d => d.isDetected);
         
-        // نستخرج مصفوفة الـ IDs فقط عشان نجيب تفاصيلهم الكاملة (الوصف والصور ان وجد)
         const detectedIds = this.detectedDetails.map(d => d.vulnerabilityId);
         return detectedIds;
       }),
-      
-      // الخطوة الثانية: جلب تفاصيل الثغرات الكاملة من VulnService
       switchMap((ids: string[]) => {
         if (!ids || ids.length === 0) return of([]);
         return this._vuln.getVulnsByIds(ids);
       })
     ).subscribe({
       next: (fullVulns) => {
-        this.vulns = fullVulns; // تعبئة المصفوفة التي يعتمد عليها الـ HTML
-        
-        // حساب الإحصائيات
-        // الأفضل نعتمد على المصفوفة الحالية عشان العداد يكون دقيق مع العرض
+        this.vulns = fullVulns;
         this.numberOfvuln = this.vulns.length;
         this.numberOfCritical = this.vulns.filter(v => v.severity === 'Critical').length;
         this.numberOfHigh = this.vulns.filter(v => v.severity === 'High').length;
@@ -96,8 +95,7 @@ export class Result implements OnInit {
     });
   }
 
-  // --- دوال الـ HTML (كما هي لم تتغير) ---
-
+  // ... باقي الدوال (openModal, closeModal, etc.) كما هي ...
   openModal(vuln: Vulnerability) {
     this.selectedVuln = vuln;
     document.body.style.overflow = 'hidden';
