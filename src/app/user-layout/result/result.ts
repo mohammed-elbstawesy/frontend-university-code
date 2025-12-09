@@ -127,7 +127,7 @@ selectSeverity(severity: string) {
   ngOnInit() {
 
 
-        this._urlService.getUrlById('692e14cee4c5989e7d42860e').subscribe({
+        this._urlService.getUrlById('6935aea46d225db9a9d73ce4').subscribe({
           next: (response: any) => {
             this.url = response
             // console.log('What did the server actually send?', response);
@@ -142,7 +142,7 @@ selectSeverity(severity: string) {
 
   
 
-        this._results.getResultsByIdUrl('69247a4c1cbc757b5d0008f1').pipe(
+        this._results.getResultsByIdUrl('6935aea46d225db9a9d73ce4').pipe(
           map((res: results[]) => {
             this.afterFilterResults = res.filter(r => r.detected);
             this.detectedIds = this.afterFilterResults.map(r => r.vulnerability);

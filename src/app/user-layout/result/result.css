@@ -22,7 +22,7 @@
     width: 200%; /* حجم كبير ليغطي المستطيل أثناء الدوران */
     height: 400%; /* الطول مضاعف لتغطية الأركان */
     transform: translate(-50%, -50%);
-    animation: electric-rotate 8s linear infinite;
+    animation: electric-rotate 10s linear infinite;
     z-index: -2; /* خلف المحتوى */
 }
 

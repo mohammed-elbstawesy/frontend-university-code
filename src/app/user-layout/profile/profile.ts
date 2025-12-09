@@ -4,6 +4,7 @@ import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -19,6 +20,7 @@ export class Profile implements OnInit {
   readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   constructor(
+    private _router:Router,
     private fb: FormBuilder,
     private userService: UserService,
     private _authService:AuthService
@@ -119,5 +121,8 @@ export class Profile implements OnInit {
         console.error(err);
       }
     });
+  }
+  routehome(){
+    this._router.navigate(['']);
   }
 }
