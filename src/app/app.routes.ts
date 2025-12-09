@@ -30,6 +30,7 @@ export const routes: Routes = [
             { path: 'scanning-wait', component: ScaningWait,canActivate:[userGuard]},
             {path: 'profile',component:Profile},
             {path:'user-urls',component:UserUrls,canActivate:[userGuard]},
+            { path: 'result/:id', component: Result },
             { 
                 path: 'login', 
                 component: Login,
