@@ -2,62 +2,55 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { map, Observable } from 'rxjs';
-import { results } from '../models/results.model';
+import { ScanReport } from '../models/results.model'; // استدعاء الموديل الجديد
+import { ApiResponse } from '../models/apiResponse.model'; // تأكد من المسار
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResultsService {
 
+  constructor(private _http: HttpClient) {}
+  
+  // تأكد أن المسار الأساسي صحيح حسب الباك إند
+  // غالباً في routes.js انت معرف الراوتر تحت /api/results/
+  url = environment.apiUrl + 'results/'; 
 
-
-  constructor(private _http:HttpClient){}
-  url = environment.apiUrl + 'results/'
-
-  getResultsByIdUrl(_id:string | number):Observable<results[]>{
-  // return this._http.get<results[]>(this.url+`/`+_id)
-
-  return this._http.get<{ message: string; data: results[] }>(`${this.url}url/${_id}`)
-
-
-
-  .pipe(
-    map(resp => resp.data || []) // نرجّع المصفوفة فقط
-  );
+  // --- 1. بدء فحص جديد ---
+  // Backend Route: POST /api/results/scan-all
+  runNewScan(targetUrl: string): Observable<any> {
+    const body = { url: targetUrl };
+    // الرد هنا بيكون فيه { message, reportId, summary, results }
+    return this._http.post<any>(`${this.url}scan-all`, body);
   }
 
-    getResult(): Observable<results[]> {
-      return this._http.get<results[]>(`${this.url}`);
-    }
+  // --- 2. جلب تاريخ الفحوصات لرابط معين ---
+  // Backend Route: GET /api/results/url/:id/reports
+  getReportsByUrlId(urlId: string | number): Observable<ScanReport[]> {
+    return this._http.get<ApiResponse<ScanReport[]>>(`${this.url}url/${urlId}/reports`)
+      .pipe(
+        map(resp => resp.data || []) 
+      );
+  }
+
+  // --- 3. جلب تفاصيل تقرير محدد (اختياري لو هتعمل صفحة تفاصيل) ---
+  // Backend Route: GET /api/results/report/:reportId
+  getReportById(reportId: string): Observable<ScanReport> {
+    return this._http.get<{ data: ScanReport }>(`${this.url}report/${reportId}`)
+      .pipe(
+        map(response => response.data)
+      );
+  }
 
 
-    // results.service.ts
+  // داخل results.service.ts
 
-    postScan(originalUrl: string | number): Observable<results[]> {
-      // 1. نجهز الجسم (Body) ليكون JSON Object
-      // Backend expects: req.body.url
-      const body = { url: originalUrl };
+  // دالة جديدة لجلب كل التقارير للإحصائيات
+  getAllReports(): Observable<ScanReport[]> {
+    // افترضنا أن عندك Endpoint في الباك إند اسمه get-all-results أو مشابه
+    // لو مش موجود، ممكن تستخدم getResultsByUrlId لو عايز احصائيات لرابط معين
+    // لكن للإحصائيات العامة، يفضل يكون عندك في الباك إند: router.get('/', controller.getAllResults)
     
-      // 2. نرسل الـ body بدلاً من originalUrl المباشر
-      return this._http.post<results[]>(`${this.url}scan-all`, body);
-    }
-
-
-  // .get<{ message: string; data: Results[] }>(`${this.url}/${id}`)
-  // .pipe(
-  //   map(resp => resp.data || []) // نرجّع المصفوفة فقط
-  // );
-    // return this._http.put(environment.apiUrl+`users/users/`+_id,data)
-
-    // getResultsById(id: string | number): Observable<Results[]> {
-    //   const endpoint = `${this.url}/${id}`;
-    //   return this.http.get<Results[]>(endpoint).pipe(
-    //     catchError(err => {
-    //       // logging أو تحويل الخطأ هنا
-    //       console.error('getResultsById error', err);
-    //       return throwError(() => err);
-    //     })
-    //   );
-    // }
-
+    return this._http.get<ScanReport[]>(this.url); 
+  }
 }

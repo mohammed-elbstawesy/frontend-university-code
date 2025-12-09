@@ -1,136 +1,231 @@
+// import { Component, OnInit } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import { FormsModule } from '@angular/forms';
+// import { Url } from '../../../core/models/url.model';
+// import { UrlService } from '../../../core/services/url.service';
+// import { ResultsService } from '../../../core/services/results.service';
+// import { ScanReport } from '../../../core/models/results.model'; // 🔥 استدعاء الموديل الجديد
+
+// @Component({
+//   selector: 'app-urls',
+//   standalone: true,
+//   imports: [CommonModule, FormsModule],
+//   templateUrl: './urls.html',
+// })
+// export class Urls implements OnInit {
+  
+//   constructor(
+//     private _url: UrlService,
+//     private _result: ResultsService
+//   ) {}
+
+//   searchTerm = '';
+//   vulnCountsMap: { [key: string]: number } = {}; // لتخزين عدد الثغرات لكل رابط
+//   URLS: Url[] = [];
+
+//   ngOnInit() {
+//     this.loadUrls();
+//   }
+
+//   loadUrls() {
+//     this._url.getUrls().subscribe({
+//       next: (res: Url[]) => {
+//         this.URLS = res;
+//         // جلب عدد الثغرات لكل رابط
+//         this.URLS.forEach(url => {
+//           this.fetchVulnCount(url._id);
+//         });
+//       },
+//       error: (err) => console.error('Error fetching URLs:', err)
+//     });
+//   }
+
+//   // 🔥 التعديل الأساسي هنا: التعامل مع التقارير بدلاً من النتائج
+//   fetchVulnCount(id: string) {
+//     this._result.getReportsByUrlId(id).subscribe({
+//       next: (reports: ScanReport[]) => {
+//         // الباك إند بيرجع التقارير مترتبة بالأحدث
+//         if (reports && reports.length > 0) {
+//           const latestReport = reports[0];
+//           // نقرأ العدد من الملخص الجاهز في التقرير
+//           this.vulnCountsMap[id] = latestReport.summary.totalVulnerabilities;
+//         } else {
+//           this.vulnCountsMap[id] = 0;
+//         }
+//       },
+//       error: (err) => {
+//         console.error(`Error fetching count for ${id}`, err);
+//         this.vulnCountsMap[id] = 0;
+//       }
+//     });
+//   }
+
+//   // الفلترة
+//   get filteredUrls(): Url[] {
+//     const q = this.searchTerm.trim().toLowerCase();
+//     if (!q) return this.URLS;
+
+//     return this.URLS.filter(u => {
+//       const matchUrl = u.originalUrl && u.originalUrl.toLowerCase().includes(q);
+//       const matchEmail = u.user?.email && u.user.email.toLowerCase().includes(q);
+//       return matchUrl || matchEmail;
+//     });
+//   }
+
+//   // إعادة الفحص
+//   rescan(urlObj: Url) {
+//     if(!confirm(`Start scanning ${urlObj.originalUrl}?`)) return;
+
+//     this._result.runNewScan(urlObj.originalUrl).subscribe({
+//       next: () => {
+//         alert('Scan started successfully!');
+//         // تحديث الحالة محلياً لحين انتهاء الفحص
+//         // (يمكنك هنا إعادة تحميل القائمة بعد فترة أو الاعتماد على WebSockets لو متطور)
+//         this.loadUrls(); 
+//       },
+//       error: (err) => console.error(err)
+//     });
+//   }
+
+//   // تحسين استخراج اسم الموقع
+//   extractSiteName(url: string): string {
+//     if (!url) return '';
+//     try {
+//       // محاولة استخدام URL API لو النص سليم
+//       const hostname = new URL(url).hostname;
+//       return hostname.replace('www.', '');
+//     } catch {
+//       // Fallback للطريقة اليدوية لو الرابط مش كامل
+//       let domain = url.replace(/(^\w+:|^)\/\//, '');
+//       domain = domain.replace('www.', '');
+//       return domain.split('/')[0];
+//     }
+//   }
+
+//   // تنسيق الألوان حسب الحالة (مطابق للباك إند)
+//   getStatusBadgeClass(status: string) {
+//     const statusMap: { [key: string]: string } = {
+//       'Finished': 'bg-green-500/10 text-green-500 border border-green-500/20',
+//       'Scanning': 'bg-blue-500/10 text-blue-500 border border-blue-500/20 animate-pulse',
+//       'Failed': 'bg-red-500/10 text-red-500 border border-red-500/20',
+//       'UnScaned': 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+//     };
+//     return statusMap[status] || 'bg-slate-500/10 text-slate-400';
+//   }
+
+//   // تنسيق ألوان العدد
+//   getVulnCountClass(count: number) {
+//     if (count >= 5) return 'bg-red-500/10 text-red-500 border border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.2)]';
+//     if (count > 0) return 'bg-orange-500/10 text-orange-500 border border-orange-500/20';
+//     return 'bg-slate-800 text-slate-500';
+//   }
+// }
+
+
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Url } from '../../../core/models/url.model';
 import { UrlService } from '../../../core/services/url.service';
-import { VulnService } from '../../../core/services/vuln.service';
 import { ResultsService } from '../../../core/services/results.service';
-import { results } from '../../../core/models/results.model';
 
 @Component({
   selector: 'app-urls',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './urls.html',
- 
 })
 export class Urls implements OnInit {
+  
   constructor(
-    private _url:UrlService,
-    private _result:ResultsService
-  ){}
+    private _url: UrlService,
+    private _result: ResultsService
+  ) {}
+
   searchTerm = '';
-  
-  
-  // urls = [
-  //   { id: 1, name: 'Main API', url: 'https://api.example.com', status: 'active', lastScanned: '2024-01-15', vulnerabilities: 3 },
-  //   { id: 2, name: 'Web App', url: 'https://app.example.com', status: 'scanning', lastScanned: '2024-01-14', vulnerabilities: 0 },
-  //   { id: 3, name: 'Admin Panel', url: 'https://admin.example.com', status: 'active', lastScanned: '2024-01-13', vulnerabilities: 5 },
-  //   { id: 4, name: 'Staging', url: 'https://staging.example.com', status: 'error', lastScanned: '2024-01-10', vulnerabilities: 2 }
-  // ];
+  URLS: Url[] = [];
 
-  
-  // get filteredUrls() {
-  //   // return this.urls.filter(u => u..toLowerCase().includes(this.searchTerm.toLowerCase()) || u.url.toLowerCase().includes(this.searchTerm.toLowerCase()));
-  //   return this.URLS.filter(u => u.originalUrl.toLowerCase().includes(this.searchTerm.toLowerCase()) || u.originalUrl.toLowerCase().includes(this.searchTerm.toLowerCase()));
-  // }
- get filteredUrls(): Url[] {
-  const q = this.searchTerm.trim().toLowerCase();
-
-  if (!q) {
-    return this.URLS;
+  ngOnInit() {
+    this.loadUrls();
   }
 
-  return this.URLS.filter(u => {
-    const matchUrl = u.originalUrl && u.originalUrl.toLowerCase().includes(q);
-    const matchEmail = u.user?.email && u.user.email.toLowerCase().includes(q);
-
-    return matchUrl || matchEmail;
-  });
-}
-  
-
-  
-  rescan(id: any) {
-    // const url = this.urls.find(u => u.id === id);
-    // if (url) {
-    //     url.status = 'scanning';
-    //     alert(`Rescanning ${url.name}...`);
-    //     setTimeout(() => {
-    //         url.status = 'active';
-    //         alert(`Scan completed for ${url.name}`);
-    //     }, 2000);
-    // }
+  loadUrls() {
+    this._url.getUrls().subscribe({
+      next: (res: Url[]) => {
+        this.URLS = res;
+        // لاحظ: لم نعد بحاجة لجلب عدد الثغرات منفصلاً
+        // لأن الباك إند يرسلها الآن داخل كائن الـ Url نفسه (numberOfvuln)
+      },
+      error: (err) => console.error('Error fetching URLs:', err)
+    });
   }
 
-  delete(id: any) {
-    // if(confirm('Are you sure you want to delete this URL?')) {
-    //   this.urls = this.urls.filter(u => u.id !== id);
-    // }
+  get filteredUrls(): Url[] {
+    const q = this.searchTerm.trim().toLowerCase();
+    if (!q) return this.URLS;
+
+    return this.URLS.filter(u => {
+      const matchUrl = u.originalUrl && u.originalUrl.toLowerCase().includes(q);
+      const matchEmail = u.user?.email && u.user.email.toLowerCase().includes(q);
+      return matchUrl || matchEmail;
+    });
   }
-  
-  getStatusBadgeClass(status: any) {
-        const statusMap: {[key: string]: string} = {
-            'active': 'bg-green-500/10 text-green-500',
-            'scanning': 'bg-blue-500/10 text-blue-500',
-            'error': 'bg-red-500/10 text-red-500'
-        };
-        return statusMap[status] || 'bg-green-500/10 text-green-500';
-    }
-    
-    getVulnCountClass(count: any) {
-        if (count >= 5) return 'bg-red-500/10 text-red-500';
-        if (count > 0) return 'bg-orange-500/10 text-orange-500';
-        return 'bg-[#121829] text-slate-400'; 
-    }
 
+  // دالة إعادة الفحص
+  rescan(urlObj: Url) {
+    if(!confirm(`Start scanning ${urlObj.originalUrl}?`)) return;
 
+    // تحديث الحالة محلياً فوراً لتحسين تجربة المستخدم
+    urlObj.status = 'Scanning';
 
+    this._result.runNewScan(urlObj.originalUrl).subscribe({
+      next: (response) => {
+        alert('Scan started successfully!');
+        // بعد انتهاء الفحص (أو بدئه)، نعيد تحميل القائمة لتحديث البيانات
+        // ملاحظة: الفحص قد يأخذ وقتاً، في التطبيقات المتقدمة نستخدم Socket
+        // هنا سنكتفي بتحديث القائمة
+        this.loadUrls(); 
+      },
+      error: (err) => {
+        console.error(err);
+        urlObj.status = 'Failed'; // إرجاع الحالة لخطأ لو فشل الطلب
+        alert('Failed to start scan.');
+      }
+    });
+  }
 
-
-    // عرف متغير يشيل النتائج مربوطة بالـ ID
-    vulnCountsMap: { [key: string]: number } = {};
-    URLS: Url[] = [];
-    
-    ngOnInit() {
-      this._url.getUrls().subscribe({
-        next: (res: Url[]) => {
-          this.URLS = res;
-          
-          // بمجرد ما الـ URLs توصل، نجيب عدد الثغرات لكل واحد فيهم
-          this.URLS.forEach(url => {
-            this.fetchVulnCount(url._id);
-          });
-        },
-        error: (err) => console.error('Error fetching URLs:', err)
-      });
-    }
-    
-    // دالة مساعدة بتجيب العدد وتخزنه في المتغير
-    fetchVulnCount(id: string) {
-      this._result.getResultsByIdUrl(id).subscribe({
-        next: (res) => {
-          // نحسب العدد
-          const count = res.filter(r => r.detected).length;
-          // نخزنه في الـ Map باستخدام الـ ID كـ مفتاح
-          this.vulnCountsMap[id] = count;
-        },
-        error: (err) => console.error(`Error fetching count for ${id}`, err)
-      });
-    }
-
-
-
-
+  // استخراج اسم الموقع للعرض
   extractSiteName(url: string): string {
     if (!url) return '';
-
-    let domain = url.replace(/(^\w+:|^)\/\//, '');
-
-    domain = domain.replace('www.', '');
-
-    return domain.split('.')[0]; 
+    try {
+        // محاولة استخدام الطريقة القياسية
+        const hostname = new URL(url).hostname;
+        return hostname.replace('www.', '');
+    } catch {
+        // Fallback
+        let domain = url.replace(/(^\w+:|^)\/\//, '');
+        domain = domain.replace('www.', '');
+        return domain.split('/')[0];
+    }
   }
-
-
+  
+  // تنسيق ألوان الحالة
+  getStatusBadgeClass(status: string | undefined) {
+        const statusMap: {[key: string]: string} = {
+            'Finished': 'bg-green-500/10 text-green-500 border border-green-500/20',
+            'Scanning': 'bg-blue-500/10 text-blue-500 border border-blue-500/20 animate-pulse',
+            'Failed': 'bg-red-500/10 text-red-500 border border-red-500/20',
+            'UnScaned': 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+        };
+        return statusMap[status || 'UnScaned'] || 'bg-slate-500/10 text-slate-400';
+  }
+    
+  // تنسيق ألوان عداد الثغرات
+  getVulnCountClass(count: number | undefined) {
+      const c = count || 0;
+      if (c >= 5) return 'bg-red-500/10 text-red-500 border border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.2)]';
+      if (c > 0) return 'bg-orange-500/10 text-orange-500 border border-orange-500/20';
+      return 'bg-slate-800 text-slate-500'; 
+  }
 }

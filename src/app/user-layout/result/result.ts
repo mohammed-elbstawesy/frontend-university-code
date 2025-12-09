@@ -1,78 +1,125 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // ضروري للـ Two-way binding
-import { ScanService } from '../../core/services/scan.service';
+import { FormsModule } from '@angular/forms';
 import { Navbar } from "./navbar/navbar";
 import { VulnService } from '../../core/services/vuln.service';
 import { Vulnerability } from '../../core/models/vuln.model';
 import { Url } from '../../core/models/url.model';
 import { UrlService } from '../../core/services/url.service';
 import { ResultsService } from '../../core/services/results.service';
-import { results } from '../../core/models/results.model';
+import { ScanReport, ScanDetail } from '../../core/models/results.model'; // الموديل الجديد
 import { map, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-result',
   standalone: true,
-  imports: [CommonModule, FormsModule, Navbar], // أضف FormsModule
+  imports: [CommonModule, FormsModule, Navbar],
   templateUrl: './result.html',
   styleUrls: ["./result.css"]
 })
 export class Result implements OnInit {
-  constructor(private _vuln:VulnService,
-    private _urlService:UrlService,
-    private _results:ResultsService
-  ){}
+  
+  constructor(
+    private _vuln: VulnService,
+    private _urlService: UrlService,
+    private _results: ResultsService
+  ) {}
+
+  // المتغيرات
   selectedVuln: Vulnerability | null = null;
-  vulns:Vulnerability[]=[]
+  vulns: Vulnerability[] = []; // دي القائمة النهائية اللي هتتعرض في الـ HTML
   url: Url[] = [];
-  urlName:any=''
-  results:results[]=[];
-  afterFilterResults:results[]=[];
-  detectedIds:any[]=[]
-  numberOfvuln:number=0
-  numberOfCritical:number=0
-  numberOfHigh:number=0
-  searchTerm:string='';
-  isFilterOpen: boolean = false; // للتحكم في فتح وغلق القائمة
+  urlName: any = '';
+  
+  // متغيرات التقرير الجديد
+  latestReport: ScanReport | null = null;
+  detectedDetails: ScanDetail[] = [];
+  
+  // الإحصائيات
+  numberOfvuln: number = 0;
+  numberOfCritical: number = 0;
+  numberOfHigh: number = 0;
+  
+  // الفلاتر والبحث
+  searchTerm: string = '';
+  isFilterOpen: boolean = false;
   selectedSeverity: string = 'All';
 
-  // قائمة مصفاة (Filtered List) تعتمد على البحث
-  // filteredVulnerabilities = computed(() => {
-  //   const term = this.searchTerm().toLowerCase();
-  //   const allVulns = this.scanService.vulnerabilities();
-    
-  //   if (!term) return allVulns; // إذا كان البحث فارغاً، اعرض الكل
+  // ID الرابط (يمكنك جعله ديناميكي لاحقاً من الـ Router)
+  targetUrlId: string = '6935aea46d225db9a9d73ce4'; 
 
-  //   return allVulns.filter(v => 
-  //     v.name.toLowerCase().includes(term) || 
-  //     v.severity.toLowerCase().includes(term) ||
-  //     v.description.toLowerCase().includes(term)
-  //   );
-  // });
+  ngOnInit() {
+    // 1. جلب بيانات الرابط (الاسم، إلخ)
+    this._urlService.getUrlById(this.targetUrlId).subscribe({
+      next: (response: any) => {
+        this.url = response;
+        this.urlName = response.originalUrl;
+      },
+      error: (error) => console.error('Error fetching URL:', error)
+    });
+
+    // 2. جلب التقارير ومعالجة البيانات
+    this._results.getReportsByUrlId(this.targetUrlId).pipe(
+      // الخطوة الأولى: استلام التقارير واستخراج أحدث واحد
+      map((reports: ScanReport[]) => {
+        if (!reports || reports.length === 0) return [];
+
+        // نأخذ أول تقرير (الأحدث لأن الباك إند مرتبهم بالتاريخ)
+        this.latestReport = reports[0];
+        
+        // نأخذ التفاصيل المصابة فقط
+        this.detectedDetails = this.latestReport.details.filter(d => d.isDetected);
+        
+        // نستخرج مصفوفة الـ IDs فقط عشان نجيب تفاصيلهم الكاملة (الوصف والصور ان وجد)
+        const detectedIds = this.detectedDetails.map(d => d.vulnerabilityId);
+        return detectedIds;
+      }),
+      
+      // الخطوة الثانية: جلب تفاصيل الثغرات الكاملة من VulnService
+      switchMap((ids: string[]) => {
+        if (!ids || ids.length === 0) return of([]);
+        return this._vuln.getVulnsByIds(ids);
+      })
+    ).subscribe({
+      next: (fullVulns) => {
+        this.vulns = fullVulns; // تعبئة المصفوفة التي يعتمد عليها الـ HTML
+        
+        // حساب الإحصائيات
+        // الأفضل نعتمد على المصفوفة الحالية عشان العداد يكون دقيق مع العرض
+        this.numberOfvuln = this.vulns.length;
+        this.numberOfCritical = this.vulns.filter(v => v.severity === 'Critical').length;
+        this.numberOfHigh = this.vulns.filter(v => v.severity === 'High').length;
+        
+        console.log('Final Vulnerabilities loaded:', this.vulns);
+      },
+      error: (err) => console.error('Error fetching report/vulns:', err)
+    });
+  }
+
+  // --- دوال الـ HTML (كما هي لم تتغير) ---
+
   openModal(vuln: Vulnerability) {
     this.selectedVuln = vuln;
-    document.body.style.overflow = 'hidden'; // لمنع التمرير في الخلفية
+    document.body.style.overflow = 'hidden';
   }
 
   closeModal() {
     this.selectedVuln = null;
-    document.body.style.overflow = 'auto'; // إعادة التمرير
+    document.body.style.overflow = 'auto';
   }
 
   toggleFilter() {
     this.isFilterOpen = !this.isFilterOpen;
   }
 
-selectSeverity(severity: string) {
+  selectSeverity(severity: string) {
     this.selectedSeverity = severity;
-    this.isFilterOpen = false; // اقفل القائمة بعد الاختيار
+    this.isFilterOpen = false;
   }
 
   get filteredVulns(): Vulnerability[] {
     let vulns = this.vulns;
 
-    // أولاً: تطبيق فلتر البحث (Search)
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase().trim();
       vulns = vulns.filter(v => 
@@ -83,13 +130,13 @@ selectSeverity(severity: string) {
       );
     }
 
-    // ثانياً: تطبيق فلتر الشدة (Severity)
     if (this.selectedSeverity !== 'All') {
       vulns = vulns.filter(v => v.severity.toLowerCase() === this.selectedSeverity.toLowerCase());
     }
 
     return vulns;
   }
+
   getSeverityClass(severity: string): string {
     switch (severity) {
         case 'Critical': return 'text-[#ff003c] border-[#ff003c]/30 bg-[#ff003c]/10 shadow-[0_0_10px_rgba(255,0,60,0.2)]';
@@ -99,9 +146,7 @@ selectSeverity(severity: string) {
     }
   }
 
-
   downloadReport(btn: HTMLButtonElement) {
-    // ... (نفس كود التحميل السابق)
     const span = btn.querySelector('span');
     const originalText = span?.innerText || 'Download Report';
     if(span) span.innerText = "Generating PDF...";
@@ -118,70 +163,7 @@ selectSeverity(severity: string) {
     }, 1500);
   }
 
-
-
-
-
-
-
-  ngOnInit() {
-
-
-        this._urlService.getUrlById('6935aea46d225db9a9d73ce4').subscribe({
-          next: (response: any) => {
-            this.url = response
-            // console.log('What did the server actually send?', response);
-            // console.log('Is it an array?', Array.isArray(response));
-            // // this.urlName = this.url.filter(r=>r.originalUrl);
-            // const found =  this.url.find(r=>r.originalUrl)
-            this.urlName =response.originalUrl;
-            console.log('URLs:', this.url);
-          },
-          error: (error) => console.error('Error fetching URLs:', error)
-        });
-
-  
-
-        this._results.getResultsByIdUrl('6935aea46d225db9a9d73ce4').pipe(
-          map((res: results[]) => {
-            this.afterFilterResults = res.filter(r => r.detected);
-            this.detectedIds = this.afterFilterResults.map(r => r.vulnerability);
-            return this.detectedIds;
-          }),
-          switchMap((ids: string[]) => {
-            if (!ids.length) return of([]);
-            return this._vuln.getVulnsByIds(ids);
-          })
-        ).subscribe({
-          next: (vulns) => { this.vulns = vulns; console.log('vulns', vulns);
-             this.numberOfvuln=vulns.length;
-             this.numberOfCritical=vulns.filter(r=>r.severity==='Critical').length
-             this.numberOfHigh=vulns.filter(r=>r.severity==='High').length
-            },
-          error: (err) => console.error(err)
-        });
-
-
-        
-
-
-  
-
-      }
-
-
-
-      trackById(index: number, item: any): string {
-        return item._id; // أو item.id إن كان هكذا
-      }
-      
-      viewDetails(id: string) {
-        // مثال: لو تريد تروّج لصفحة تفاصيل عبر router
-        // this.router.navigate(['/vulnerabilities', id]);
-      
-        // أو ببساطة اطبع أو افتح modal
-        console.log('view details for', id);
-        // هنا ضع منطق فتح modal أو تمرير البيانات إلى تفاصيل
-      }
-
+  trackById(index: number, item: any): string {
+    return item._id;
+  }
 }

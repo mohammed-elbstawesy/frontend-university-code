@@ -80,7 +80,7 @@ export class Home implements OnInit {
           const url_name:string = response.originalUrl;
           
 
-          this._scanService.postScan(url_name).subscribe({
+          this._scanService.runNewScan(url_name).subscribe({
             next: (response) => console.log('URL start scanning successfully'),
             error: (error) => console.error('Error scanning URL:', error),
           }
