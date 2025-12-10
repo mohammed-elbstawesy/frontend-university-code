@@ -29,7 +29,8 @@ export class Home implements OnInit {
   urlForm!: FormGroup;
   errorMessage: string = '';
   
-  readonly urlRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
+  readonly urlRegex = /^(https?:\/\/)?(([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|localhost|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/[^\s]*)?$/;
+
 
 
 
