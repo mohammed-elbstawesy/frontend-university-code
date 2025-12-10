@@ -14,7 +14,7 @@ import { ScanReport } from '../../core/models/results.model'; // 🔥 استخد
   standalone: true,
   imports: [CommonModule],
   templateUrl: './stats.html',
-  styles: []
+  styleUrls: ['./stats.css']
 })
 export class Stats implements OnInit {
   
@@ -48,10 +48,10 @@ stats = [
     { label: 'Total Issues Found', value: 0, color: 'text-green-500', bg: 'bg-green-500/10', iconPath: 'M5 10L8 13L15 6' },
     
     // اللون البنفسجي (ثابت الآن)
-    { label: 'Tracked URLs', value: 0, color: 'text-[#8b5cf6]', bg: 'bg-[#8b5cf6]/10', iconPath: 'M8 12L12 8M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2Z' },
+    { label: 'Tracked URLs', value: 0, color: 'text-pink-500', bg: 'bg-pink-500/10', iconPath: 'M8 12L12 8M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2Z' },
     
     // تم التصحيح هنا: استخدام Hex Code للـ Cyan (#06b6d4) لضمان ظهوره
-    { label: 'Reports Generated', value: 0, color: 'text-[#06b6d4]', bg: 'bg-[#06b6d4]/10', iconPath: 'M6 2H14C15.1 2 16 2.9 16 4V18L10 15L4 18V4C4 2.9 4.9 2 6 2Z' }
+    { label: 'Reports Generated', value: 0, color: 'text-cyan-500', bg: 'bg-cyan-500/10', iconPath: 'M6 2H14C15.1 2 16 2.9 16 4V18L10 15L4 18V4C4 2.9 4.9 2 6 2Z' }
 ];
   ngOnInit() {
     this.fetchVulnerabilities();
