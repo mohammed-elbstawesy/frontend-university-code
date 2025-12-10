@@ -71,15 +71,16 @@ export class Home implements OnInit {
       // 1. إضافة الرابط للداتا بيس أولاً
       this._urlService.addUrl({ originalUrl: urlInput }).subscribe({
         next: (response: any) => { 
-          console.log('URL added successfully:', response);
+          // console.log('URL added successfully:', response);
           
           // 🔥 التعديل هنا: نأخذ الـ ID من الاستجابة لبدء الفحص
           const urlId = response._id; 
           
           // 2. بدء الفحص باستخدام الـ ID
           this._scanService.runNewScan(urlId).subscribe({
-            next: () => 
-              console.log('Scan started successfully'),
+            next: () => {}
+              // console.log('Scan started successfully')
+            ,
             error: (err) => 
               console.error('Error starting scan:', err),
           });

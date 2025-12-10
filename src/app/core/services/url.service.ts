@@ -32,21 +32,6 @@ export class UrlService {
 
 
 
-//   url :Url[]= [];
-// constructor(private _urlService:UrlService){}
-
-// ngOnInit() {
-
-//   this._urlService.getUrls().subscribe({
-//     next: (response) => {
-//       this.url = response;
-//       console.log("URLs:", this.url);
-//     },
-//     error: (error) => {
-//       console.error('Error fetching URLs:', error);
-//     }
-//   });
-// }
 
 
 

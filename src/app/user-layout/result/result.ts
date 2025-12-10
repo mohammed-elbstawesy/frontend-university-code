@@ -88,7 +88,7 @@ export class Result implements OnInit {
         this.numberOfCritical = this.vulns.filter(v => v.severity === 'Critical').length;
         this.numberOfHigh = this.vulns.filter(v => v.severity === 'High').length;
         
-        console.log('Final Vulnerabilities loaded:', this.vulns);
+        // console.log('Final Vulnerabilities loaded:', this.vulns);
       },
       // 🔥 Updated Error Handling Logic
       error: (err) => {

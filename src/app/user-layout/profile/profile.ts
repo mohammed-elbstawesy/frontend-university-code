@@ -70,7 +70,7 @@ export class Profile implements OnInit {
       next: (res: any) => {
         this.user = res.data || res; // حسب شكل الـ Response بتاعك
         // تحديث قيم الفورم بالبيانات اللي جت
-        console.log('Res :'+this.user.data);
+        // console.log('Res :'+this.user.data);
         
         this.profileForm.patchValue({
           fristName: this.user.fristName,
