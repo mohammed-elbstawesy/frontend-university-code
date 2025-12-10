@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Url } from '../../../core/models/url.model';
 import { UrlService } from '../../../core/services/url.service';
 import { ResultsService } from '../../../core/services/results.service';
+import { Router } from '@angular/router'; // 1. استدعاء Router
 
 @Component({
   selector: 'app-urls',
@@ -15,7 +16,8 @@ export class Urls implements OnInit {
   
   constructor(
     private _url: UrlService,
-    private _result: ResultsService
+    private _result: ResultsService,
+    private _router: Router // 2. حقن Router
   ) {}
 
   searchTerm = '';
@@ -45,13 +47,31 @@ export class Urls implements OnInit {
     });
   }
 
-  // دالة إعادة الفحص
+  // --- دوال التنقل والعرض الجديدة ---
+
+  // 3. دالة الذهاب لصفحة النتائج
+  viewResults(id: string) {
+    this._router.navigate(['/result', id]);
+  }
+
+  // 4. دالة إصلاح الرابط الخارجي (عشان يفتح الموقع صح وميفتحش صفحة فاضية)
+  ensureProtocol(url: string): string {
+    if (!url) return '';
+    // لو الرابط مفيهوش http أو https بنضيفهم عشان المتصفح يفهم إنه رابط خارجي
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        return 'http://' + url;
+    }
+    return url;
+  }
+
+  // ----------------------------------
+
+  // دالة إعادة الفحص (تركتها لك لو احتجتها لاحقاً)
   rescan(urlObj: Url) {
     if(!confirm(`Start scanning ${urlObj.originalUrl}?`)) return;
 
-    urlObj.status = 'Scanning'; // تحديث محلي
+    urlObj.status = 'Scanning'; 
 
-    // 🔥 التعديل هنا: نرسل الـ ID (urlObj._id)
     this._result.runNewScan(urlObj._id).subscribe({
       next: (response) => {
         alert('Scan started successfully!');
@@ -65,11 +85,10 @@ export class Urls implements OnInit {
     });
   }
 
-  // استخراج اسم الموقع للعرض
   extractSiteName(url: string): string {
     if (!url) return '';
     try {
-        const hostname = new URL(url).hostname;
+        const hostname = new URL(this.ensureProtocol(url)).hostname; // استخدام ensureProtocol هنا أيضاً لتجنب الأخطاء
         return hostname.replace('www.', '');
     } catch {
         let domain = url.replace(/(^\w+:|^)\/\//, '');

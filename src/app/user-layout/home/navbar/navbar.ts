@@ -26,7 +26,12 @@ export class Navbar implements OnInit {
       this.getUserData();
     }
   }
-
+cheackuser(){
+  if(this.user?.isAdmin)
+  return true;
+  else
+  return false;
+}
   getUserData() {
     const token = this._authService.getToken();
     if (token) {

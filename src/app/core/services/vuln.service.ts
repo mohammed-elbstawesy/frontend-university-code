@@ -25,7 +25,7 @@ createVuln(data: any): Observable<any> {
     return this._http.post(`${this.url}/`, data);
   }
 
-  editVulnerability(id: string, vulnData: Vulnerability): Observable<any> {
+editVulnerability(id: string, vulnData: any): Observable<any> {
     return this._http.put(`${this.url}/${id}`, vulnData);
   }
 }

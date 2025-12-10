@@ -42,8 +42,9 @@ get filteredUsers(): User[] {
 
   delete(userId?: string) {
     if (!userId) return alert('User id missing');
+    const user = this.users.find(u => u._id === userId); // نجد المستخدم
     if (confirm(`you are sure to stop ${this.users.find(u => u._id === userId)?.fristName} account's ?` )) {
-    this._userService.editUserStatus(userId, { userActive: 'notActive', userPending: 'accepted' })
+    this._userService.editUserStatus(userId, { userActive: 'notActive', userPending: 'accepted',fristName: user?.fristName })
       .subscribe({
         next: updated => {
           // alert(`User updated: ${updated.email}`);
@@ -59,8 +60,9 @@ get filteredUsers(): User[] {
 
   restore(userId?: string) {
     if (!userId) return alert('User id missing');
+    const user = this.users.find(u => u._id === userId);
     if (confirm(`you are sure to restore ${this.users.find(u => u._id === userId)?.fristName} account's ?` )) {
-    this._userService.editUserStatus(userId, { userActive: 'active' })
+    this._userService.editUserStatus(userId, { userActive: 'active',fristName: user?.fristName })
       .subscribe({
         next: updated => {
           // alert(`User updated: ${updated.email}`);

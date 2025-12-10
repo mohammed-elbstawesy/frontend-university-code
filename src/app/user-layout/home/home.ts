@@ -78,8 +78,10 @@ export class Home implements OnInit {
           
           // 2. بدء الفحص باستخدام الـ ID
           this._scanService.runNewScan(urlId).subscribe({
-            next: () => console.log('Scan started successfully'),
-            error: (err) => console.error('Error starting scan:', err),
+            next: () => 
+              console.log('Scan started successfully'),
+            error: (err) => 
+              console.error('Error starting scan:', err),
           });
 
           // 3. التوجيه
@@ -91,7 +93,8 @@ export class Home implements OnInit {
             this.router.navigate(['/scanning-wait', response._id]);
           }
         },
-        error: (error) => console.error('Error adding URL:', error),
+        error: (error) => 
+          console.error('Error adding URL:', error),
       });
 
     } else {

@@ -1,86 +1,102 @@
 <section class="animate-fade-in p-6">
-    <header class="flex justify-between items-start flex-wrap gap-6 mb-8">
-        <div>
-            <h2 class="text-3xl font-bold text-white mb-2">Vulnerabilities</h2>
-            <p class="text-slate-400">Track and manage vulnerability status.</p>
-        </div>
-        <button routerLink="/dashboard/vulnerabilities/add" class="flex items-center gap-2 px-4 py-2 bg-[#4c6ef5] text-white rounded-lg font-semibold hover:bg-[#4361ee] transition-all shadow-lg hover:-translate-y-0.5 cursor-pointer">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3V13M3 8H13"/></svg>
-            Add Vulnerability
-        </button>
-    </header>
+  <header class="flex justify-between items-start flex-wrap gap-6 mb-8">
+    <div>
+      <h2 class="text-3xl font-bold text-white mb-2">Vulnerabilities</h2>
+      <p class="text-slate-400">Track and manage vulnerability status.</p>
+    </div>
+    <button routerLink="/dashboard/vulnerabilities/add"
+      class="flex items-center gap-2 px-4 py-2 bg-[#4c6ef5] text-white rounded-lg font-semibold hover:bg-[#4361ee] transition-all shadow-lg hover:-translate-y-0.5 cursor-pointer">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round">
+        <path d="M8 3V13M3 8H13" />
+      </svg>
+      Add Vulnerability
+    </button>
+  </header>
 
-    <div class="bg-[#1a2236] border border-slate-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
-        <div class="flex justify-between items-center mb-6 flex-wrap gap-4 border-b border-slate-800 pb-6">
-            <h3 class="text-xl font-semibold text-white">All Vulnerabilities ({{ filteredVulns.length }})</h3>
-            <div class="flex gap-3 w-full lg:w-auto flex-wrap">
-                <div class="relative flex-1 min-w-[200px]">
-                    <svg class="absolute left-3 top-2.5 text-slate-500" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11L14 14"/></svg>
-                    <input [(ngModel)]="searchTerm" type="text" placeholder="Search vulnerabilities..." class="w-full bg-[#0a0e1a]/50 border border-slate-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white focus:border-[#4c6ef5] focus:outline-none transition-colors">
-                </div>
-                <select title="severity" [(ngModel)]="severityFilter" class="bg-[#0a0e1a]/50 border border-slate-700 rounded-lg py-2 px-4 text-sm text-slate-300 focus:border-[#4c6ef5] focus:outline-none cursor-pointer">
-                    <option value="all">All Severity</option>
-                    <option value="critical">Critical</option>
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
-                </select>
-                <select title="status" [(ngModel)]="statusFilter" class="bg-[#0a0e1a]/50 border border-slate-700 rounded-lg py-2 px-4 text-sm text-slate-300 focus:border-[#4c6ef5] focus:outline-none cursor-pointer">
-                    <option value="all">All Status</option>
-                    <option value="available">Available</option>
-                    <option value="resolved">Resolved</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
-            </div>
+  <div
+    class="bg-[#1a2236] border border-slate-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+    <div class="flex justify-between items-center mb-6 flex-wrap gap-4 border-b border-slate-800 pb-6">
+      <h3 class="text-xl font-semibold text-white">All Vulnerabilities ({{ filteredVulns.length }})</h3>
+      <div class="flex gap-3 w-full lg:w-auto flex-wrap">
+        <div class="relative flex-1 min-w-[200px]">
+          <svg class="absolute left-3 top-2.5 text-slate-500" width="16" height="16" viewBox="0 0 16 16" fill="none"
+            stroke="currentColor" stroke-width="1.5">
+            <circle cx="7" cy="7" r="5" />
+            <path d="M11 11L14 14" />
+          </svg>
+          <input [(ngModel)]="searchTerm" type="text" placeholder="Search vulnerabilities..."
+            class="w-full bg-[#0a0e1a]/50 border border-slate-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white focus:border-[#4c6ef5] focus:outline-none transition-colors">
         </div>
+        <select title="severity" [(ngModel)]="severityFilter"
+          class="bg-[#0a0e1a]/50 border border-slate-700 rounded-lg py-2 px-4 text-sm text-slate-300 focus:border-[#4c6ef5] focus:outline-none cursor-pointer">
+          <option value="all">All Severity</option>
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <select title="status" [(ngModel)]="statusFilter"
+          class="bg-[#0a0e1a]/50 border border-slate-700 rounded-lg py-2 px-4 text-sm text-slate-300 focus:border-[#4c6ef5] focus:outline-none cursor-pointer">
+          <option value="all">All Status</option>
+          <option value="available">Available</option>
+          <option value="resolved">Resolved</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+    </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-separate border-spacing-0">
-                <thead>
-                    <tr class="text-slate-500 text-xs uppercase tracking-wider">
-                        <th class="p-4 font-semibold border-b border-slate-800">Status</th>
-                        <th class="p-4 font-semibold border-b border-slate-800">Title</th>
-                        <th class="p-4 font-semibold border-b border-slate-800">Severity</th>
-                        <th class="p-4 font-semibold border-b border-slate-800">Script File</th>
-                        <th class="p-4 font-semibold border-b border-slate-800">Discovered</th>
-                        <th class="p-4 font-semibold border-b border-slate-800">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="text-sm text-slate-200">
-                    @for (vuln of filteredVulns; track vuln._id) {
-                      <tr class="group hover:bg-white/5 transition-colors duration-200">
-                        
-                        <td class="p-4 border-b border-slate-800">
-                          <div [class]="'inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold capitalize border ' + getStatusClass(vuln.isActive)">
-                            <span [class]="'w-1.5 h-1.5 rounded-full ' + getStatusDotClass(vuln.isActive)"></span>
-                            {{ vuln.isActive ? 'available' : 'cancelled' }}
-                          </div>
-                        </td>
-                  
-                        <td class="p-4 border-b border-slate-800">
-                          <div class="flex flex-col gap-1">
-                            <span class="font-semibold text-white">{{ vuln.name }}</span>
-                            <span class="text-xs text-slate-400">{{ vuln.smallDescription || vuln.description }}</span>
-                          </div>
-                        </td>
-                  
-                        <td class="p-4 border-b border-slate-800">
-                          <span [class]="'px-2.5 py-1 rounded-md text-[11px] font-bold uppercase border ' + getSeverityClass(vuln.severity)">
-                            {{ vuln.severity }}
-                          </span>
-                        </td>
-                  
-                        <td class="p-4 border-b border-slate-800">
-                          <span class="font-mono text-xs text-[#4c6ef5] opacity-90 bg-[#4c6ef5]/10 px-2 py-1 rounded cursor-pointer hover:underline" [title]="vuln.scriptFile">
-                            {{ vuln.scriptFile || '-' }}
-                          </span>
-                        </td>
-                  
-                        <td class="p-4 border-b border-slate-800 text-slate-400">
-                          {{ vuln.date | date:'medium' }}
-                        </td>
-                  
-                        <!-- <td class="p-4 border-b border-slate-800">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-separate border-spacing-0">
+        <thead>
+          <tr class="text-slate-500 text-xs uppercase tracking-wider">
+            <th class="p-4 font-semibold border-b border-slate-800">Status</th>
+            <th class="p-4 font-semibold border-b border-slate-800">Title</th>
+            <th class="p-4 font-semibold border-b border-slate-800">Severity</th>
+            <th class="p-4 font-semibold border-b border-slate-800">Script File</th>
+            <th class="p-4 font-semibold border-b border-slate-800">Discovered</th>
+            <th class="p-4 font-semibold border-b border-slate-800">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-sm text-slate-200">
+          @for (vuln of filteredVulns; track vuln._id) {
+          <tr class="group hover:bg-white/5 transition-colors duration-200">
+
+            <td class="p-4 border-b border-slate-800">
+              <div
+                [class]="'inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold capitalize border ' + getStatusClass(vuln.isActive)">
+                <span [class]="'w-1.5 h-1.5 rounded-full ' + getStatusDotClass(vuln.isActive)"></span>
+                {{ vuln.isActive ? 'available' : 'cancelled' }}
+              </div>
+            </td>
+
+            <td class="p-4 border-b border-slate-800">
+              <div class="flex flex-col gap-1">
+                <span class="font-semibold text-white">{{ vuln.name }}</span>
+                <span class="text-xs text-slate-400">{{ vuln.smallDescription || vuln.description }}</span>
+              </div>
+            </td>
+
+            <td class="p-4 border-b border-slate-800">
+              <span
+                [class]="'px-2.5 py-1 rounded-md text-[11px] font-bold uppercase border ' + getSeverityClass(vuln.severity)">
+                {{ vuln.severity }}
+              </span>
+            </td>
+
+            <td class="p-4 border-b border-slate-800">
+              <span
+                class="font-mono text-xs text-[#4c6ef5] opacity-90 bg-[#4c6ef5]/10 px-2 py-1 rounded cursor-pointer hover:underline"
+                [title]="vuln.scriptFile">
+                {{ vuln.scriptFile || '-' }}
+              </span>
+            </td>
+
+            <td class="p-4 border-b border-slate-800 text-slate-400">
+              {{ vuln.date | date:'medium' }}
+            </td>
+
+            <!-- <td class="p-4 border-b border-slate-800">
                           <div class="flex gap-2">
                             @if (vuln.isActive) {
                               <button (click)="resolve(vuln._id)" class="px-3 py-1.5 bg-green-500/10 text-green-500 border border-green-500/20 rounded text-xs font-bold hover:bg-green-500 hover:text-white transition-all cursor-pointer">Resolve</button>
@@ -90,44 +106,121 @@
                             }
                           </div>
                         </td> -->
-                        <td class="p-4">
-                          <button 
-                              (click)="toggleActive(vuln)"
-                              class="flex items-center gap-2 focus:outline-none group transition-all"
-                          >
-                          <div 
-                          class="flex items-center justify-center gap-2 cursor-pointer group transition-all duration-300 rounded-full w-8 h-8"
-                          
-                          [ngClass]="{
+            <td class="p-4">
+              <div class="flex items-center gap-3">
+                <button (click)="toggleActive(vuln)"
+                  class="flex items-center gap-2 focus:outline-none group transition-all">
+                  <div
+                    class="flex items-center justify-center gap-2 cursor-pointer group transition-all duration-300 rounded-full w-8 h-8"
+                    [ngClass]="{
                               'bg-green-500/50 hover:bg-green-500 hover:shadow-[0_0_20px_rgba(0,240,255,0.8)] text-white ': vuln.isActive,
                               
                               'bg-red-500/50 hover:bg-red-500 hover:shadow-[0_0_20px_rgba(0,240,255,0.6)] text-white': !vuln.isActive
-                          }"
-                      >
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
-                          </svg>
-                      </div>
-                              
-                              <span 
-                                  class="font-bold transition-colors"
-                                  [ngClass]="{
+                          }">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
+                    </svg>
+                  </div>
+
+                  <span class="font-bold transition-colors" [ngClass]="{
                                       'text-green-500': vuln.isActive,
                                       'text-red-500': !vuln.isActive
-                                  }"
-                              >
-                                  {{ vuln.isActive ? 'ON' : 'OFF' }}
-                              </span>
-                          </button>
-                      </td>
-                  
-                      </tr>
-                    }
-                  </tbody>
-                  
-                  
-                  
-            </table>
+                                  }">
+                    {{ vuln.isActive ? 'ON' : 'OFF' }}
+                  </span>
+                </button>
+                <button (click)="openEditModal(vuln)"
+                  class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-500 hover:bg-blue-500 hover:text-white hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all duration-300 focus:outline-none"
+                  title="Edit Vulnerability">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+          }
+        </tbody>
+
+
+
+      </table>
+    </div>
+  </div>
+</section>
+@if (isEditModalOpen && editingVuln) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in" (click)="closeEditModal()">
+        
+        <div class="bg-[#1a2236] border border-slate-700 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden" (click)="$event.stopPropagation()">
+            
+            <div class="p-5 border-b border-slate-700/50 flex justify-between items-center bg-[#131722]">
+                <h3 class="text-xl font-bold text-white">Edit Vulnerability</h3>
+                <button title="edit" (click)="closeEditModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-4">
+                
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-1">Name</label>
+                    <input title="name" [(ngModel)]="editingVuln.name" type="text" class="w-full bg-[#0a0e1a] border border-slate-700 rounded-lg py-2.5 px-4 text-white focus:border-[#4c6ef5] focus:outline-none transition-colors">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-1">Severity</label>
+                    <select title="severity" [(ngModel)]="editingVuln.severity" class="w-full bg-[#0a0e1a] border border-slate-700 rounded-lg py-2.5 px-4 text-white focus:border-[#4c6ef5] focus:outline-none appearance-none cursor-pointer">
+                        <option value="Critical">Critical</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-1">Description</label>
+                    <textarea title="description" [(ngModel)]="editingVuln.description" rows="4" class="w-full bg-[#0a0e1a] border border-slate-700 rounded-lg py-2.5 px-4 text-white focus:border-[#4c6ef5] focus:outline-none transition-colors resize-none"></textarea>
+                </div>
+
+                 <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-1">Small Description</label>
+                    <input title="smallDescription" [(ngModel)]="editingVuln.smallDescription" type="text" class="w-full bg-[#0a0e1a] border border-slate-700 rounded-lg py-2.5 px-4 text-white focus:border-[#4c6ef5] focus:outline-none transition-colors">
+                </div>
+                <div>
+    <label class="block text-sm font-medium text-slate-400 mb-1">Script File (.py)</label>
+    
+    <div class="flex flex-col gap-2">
+        @if (editingVuln.scriptFile) {
+            <div class="text-xs text-[#4c6ef5] bg-[#4c6ef5]/10 px-3 py-1.5 rounded w-fit font-mono">
+                Current: {{ editingVuln.scriptFile }}
+            </div>
+        }
+
+        <input title="file"
+            type="file" 
+            accept=".py"
+            (change)="onFileSelected($event)"
+            class="w-full bg-[#0a0e1a] border border-slate-700 rounded-lg py-2 px-4 text-slate-300 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#4c6ef5] file:text-white hover:file:bg-[#4361ee] focus:outline-none cursor-pointer"
+        >
+    </div>
+    <p class="text-[10px] text-slate-500 mt-1">Leave empty to keep current file.</p>
+</div>
+
+            </div>
+
+            <div class="p-5 border-t border-slate-700/50 bg-[#131722] flex justify-end gap-3">
+                <button (click)="closeEditModal()" class="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors font-medium">
+                    Cancel
+                </button>
+                <button (click)="saveEdit()" class="px-6 py-2 bg-[#4c6ef5] hover:bg-[#4361ee] text-white rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5">
+                    Save Changes
+                </button>
+            </div>
+
         </div>
     </div>
-</section>
+}

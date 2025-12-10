@@ -29,8 +29,7 @@ export const userGuard: CanActivateFn = (route, state) => {
       return true;
     } else if (role === 'admin') {
       // لو أدمن وحاول يدخل صفحة يوزر، نخرجه (حسب اللوجيك بتاعك)
-      auth.logout();
-      return router.createUrlTree(['/login/signin']);
+      return true;
     }
   }
   

@@ -19,7 +19,7 @@ export class UserService {
 
 
 
-  editUserStatus(id:string,payload:{userActive?: 'active' | 'notActive'; userPending?: 'pending' | 'accepted';role?: 'admin' | 'user'}): Observable<User>{
+  editUserStatus(id:string,payload:{userActive?: 'active' | 'notActive'; userPending?: 'pending' | 'accepted';role?: 'admin' | 'user';fristName?: string;}): Observable<User>{
     return this._http.put<{message?:string; data:User}>(`${this.url}/edit/status/${id}`,payload).pipe(
       map(res=>res.data ?? (res as any)),
       catchError(err=>{
