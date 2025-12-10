@@ -58,5 +58,6 @@ export const routes: Routes = [
         ],
     canActivate: [adminGuard],
 
-    }
+    },
+    { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

@@ -65,7 +65,7 @@ export class SignIn {
           if (pendingUrl && role !== 'admin') {
             this._urlService.addUrl({ originalUrl: pendingUrl }).subscribe({
               next: (res) => {
-                console.log('Pending URL saved');
+                // console.log('Pending URL saved');
                 localStorage.removeItem('pendingData');
                 // هنا ممكن نستخدم ال ID من res._id عشان نوديه لصفحة الانتظار لو حابب
                 this.router.navigate(['/result']); 

@@ -93,7 +93,7 @@ onFileSelected(event: any) {
         }
       }
       alert("The Vulnerability of {" + this.editingVuln?.name + "} updated successfully ");
-      console.log('Vulnerability updated successfully');
+      // console.log('Vulnerability updated successfully');
 
       this.closeEditModal();
       this.selectedFile = null; // تصفير الملف

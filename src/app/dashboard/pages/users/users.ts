@@ -79,9 +79,9 @@ export class Users implements OnInit {
         this.users=res;
 
         this.allUsersCount=res.length;
-        console.log(this.users);
+        // console.log(this.users);
         
-        console.log('All users:',res);
+        // console.log('All users:',res);
       },
         error:(err)=>console.error('Error fetching users:',err)
     }

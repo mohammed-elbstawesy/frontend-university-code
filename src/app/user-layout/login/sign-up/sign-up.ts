@@ -107,7 +107,7 @@ readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\
   
     this._authService.signup(formData).subscribe({
       next: (res) => {
-        console.log("Signup success", res);
+        // console.log("Signup success", res);
         this.router.navigate(['/login']);
 
       },

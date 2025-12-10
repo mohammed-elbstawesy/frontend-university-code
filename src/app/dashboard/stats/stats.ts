@@ -119,8 +119,8 @@ stats = [
         this.updateStat(3, this.totalIssuesDetected); // Total Issues
         this.updateStat(5, this.totalReportsGenerated); // Reports Generated
         
-        console.log('Total Reports:', this.totalReportsGenerated);
-        console.log('Total Issues:', this.totalIssuesDetected);
+        // console.log('Total Reports:', this.totalReportsGenerated);
+        // console.log('Total Issues:', this.totalIssuesDetected);
       },
       error: (error) => console.error('Error fetching Reports:', error)
     });
