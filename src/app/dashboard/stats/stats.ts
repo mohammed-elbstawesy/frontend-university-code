@@ -8,6 +8,7 @@ import { Url } from '../../core/models/url.model';
 import { UrlService } from '../../core/services/url.service';
 import { ResultsService } from '../../core/services/results.service';
 import { ScanReport } from '../../core/models/results.model'; // 🔥 استخدام الموديل الجديد
+import { LogEntry, LogService } from '../../core/services/log.service';
 
 @Component({
   selector: 'app-stats',
@@ -22,7 +23,8 @@ export class Stats implements OnInit {
     private _vulnService: VulnService,
     private _user: UserService,
     private _url: UrlService,
-    private _result: ResultsService
+    private _result: ResultsService,
+    private _logService: LogService
   ) {}
 
   // المتغيرات
@@ -58,6 +60,7 @@ stats = [
     this.fetchUsers();
     this.fetchUrls();
     this.fetchReports(); // 🔥 الدالة الجديدة
+    this.fetchLogs();
   }
 
   // 1. جلب تعريفات الثغرات
@@ -132,4 +135,49 @@ stats = [
       this.stats[index].value = value;
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  logs: LogEntry[] = [];
+  isLoadingLogs: boolean = false;
+
+
+
+
+  fetchLogs() {
+    this.isLoadingLogs = true;
+    this._logService.getLogs().subscribe({
+      next: (res) => {
+        this.logs = res.data;
+        this.isLoadingLogs = false;
+      },
+      error: (err) => {
+        console.error('Error fetching logs:', err);
+        this.isLoadingLogs = false;
+      }
+    });
+  }
+
+  // دالة مساعدة لتحديد لون الـ Badge حسب نوع اللوج
+  getLogLevelClass(level: string): string {
+    switch (level.toLowerCase()) {
+      case 'error': return 'bg-red-500/10 text-red-500 border-red-500/20';
+      case 'warn': return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20';
+      case 'info': return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
+      default: return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+    }
+  }
+
 }

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'; 
-import { Router, RouterLink, ActivatedRoute } from '@angular/router'; // 1. استدعاء ActivatedRoute
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
+import { Router, RouterLink, ActivatedRoute } from '@angular/router'; 
 import { ScanService } from '../../../core/services/scan.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
@@ -20,7 +20,7 @@ export class SignIn {
     private _authService: AuthService,
     private router: Router,
     private _urlService: UrlService,
-    private route: ActivatedRoute // 2. حقن ActivatedRoute
+    private route: ActivatedRoute 
   ) {}
 
   scanService = inject(ScanService);
@@ -39,10 +39,10 @@ export class SignIn {
     const password = this.loginForm.get('password')!.value;
     const data = { email: email!, password: password! };
 
-    this.isLoading = true; // تشغيل اللودينج
+    this.isLoading = true; 
 
     this._authService.login(data).subscribe({
-      next: () => {
+      next: (res) => {
         const token = this._authService.getToken();
         let role = null;
         if (token) {
@@ -50,24 +50,20 @@ export class SignIn {
           role = decoded.role;
         }
 
-        // 🔥 3. المنطق الجديد: التحقق من Return URL أولاً
+        // 1. التحقق من Return URL أولاً (لحل مشكلة الرابط من الإيميل)
         const returnUrl = this.route.snapshot.queryParams['returnUrl'];
 
         if (returnUrl) {
-          // لو جاي من رابط معين (زي الإيميل)، وديه هناك فوراً
           this.router.navigateByUrl(returnUrl);
         } 
         else {
-          // --- اللوجيك القديم (Pending Data & Default Redirect) ---
-          
+          // 2. اللوجيك القديم (Pending Data & Default Redirect)
           const pendingUrl = localStorage.getItem('pendingData');
 
           if (pendingUrl && role !== 'admin') {
             this._urlService.addUrl({ originalUrl: pendingUrl }).subscribe({
               next: (res) => {
-                // console.log('Pending URL saved');
                 localStorage.removeItem('pendingData');
-                // هنا ممكن نستخدم ال ID من res._id عشان نوديه لصفحة الانتظار لو حابب
                 this.router.navigate(['/result']); 
               },
               error: (err) => {
@@ -88,6 +84,18 @@ export class SignIn {
       error: (err) => {
         this.isLoading = false;
         console.log(err);
+
+        // 🔥🔥🔥 التعديل الجديد هنا 🔥🔥🔥
+        // التحقق هل الحساب غير مفعل؟
+        if (err.error && err.error.notVerified) {
+            // توجيه المستخدم لصفحة الـ OTP مع تمرير الإيميل
+            this.router.navigate(['/login/verify'], {
+                queryParams: { email: email }
+            });
+            return; // وقف التنفيذ
+        }
+
+        // إظهار رسائل الخطأ العادية
         if (err.error && err.error.message) {
           this.errorMessage = err.error.message;
         } else {

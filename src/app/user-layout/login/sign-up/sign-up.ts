@@ -9,34 +9,34 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink], // تأكد من استيراد ReactiveFormsModule
+  imports: [CommonModule, ReactiveFormsModule, RouterLink], 
   templateUrl: './sign-up.html',
   styles: []
 })
 export class SignUp {
-  // router = inject(Router);
   scanService = inject(ScanService);
   fb = inject(FormBuilder);
-readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  
+  readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   isLoading = false;
   signUpForm: FormGroup;
   
-  constructor(private _authService: AuthService, private router: Router) {    // تعريف النموذج وقواعد التحقق
-
+  constructor(private _authService: AuthService, private router: Router) {    
+    // تعريف النموذج وقواعد التحقق
     this.signUpForm = this.fb.group({
       fristName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
       location: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9+]+$'),Validators.minLength(7)]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9+]+$'), Validators.minLength(7)]],
       nationalID: ['', [Validators.required, Validators.minLength(10)]],
       age: ['', [Validators.required, Validators.min(21)]],
-      image: [null], // اختياري أو يمكن جعله required
-      // agreement: [false, Validators.requiredTrue] // شرط أساسي
+      image: [null], 
       agreement: [false, Validators.requiredTrue]
     });
   }
+
   get pass() { return this.signUpForm.get('password'); }
   
   hasLowerCase() { return /[a-z]/.test(this.pass?.value || ''); }
@@ -49,17 +49,14 @@ readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\
   getFieldClass(fieldName: string): string {
     const field = this.signUpForm.get(fieldName);
     
-    // لم يلمس المستخدم الحقل بعد
     if (!field || !field.touched) {
       return 'border-slate-700 focus-within:border-[#00f0ff]'; 
     }
 
-    // الحقل صحيح
     if (field.valid) {
       return 'border-green-500 focus-within:border-green-500 text-green-500'; 
     }
 
-    // الحقل خطأ وتم لمسه
     return 'border-red-500 focus-within:border-red-500 text-red-500 animate-pulse';
   }
 
@@ -83,12 +80,13 @@ readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\
   }
 
   onSubmit() {
-
     if (this.signUpForm.invalid) {
       this.signUpForm.markAllAsTouched();
       return;
     }
   
+    this.isLoading = true; // تشغيل اللودينج
+
     const formData = new FormData();
   
     formData.append('fristName', this.signUpForm.value.fristName);
@@ -100,26 +98,23 @@ readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\
     formData.append('nationalID', this.signUpForm.value.nationalID);
     formData.append('age', this.signUpForm.value.age);
   
-    // أهم جزء
     if (this.signUpForm.value.image) {
       formData.append('image', this.signUpForm.value.image);
     }
   
     this._authService.signup(formData).subscribe({
       next: (res) => {
-        // console.log("Signup success", res);
-        this.router.navigate(['/login']);
-
+        this.isLoading = false;
+        // التوجيه لصفحة التحقق (OTP) مع تمرير الإيميل
+        this.router.navigate(['/login/verify'], { 
+          queryParams: { email: this.signUpForm.value.email } 
+        });
       },
       error: (err) => {
+        this.isLoading = false;
         console.error("Signup failed", err);
+        // يمكنك هنا إضافة رسالة خطأ تظهر للمستخدم إذا أردت
       }
     });
   }
-
-
-  
-
-
-
 }

@@ -19,6 +19,9 @@ import { Profile } from './user-layout/profile/profile';
 import { UserUrls } from './user-layout/user-urls/user-urls';
 import { ScaningWait } from './user-layout/scaning-wait/scaning-wait';
 import { notloginGuard } from './core/guards/notlogin-guard';
+import { VerifyOtp } from './user-layout/login/verify-otp/verify-otp';
+import { ForgotPassword } from './user-layout/login/forgot-password/forgot-password';
+import { ResetPassword } from './user-layout/login/reset-password/reset-password';
 
 
 export const routes: Routes = [
@@ -31,6 +34,7 @@ export const routes: Routes = [
             { path: 'scanning-wait/:id', component: ScaningWait, canActivate: [userGuard] },
             {path: 'profile',component:Profile},
             {path:'user-urls',component:UserUrls,canActivate:[userGuard]},
+            // داخل مصفوفة children بتاعة login
             { path: 'result/:id', component: Result,canActivate:[userGuard] },
             { 
                 path: 'login', 
@@ -38,6 +42,9 @@ export const routes: Routes = [
                 children: [
                     { path: 'signin', component: SignIn,canActivate:[notloginGuard] },
                     { path: 'signup', component: SignUp },
+                    { path: 'verify', component: VerifyOtp },
+                    { path: 'forgot-password', component: ForgotPassword },
+                    { path: 'reset-password', component: ResetPassword },
                     { path: '', redirectTo: 'signin', pathMatch: 'full' }
                 ]
             }
