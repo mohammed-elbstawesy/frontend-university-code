@@ -1,14 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-export interface LogEntry {
-  _id: string;
-  level: string;
-  message: string;
-  timestamp: string;
-  meta?: any; // البيانات الإضافية زي الـ user id
-}
+import {LogEntry,LogsResponse} from '../models/log.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +12,16 @@ export class LogService {
 
   constructor(private http: HttpClient) {}
 
-  getLogs(): Observable<{ status: string, results: number, data: LogEntry[] }> {
-    return this.http.get<{ status: string, results: number, data: LogEntry[] }>(this.apiUrl);
+  // الدالة المعدلة
+  getLogs(page: number, limit: number, search: string, level: string): Observable<LogsResponse> {
+    let params = new HttpParams()
+        .set('page', page.toString())
+        .set('limit', limit.toString());
+    
+    if (search) params = params.set('search', search);
+    if (level && level !== 'all') params = params.set('level', level);
+
+    return this.http.get<LogsResponse>(this.apiUrl, { params });
   }
 }
+

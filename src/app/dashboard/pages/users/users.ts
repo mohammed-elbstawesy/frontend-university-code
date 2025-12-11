@@ -14,6 +14,8 @@ export class Users implements OnInit {
     constructor(private _userService:UserService){}
     users :User[]=[]
     allUsersCount: number = 0;
+    isImageModalOpen: boolean = false;
+    selectedImageUrl: string = '';
     
     pending(id?:String){
       return this.users.find(u => u._id === id)?.userPending ==='pending'
@@ -39,17 +41,30 @@ export class Users implements OnInit {
         });
       }
     }
+openImageModal(imagePath: string) {
+        if (imagePath) {
+            // نكون الرابط الكامل هنا
+            this.selectedImageUrl = 'http://localhost:3000/' + imagePath;
+            this.isImageModalOpen = true;
+            document.body.style.overflow = 'hidden'; // منع السكرول الخلفي
+        }
+    }
+
+    closeImageModal() {
+        this.isImageModalOpen = false;
+        this.selectedImageUrl = '';
+        document.body.style.overflow = 'auto'; // إعادة السكرول
+    }
 
 
 
 
-
-  pendingUsers = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Security Analyst', requested: '2 hours ago', photo: 'https://i.pravatar.cc/150?img=1' },
-    { id: 2, name: 'Sarah Smith', email: 'sarah@example.com', role: 'Penetration Tester', requested: '5 hours ago', photo: 'https://i.pravatar.cc/150?img=5' },
-    { id: 3, name: 'Mike Johnson', email: 'mike@example.com', role: 'DevOps Engineer', requested: '1 day ago', photo: 'https://i.pravatar.cc/150?img=3' },
-    { id: 4, name: 'Emily Davis', email: 'emily@example.com', role: 'Security Manager', requested: '2 days ago', photo: 'https://i.pravatar.cc/150?img=9' }
-  ];
+  // pendingUsers = [
+  //   { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Security Analyst', requested: '2 hours ago', photo: 'https://i.pravatar.cc/150?img=1' },
+  //   { id: 2, name: 'Sarah Smith', email: 'sarah@example.com', role: 'Penetration Tester', requested: '5 hours ago', photo: 'https://i.pravatar.cc/150?img=5' },
+  //   { id: 3, name: 'Mike Johnson', email: 'mike@example.com', role: 'DevOps Engineer', requested: '1 day ago', photo: 'https://i.pravatar.cc/150?img=3' },
+  //   { id: 4, name: 'Emily Davis', email: 'emily@example.com', role: 'Security Manager', requested: '2 days ago', photo: 'https://i.pravatar.cc/150?img=9' }
+  // ];
 
   // approve(id: number) {
   //   const user = this.pendingUsers.find(u => u.id === id);

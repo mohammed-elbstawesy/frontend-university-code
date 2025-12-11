@@ -22,6 +22,7 @@ import { notloginGuard } from './core/guards/notlogin-guard';
 import { VerifyOtp } from './user-layout/login/verify-otp/verify-otp';
 import { ForgotPassword } from './user-layout/login/forgot-password/forgot-password';
 import { ResetPassword } from './user-layout/login/reset-password/reset-password';
+import { Log } from './dashboard/pages/log/log';
 
 
 export const routes: Routes = [
@@ -61,7 +62,8 @@ export const routes: Routes = [
             { path: 'reports', component: Reports },
             { path: 'vulnerabilities', component: Vulnerabilities },
             { path: 'users', component: Users },
-            { path: 'users-info', component: UsersInfo }
+            { path: 'users-info', component: UsersInfo },
+            { path: 'logs', component: Log }
         ],
     canActivate: [adminGuard],
 

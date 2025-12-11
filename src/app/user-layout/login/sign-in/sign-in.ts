@@ -22,7 +22,7 @@ export class SignIn {
     private _urlService: UrlService,
     private route: ActivatedRoute 
   ) {}
-
+  showPassword = false;
   scanService = inject(ScanService);
   isLoading = false;
   errorMessage: string = '';
@@ -31,6 +31,9 @@ export class SignIn {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit() {
     if (this.loginForm.invalid) return;

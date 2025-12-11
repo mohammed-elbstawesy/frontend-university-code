@@ -14,7 +14,8 @@ export class UsersInfo implements OnInit {
 constructor(private _userService:UserService){}
 allUsersCount: number = 0;
 users :User[]=[]
-
+isUserModalOpen: boolean = false;
+selectedUser: User | null = null;
 
 roleFilter: string = 'all';   
 statusFilter: string = 'all'; 
@@ -39,6 +40,18 @@ get filteredUsers(): User[] {
     return matchesSearch && matchesRole && matchesStatus;
   });
 }
+
+openUserModal(user: User) {
+    this.selectedUser = user;
+    this.isUserModalOpen = true;
+    document.body.style.overflow = 'hidden'; // منع السكرول الخلفي
+  }
+
+  closeUserModal() {
+    this.isUserModalOpen = false;
+    this.selectedUser = null;
+    document.body.style.overflow = 'auto';
+  }
 
   delete(userId?: string) {
     if (!userId) return alert('User id missing');
