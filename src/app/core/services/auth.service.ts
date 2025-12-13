@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Auth, User } from '../models/users.model';
 import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -12,10 +13,27 @@ export class AuthService {
   // تأكد أن الرابط الأساسي صحيح
   url = environment.apiUrl + 'users/login'; 
 
+  // 🔥 2. حقن الراوتر (استخدمنا inject عشان نتفادى مشاكل الـ constructor القديم)
+  private _router = inject(Router);
   constructor(private _http: HttpClient) {}
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  //3. دالة جديدة: التحقق هل التوكن منتهي الصلاحية أم لا
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
+
+    try {
+      const decoded: any = jwtDecode(token);
+      const currentTime = Date.now() / 1000; // الوقت الحالي بالثواني
+      // exp هو وقت الانتهاء بالثواني القادم من الباك إند
+      return decoded.exp < currentTime; 
+    } catch (error) {
+      return true; // لو التوكن بايظ نعتبره منتهي
+    }
   }
 
   login(data: { email: string; password: string }): Observable<Auth> {
@@ -44,7 +62,8 @@ export class AuthService {
   }
 
   isLogin(): boolean {
-    return !!this.getToken();
+    //  4. تحديث التحقق: يجب أن يكون التوكن موجوداً وغير منتهي
+    return !!this.getToken() && !this.isTokenExpired();
   }
 
   logout(): void {

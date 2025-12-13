@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ScanService } from '../../../core/services/scan.service';
-import { User } from '../../../core/models/users.model';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -21,6 +20,23 @@ export class SignUp {
   isLoading = false;
   signUpForm: FormGroup;
   
+  countries = [
+    { name: 'Egypt', code: '+20' },
+    { name: 'Saudi Arabia', code: '+966' },
+    { name: 'UAE', code: '+971' },
+    { name: 'USA', code: '+1' },
+    { name: 'UK', code: '+44' },
+    { name: 'Germany', code: '+49' },
+    { name: 'France', code: '+33' },
+    { name: 'Kuwait', code: '+965' },
+    { name: 'Jordan', code: '+962' },
+    { name: 'Palestine', code: '+970' }
+  ];
+
+  //  متغيرات لحفظ القيم المختارة (للعرض والدمج)
+  selectedCountryCode: string = '';
+  selectedCountryName: string = '';
+
   // متغيرات للتحكم في ظهور الباسورد
   showPassword = false;
   showRePassword = false;
@@ -32,14 +48,35 @@ export class SignUp {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
       rePassword: ['', [Validators.required]], // حقل تأكيد الباسورد
-      location: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9+]+$'), Validators.minLength(7)]],
+      country: ['', Validators.required],
+// تم تعطيل الحقل افتراضياً حتى يختار الدولة
+      location: [{value: '', disabled: true}, Validators.required],
+      // تم تعديل الفاليديتور ليقبل الأرقام فقط (لأن الرمز + سيتم دمجه لاحقاً)
+      phone: [{value: '', disabled: true}, [Validators.required, Validators.pattern('^[0-9]+$'), Validators.minLength(7)]],
       nationalID: ['', [Validators.required, Validators.minLength(10)]],
       age: ['', [Validators.required, Validators.min(21)]],
       image: [null], 
       agreement: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator }); // إضافة الـ Validator هنا للمجموعة كاملة
   }
+  onCountryChange(event: any) {
+    const selectedCode = event.target.value; 
+    // البحث عن الدولة المختارة
+    const country = this.countries.find(c => c.code === selectedCode);
+    
+    if (country) {
+      this.selectedCountryCode = country.code;
+      this.selectedCountryName = country.name;
+
+      // 🔥 تفعيل حقول الهاتف والموقع الآن
+      this.signUpForm.get('phone')?.enable();
+      this.signUpForm.get('location')?.enable();
+      
+      // (اختياري) تصفير الحقول لضمان عدم وجود بيانات قديمة
+      // this.signUpForm.get('location')?.setValue('');
+    }
+  }
+
 
   // دالة التحقق من تطابق الباسورد
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -113,13 +150,17 @@ export class SignUp {
     this.isLoading = true; 
 
     const formData = new FormData();
+    // دمج البيانات هنا قبل الإرسال (مهم جداً للباك إند)
+    const fullPhone = this.selectedCountryCode + this.signUpForm.value.phone;
+    const fullLocation = this.selectedCountryName + ', ' + this.signUpForm.value.location;
     // نرسل البيانات (بدون rePassword لأنه غير مطلوب في الباك إند عادة)
     formData.append('fristName', this.signUpForm.value.fristName);
     formData.append('lastName', this.signUpForm.value.lastName);
     formData.append('email', this.signUpForm.value.email);
     formData.append('password', this.signUpForm.value.password);
-    formData.append('location', this.signUpForm.value.location);
-    formData.append('phone', this.signUpForm.value.phone);
+    // إرسال القيم المدمجة بدلاً من القيم الخام
+    formData.append('location', fullLocation);
+    formData.append('phone', fullPhone);
     formData.append('nationalID', this.signUpForm.value.nationalID);
     formData.append('age', this.signUpForm.value.age);
   
@@ -137,6 +178,11 @@ export class SignUp {
       error: (err) => {
         this.isLoading = false;
         console.error("Signup failed", err);
+        // عرض رسالة خطأ لو الإيميل موجود
+        if(err.error && err.error.message) {
+            alert(err.error.message); // هيطلع "Email already exists"
+        }
+        
       }
     });
   }

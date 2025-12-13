@@ -22,6 +22,11 @@ export class Navbar implements OnInit {
     private _userService: UserService 
   ) {}
   ngOnInit(): void {
+    //  1. فحص استباقي: لو التوكن منتهي، اخرج فوراً قبل محاولة جلب البيانات
+    if (this._authService.isTokenExpired()) {
+       this.logout();
+       return;
+    }
     if (this.islogin) {
       this.getUserData();
     }
@@ -35,13 +40,21 @@ cheackuser(){
   getUserData() {
     const token = this._authService.getToken();
     if (token) {
-      const decoded: any = jwtDecode(token);
-      this._userService.getUser(decoded.id).subscribe({
-        next: (res: any) => {
-          this.user = res.data || res;
-        },
-        error: (err) => console.error(err)
-      });
+      try { //  إضافة try-catch للأمان
+        const decoded: any = jwtDecode(token);
+        this._userService.getUser(decoded.id).subscribe({
+          next: (res: any) => {
+            this.user = res.data || res;
+          },
+          error: (err) => {
+             console.error(err);
+             // لو فشل جلب اليوزر (مثلاً اليوزر اتمسح)، نخرج
+             if(err.status === 401 || err.status === 404) this.logout();
+          }
+        });
+      } catch(e) {
+        this.logout();
+      }
     }
   }
 
@@ -58,6 +71,7 @@ get isadmin(): boolean {
   }
 
   get islogin(): boolean {
+    //  الاعتماد على الدالة المحدثة في السيرفس
     return this._authService.getToken() !==null;
   }
 
@@ -67,6 +81,7 @@ get isadmin(): boolean {
     localStorage.removeItem('token');
     localStorage.removeItem('pendingData');
     this._router.navigate(['']);
+    this.user = null;
 
   }
 

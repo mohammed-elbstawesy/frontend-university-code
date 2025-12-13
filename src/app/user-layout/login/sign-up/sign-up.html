@@ -67,18 +67,72 @@
                 </div>
 
                 <div class="w-full">
+                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Country</label>
+                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('country')">
+                        <div class="pl-3 text-slate-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        </div>
+                        <select title="country" formControlName="country" (change)="onCountryChange($event)" class="w-full bg-transparent border-none text-slate-100 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm cursor-pointer appearance-none">
+                            <option value="" disabled selected class="bg-[#13131f] text-slate-500">Select Country</option>
+                            @for (c of countries; track c.name) {
+                                <option [value]="c.code" class="bg-[#13131f] text-white">{{ c.name }} ({{c.code}})</option>
+                            }
+                        </select>
+                        <div class="absolute right-3 text-slate-500 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                    </div>
+                    @if (signUpForm.get('country')?.invalid && (signUpForm.get('country')?.touched)) {
+                        <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
+                            Please select a country
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Phone Number</label>
                     <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('phone')">
                         <div class="pl-3 text-slate-500">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                         </div>
-                        <input formControlName="phone" type="tel" placeholder="+20 1xxxxxxxxx" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
+                        
+                        @if (selectedCountryCode) {
+                            <div class="pl-2 pr-1 text-cyan-400 font-mono text-sm font-bold border-r border-slate-700/50 mr-2 select-none">
+                                {{ selectedCountryCode }}
+                            </div>
+                        }
+
+                        <input formControlName="phone" type="tel" placeholder="1xxxxxxxxx" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
                     </div>
                     @if (signUpForm.get('phone')?.invalid && (signUpForm.get('phone')?.touched || signUpForm.get('phone')?.dirty)) {
                         <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
                             @if (signUpForm.get('phone')?.errors?.['required']) { Please enter phone number }
                             @if (signUpForm.get('phone')?.errors?.['pattern']) { Phone must contain numbers only }
                             @if (signUpForm.get('phone')?.errors?.['minlength']) { Phone number must be at least 7 digits }
+                        </div>
+                    }
+                </div>
+
+                <div class="w-full">
+                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Location</label>
+                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('location')">
+                        <div class="pl-3 text-slate-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        </div>
+                        
+                        @if (selectedCountryName) {
+                            <div class="pl-2 pr-1 text-cyan-400 font-medium text-sm border-r border-slate-700/50 mr-2 select-none whitespace-nowrap">
+                                {{ selectedCountryName }},
+                            </div>
+                        }
+
+                        <input formControlName="location" type="text" placeholder="Street 9, Building 4..." class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
+                    </div>
+                    @if (signUpForm.get('location')?.invalid && (signUpForm.get('location')?.touched || signUpForm.get('location')?.dirty)) {
+                        <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
+                            @if (signUpForm.get('location')?.errors?.['required']) { Please enter your location }
                         </div>
                     }
                 </div>
@@ -159,21 +213,6 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="w-full">
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Location</label>
-                    <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('location')">
-                        <div class="pl-3 text-slate-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        </div>
-                        <input formControlName="location" type="text" placeholder="Cairo, Egypt" class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-2.5 pl-3 pr-4 rounded-lg outline-none text-sm">
-                    </div>
-                    @if (signUpForm.get('location')?.invalid && (signUpForm.get('location')?.touched || signUpForm.get('location')?.dirty)) {
-                        <div class="text-[#ff003c] text-[10px] mt-1 ml-1 font-medium animate-pulse">
-                            @if (signUpForm.get('location')?.errors?.['required']) { Please enter your location }
-                        </div>
-                    }
-                </div>
-
-                <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">National ID</label>
                     <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('nationalID')">
                         <div class="pl-3 text-slate-500">
@@ -188,10 +227,8 @@
                         </div>
                     }
                 </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="w-full">
+                
+                 <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Age</label>
                     <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 ' + getFieldClass('age')">
                         <div class="pl-3 text-slate-500">
@@ -206,7 +243,9 @@
                         </div>
                     }
                 </div>
+            </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-5">
                 <div class="w-full">
                     <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">National ID Image</label>
                     <div [className]="'relative flex items-center bg-[#13131f] rounded-lg border transition-all duration-300 p-1 ' + getFieldClass('image')">
