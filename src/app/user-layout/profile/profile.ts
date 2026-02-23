@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
@@ -17,6 +17,8 @@ export class Profile implements OnInit {
   isEditMode: boolean = false;
   userId: string = ''; 
   user: any = {}; 
+  showPassword = false;
+  showConfirmPassword = false;
   readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   constructor(
@@ -29,17 +31,20 @@ export class Profile implements OnInit {
     this.profileForm = this.fb.group({
       fristName: ['', Validators.required], 
       lastName: ['', Validators.required],
-      password: ['', [ Validators.pattern(this.passwordRegex)]],
+      password: ['', [Validators.pattern(this.passwordRegex), Validators.minLength(0)]],
+      confirmPassword: [''],
       location: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-    });
+      phone: ['', [Validators.required, Validators.pattern('^\\+?[0-9]+$')]],
+    }, { validators: this.passwordMatchValidator,
+       updateOn: 'change'});
   }
+  
     get pass() { return this.profileForm.get('password'); }
   hasLowerCase() { return /[a-z]/.test(this.pass?.value || ''); }
   hasUpperCase() { return /[A-Z]/.test(this.pass?.value || ''); }
   hasNumber() { return /\d/.test(this.pass?.value || ''); }
   hasSpecial() { return /[@$!%*?&]/.test(this.pass?.value || ''); }
-  hasMinLength() { return (this.pass?.value || '').length >= 12; }
+  hasMinLength() { return (this.pass?.value || '').length >= 8; }
 
 
   ngOnInit(): void {
@@ -64,60 +69,83 @@ export class Profile implements OnInit {
     }
   }
 
-  // تحميل بيانات المستخدم من السيرفر
   loadUserData() {
     this.userService.getUser(this.userId).subscribe({
       next: (res: any) => {
-        this.user = res.data || res; // حسب شكل الـ Response بتاعك
-        // تحديث قيم الفورم بالبيانات اللي جت
-        // console.log('Res :'+this.user.data);
+        this.user = res.data || res; 
+        
         
         this.profileForm.patchValue({
           fristName: this.user.fristName,
           lastName: this.user.lastName,
           location: this.user.location,
           phone: this.user.phone,
-          password: '' // الباسورد دايما فاضي
+          password: '' 
         });
       },
       error: (err) => console.error('Failed to load user', err)
     });
   }
 
-  // تفعيل وضع التعديل
   enableEdit() {
     this.isEditMode = true;
   }
 
-  // إلغاء التعديل والعودة للبيانات الأصلية
   cancelEdit() {
     this.isEditMode = false;
-    this.profileForm.patchValue(this.user); // استرجاع البيانات القديمة للفورم
+    this.profileForm.patchValue(this.user); 
     this.profileForm.get('password')?.setValue('');
+    this.profileForm.get('confirmPassword')?.setValue('');
   }
 
-  // حفظ البيانات
+  passwordMatchValidator(control: AbstractControl) {
+  const password = control.get('password')?.value;
+  const confirmPassword = control.get('confirmPassword');
+
+  if (!password && !confirmPassword?.value) {
+    confirmPassword?.setErrors(null);
+    return null;
+  }
+
+  if (password !== confirmPassword?.value) {
+    confirmPassword?.setErrors({ mismatch: true });
+    return { mismatch: true };
+  } 
+
+  confirmPassword?.setErrors(null);
+  return null;
+}
+
+togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
   onSubmit() {
     if (this.profileForm.invalid) {
-      alert('يرجى التأكد من صحة البيانات');
+      alert('Please fill all required fields correctly.');
       return;
     }
 
-    const formData = this.profileForm.value;
+    const formData = { ...this.profileForm.value };
     
-    // لو الباسورد فاضي، شيله من الأوبجكت عشان ميمسحش القديم في الداتابيز (رغم اننا عاملين حسابنا في الباك اند بس زيادة تأكيد)
+    delete formData.confirmPassword;
+
     if (!formData.password) {
       delete formData.password;
     }
 
     this.userService.updateUser(this.userId, formData).subscribe({
       next: (res) => {
-        // alert('تم تحديث البيانات بنجاح');
-        this.user = { ...this.user, ...formData }; // تحديث البيانات المعروضة فوراً
-        this.isEditMode = false; // الخروج من وضع التعديل
+        this.user = { ...this.user, ...formData };
+        this.isEditMode = false; 
+        this.profileForm.get('confirmPassword')?.setValue('');
       },
       error: (err) => {
-        alert('حدث خطأ أثناء التحديث');
+        alert('error updating profile');
         console.error(err);
       }
     });
