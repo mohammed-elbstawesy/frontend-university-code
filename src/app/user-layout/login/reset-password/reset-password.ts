@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './reset-password.html',
-  styleUrl: './reset-password.css', // تأكد أن هذا الملف موجود أو احذف السطر
+  styleUrl: './reset-password.css',
 })
 export class ResetPassword implements OnInit {
   fb = inject(FormBuilder);
@@ -22,8 +22,15 @@ export class ResetPassword implements OnInit {
   isLoading = false;
   message = '';
   error = '';
+  
+  // التحكم في الخطوات: 1 للـ OTP و 2 للباسورد
+  step: 1 | 2 = 1; 
+  
+  // متغيرات إعادة الإرسال
+  resendTimer = 0;
+  isResending = false;
 
-  showPassword = false; // تم توحيد الاسم ليكون متناسق
+  showPassword = false; 
   showConfirmPassword = false;
   readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,}$/;
 
@@ -35,8 +42,51 @@ export class ResetPassword implements OnInit {
     }, { validators: this.passwordMatchValidator });
   }
 
+  ngOnInit() {
+    this.email = this.route.snapshot.queryParams['email'];
+  }
+
+  // الانتقال للخطوة الثانية بعد التأكد من فورمات الـ OTP
+  goToStepTwo() {
+    if (this.resetForm.get('otp')?.valid) {
+      this.step = 2;
+      this.error = '';
+      this.message = '';
+    } else {
+      this.resetForm.get('otp')?.markAsTouched();
+    }
+  }
+
+  // ميثود إعادة إرسال الكود
+  resendOtp() {
+    if (this.resendTimer > 0 || this.isResending) return;
+
+    this.isResending = true;
+    this.error = '';
+    this.message = '';
+
+    this.authService.forgotPassword(this.email).subscribe({
+      next: () => {
+        this.isResending = false;
+        this.message = 'A new code has been sent to your email.';
+        this.startTimer();
+      },
+      error: (err) => {
+        this.isResending = false;
+        this.error = err.error?.message || 'Failed to resend code';
+      }
+    });
+  }
+
+  startTimer() {
+    this.resendTimer = 60;
+    const interval = setInterval(() => {
+      this.resendTimer--;
+      if (this.resendTimer <= 0) clearInterval(interval);
+    }, 1000);
+  }
+
   get pass() { return this.resetForm.get('password'); }
-  
   hasLowerCase() { return /[a-z]/.test(this.pass?.value || ''); }
   hasUpperCase() { return /[A-Z]/.test(this.pass?.value || ''); }
   hasNumber() { return /\d/.test(this.pass?.value || ''); }
@@ -47,40 +97,30 @@ export class ResetPassword implements OnInit {
     const field = this.resetForm.get(fieldName);
     if (!field || !field.touched) return 'border-slate-700 focus-within:border-[#00f0ff]';
     if (field.valid) return 'border-green-500 focus-within:border-green-500 text-green-500';
-    return 'border-red-500 focus-within:border-red-500 text-red-500 animate-pulse';
+    return 'border-red-500 focus-within:border-red-500 text-red-500';
   }
 
-  // تم إصلاح استدعاء اسم الحقل ليصبح 'password' بدلاً من 'newPassword'
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const pass = control.get('password'); 
     const confirm = control.get('confirmPassword');
-    
-    // التحقق فقط إذا كان كلا الحقلين تم لمسهما أو الكتابة فيهما
     if (!pass || !confirm) return null;
-
     return pass.value === confirm.value ? null : { mismatch: true };
   };
 
-  ngOnInit() {
-    this.email = this.route.snapshot.queryParams['email'];
-    if (!this.email) {
-      // this.router.navigate(['/login/forgot-password']); // يمكن تفعيل هذا السطر لاحقاً
-    }
-  }
-
   onSubmit() {
     if (this.resetForm.invalid) {
-        this.resetForm.markAllAsTouched(); // إظهار الأخطاء عند الضغط
+        this.resetForm.markAllAsTouched();
         return;
     }
 
     this.isLoading = true;
     this.error = '';
+    this.message = '';
 
     const data = {
       email: this.email,
       otp: this.resetForm.value.otp,
-      newPassword: this.resetForm.value.password // إرسال القيمة الصحيحة للباك إند
+      newPassword: this.resetForm.value.password
     };
 
     this.authService.resetPassword(data).subscribe({
@@ -91,7 +131,11 @@ export class ResetPassword implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        this.error = err.error?.message || 'Failed to reset password';
+        this.error = err.error?.message || 'Invalid code or expired';
+        // إذا كان الخطأ في الكود، نرجعه للخطوة الأولى ليجرب مرة أخرى
+        if (this.error.toLowerCase().includes('otp') || this.error.toLowerCase().includes('code')) {
+            this.step = 1;
+        }
       }
     });
   }
