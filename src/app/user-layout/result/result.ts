@@ -193,7 +193,7 @@ export class Result implements OnInit {
   //       console.error('حصل مشكلة في التحميل!', err);
   //       alert('فشل تحميل الملف، تأكد من اتصالك بالسيرفر.');
   //     }
-  //   });
+  //   });  
   // }
 
 
