@@ -1,19 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-forgot-password',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './forgot-password.html',
-  styleUrl: './forgot-password.css',
+  styleUrls: ['./forgot-password.css','./../login.css'],
 })
 export class ForgotPassword {
   authService = inject(AuthService);
   router = inject(Router);
-  
+
   isLoading = false;
   message = '';
   error = '';
@@ -27,7 +27,7 @@ export class ForgotPassword {
 
     this.isLoading = true;
     this.error = '';
-    
+
     const email = this.forgotForm.value.email!;
 
     this.authService.forgotPassword(email).subscribe({
@@ -44,9 +44,7 @@ export class ForgotPassword {
   }
 
 
-  backToLogin(){
-    this.router.navigate(['']);
-    console.log('test');
-    
+  backToLogin() {
+    this.router.navigate(['/login/signin']);
   }
 }

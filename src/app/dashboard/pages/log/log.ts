@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LogService } from '../../../core/services/log.service';
 import { LogEntry } from '../../../core/models/log.model';
+import { Subject, timer } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-logs',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './log.html',
-  styles: []
+  styleUrls: ['./log.css']
 })
-export class Log implements OnInit {
+export class Log implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   protected Math = Math;
   // بيانات اللوجز
   logs: LogEntry[] = [];
@@ -24,10 +27,33 @@ export class Log implements OnInit {
   totalLogs: number = 0;
   totalPages: number = 0;
 
-  constructor(private _logService: LogService) {}
+  constructor(private _logService: LogService) { }
 
   ngOnInit() {
-    this.fetchLogs();
+    this.startPolling();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  startPolling() {
+    timer(0, 5000).pipe(
+      switchMap(() => this._logService.getLogs(this.currentPage, this.itemsPerPage, this.searchTerm, this.levelFilter)),
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (res) => {
+        this.logs = res.data;
+        this.totalLogs = res.totalLogs;
+        this.totalPages = res.totalPages;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching logs:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
   // دالة جلب البيانات
@@ -69,19 +95,18 @@ export class Log implements OnInit {
   // تغيير الصفحة
   changePage(newPage: number) {
     if (newPage >= 1 && newPage <= this.totalPages) {
-        this.currentPage = newPage;
-        this.fetchLogs();
+      this.currentPage = newPage;
+      this.fetchLogs();
     }
   }
 
-  // تحديد ألوان الـ Level
   getLogLevelClass(level: string): string {
     switch (level.toLowerCase()) {
-      case 'error': return 'bg-red-500/10 text-red-500 border-red-500/20';
-      case 'warn': return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20';
-      case 'info': return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
-      case 'debug': return 'bg-purple-500/10 text-purple-500 border-purple-500/20';
-      default: return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+      case 'error': return 'badge-danger';
+      case 'warn': return 'badge-warning';
+      case 'info': return 'badge-info';
+      case 'debug': return 'badge-purple';
+      default: return 'badge-info';
     }
   }
 }

@@ -1,15 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // مهم
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; // إضافة ReactiveFormsModule
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-verify-otp',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], // 🔥 أضفنا ReactiveFormsModule هنا
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './verify-otp.html',
-  styleUrl: './verify-otp.css',
+  styleUrls: ['./verify-otp.css','./../login.css'],
 })
 export class VerifyOtp implements OnInit {
   fb = inject(FormBuilder);
@@ -36,6 +36,10 @@ export class VerifyOtp implements OnInit {
     }
   }
 
+  goBack() {
+    this.router.navigate(['/login/signin']);
+  }
+
   onSubmit() {
     if (this.otpForm.invalid) return;
 
@@ -50,13 +54,8 @@ export class VerifyOtp implements OnInit {
     this.authService.verifyAccount(data).subscribe({
       next: (res) => {
         this.isLoading = false;
-        localStorage.setItem('token', res.token); // تأكد ان الاسم token مش userToken عشان يبقى موحد
-        
-        // 🔥 حل الخطأ الثاني: استدعاء دالة saveUserData (تأكد من وجودها في السيرفس)
-        // لو مش موجودة، ممكن نكتفي بحفظ التوكن
-        // this.authService.saveUserData(); 
-        
-        this.router.navigate(['/']); 
+        localStorage.setItem('token', res.token);
+        this.router.navigate(['/']);
       },
       error: (err) => {
         this.isLoading = false;

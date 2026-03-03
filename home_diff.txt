@@ -1,0 +1,522 @@
+﻿diff --git a/src/app/user-layout/home/home.html b/src/app/user-layout/home/home.html
+index a7cd258..9163c44 100644
+--- a/src/app/user-layout/home/home.html
++++ b/src/app/user-layout/home/home.html
+@@ -1,83 +1,439 @@
+-<app-navbar></app-navbar>
+-
+-<section class="py-12 flex flex-col items-center justify-center max-w-4xl mx-auto w-full animate-fade-in">
+-    <!-- Status Badge -->
+-    <div class="mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-primary/10 border border-cyber-primary/20 text-cyber-primary text-xs font-mono tracking-wider uppercase">
+-         <span class="relative flex h-2 w-2">
+-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-primary opacity-75"></span>
+-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-cyber-primary"></span>
+-                </span>
+-        System Online v2.4.0
++<!-- ΓòÉΓòÉΓòÉ HERO SECTION ΓòÉΓòÉΓòÉ -->
++<section class="hero" id="hero">
++  <div class="hero-grid">
++    <!-- Left: Text Content -->
++    <div class="hero-content-left">
++      <div class="hero-heading">
++        <div class="section-label">
++          <span class="dot"></span> From Vulnerability to Insight
++        </div>
++        <h1 class="hero-title">
++          Advanced Threat<br>
++          <span class="accent hero-word" [class.hero-word-fade]="heroFade">{{ heroWord }}</span> For<br>
++          The Modern Web
++        </h1>
++      </div>
++      <p class="hero-desc">
++        Secure your infrastructure with our AI-powered vulnerability scanner.
++        Detect vulnerabilities before they become threats and generate detailed security reports.
++      </p>
+     </div>
+ 
+-    <!-- Hero Text -->
+-     <h1 class="text-4xl md:text-6xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 mb-6 leading-tight">
+-                Advanced Threat Detection <br />
+-                <span class="text-white">For The Modern Web</span>
+-            </h1>
+-     <p class="text-lg text-slate-300 text-center max-w-2xl mb-12 leading-relaxed">
+-                Secure your infrastructure with vulnerability scanner. 
+-                Detect some vulnerabilities before they become threats and generate detailed reports with AI
+-                .</p>
+-
+-    <!-- Search Form -->
+-    <!-- Search Form -->
+-    <form [formGroup]="urlForm" (ngSubmit)="onSubmit()" class="w-full max-w-md relative z-20 flex flex-col gap-4">
+-      <div class="w-full">
+-        <div class="relative group">
+-          <div class="absolute inset-0 bg-gradient-to-r from-cyber-primary/20 to-cyber-secondary/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+-          <div class="relative flex items-center bg-cyber-dark rounded-lg border border-slate-700 focus-within:border-cyber-primary focus-within:ring-1 focus-within:ring-cyber-primary/50 transition-all duration-300">
+-            <div class="pl-3 text-slate-500 group-focus-within:text-cyber-primary transition-colors">
+-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+-                <circle cx="12" cy="12" r="10"></circle>
+-                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+-                <path d="M2 12h20"></path>
+-              </svg>
+-            </div>
+-    
+-            <!-- Input binding -->
+-            <input formControlName="originalUrl" type="text" 
+-                   class="w-full bg-transparent border-none text-slate-100 placeholder-slate-600 focus:ring-0 py-3 pl-3 pr-4 rounded-lg outline-none" 
+-                   placeholder="Enter company domain (e.g. acme-corp.com)" required>
++    <!-- Right: Shield Visual -->
++    <div class="hero-visual">
++      <div class="hero-shield-container">
++        <div class="hero-shield-glow"></div>
++        <div class="hero-shield-ring"></div>
++        <svg class="hero-shield-icon" xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24"
++          fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
++          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
++          <path d="m9 12 2 2 4-4" />
++        </svg>
++      </div>
++    </div>
++
++    <!-- Full-width: Description Area -->
++
++
++    <!-- Full-width: Scan Form -->
++    <div class="hero-form-area">
++
++      <form [formGroup]="urlForm" (ngSubmit)="onSubmit()" class="hero-form">
++        <div class="input-wrap">
++          <div class="input-icon">
++            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
++              stroke="currentColor" stroke-width="2">
++              <circle cx="12" cy="12" r="10"></circle>
++              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
++              <path d="M2 12h20"></path>
++            </svg>
+           </div>
++          <input formControlName="originalUrl" type="text" class="form-input"
++            placeholder="Enter domain to scan (e.g. acme-corp.com)">
++        </div>
++        <button type="submit" class="btn-primary">
++          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++            stroke="currentColor" stroke-width="2">
++            <circle cx="11" cy="11" r="8"></circle>
++            <path d="m21 21-4.3-4.3"></path>
++          </svg>
++          Start Scan
++        </button>
++      </form>
++      <p *ngIf="errorMessage" class="form-error visible home-style-2">{{ errorMessage }}</p>
++    </div>
++  </div>
++</section>
++
++
++<app-about></app-about>
++
++
++<app-services></app-services>
++
++
++
++<!-- ΓòÉΓòÉΓòÉ HOW IT WORKS SECTION ΓòÉΓòÉΓòÉ -->
++<div class="section-dark">
++  <div class="section-inner" id="how-it-works">
++    <div class="section-label-center">How It Works</div>
++    <h2 class="section-title animate-on-scroll">Three Simple Steps to<br>Total Protection</h2>
++    <p class="section-desc animate-on-scroll">Get started in minutes. No complex setup required.</p>
++    <div class="steps-grid animate-on-scroll">
++      <div class="step-card glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-specular"></div>
++        <div class="glass-content">
++          <div class="step-number">01</div>
++          <div class="step-connector"></div>
++          <h3>Enter Your Domain</h3>
++          <p>Simply enter your website URL and we'll begin mapping your entire attack surface automatically.</p>
+         </div>
+-    
+-        <!-- Error Message -->
+-        <p *ngIf="errorMessage" class="mt-1 text-xs text-cyber-accent ml-1 animate-fade-in">{{ errorMessage }}</p>
+       </div>
+-    
+-      <button type="submit" class="relative px-6 py-3 rounded-lg font-medium tracking-wide transition-all duration-300 bg-cyber-primary text-cyber-black hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 w-full flex items-center justify-center gap-2 group cursor-pointer">
+-        Start Free Scan
+-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1">
+-          <path d="M5 12h14"></path>
+-          <path d="m12 5 7 7-7 7"></path>
+-        </svg>
+-      </button>
+-    </form>
+-    
+-
+-    <!-- Feature Cards -->
+-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 w-full">
+-        <!-- Card 1 -->
+-        <div class="p-6 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+-            <div class="mb-4 p-3 bg-black/30 rounded-lg w-fit text-cyber-accent">
+-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+-            </div>
+-            <h3 class="text-white font-semibold mb-2">Web vulnerability Detection</h3>
+-        </div>
+-        <!-- Card 2 -->
+-        <div class="p-6 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+-            <div class="mb-4 p-3 bg-black/30 rounded-lg w-fit text-cyber-secondary">
+-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+-            </div>
+-            <h3 class="text-white font-semibold mb-2">Secure Scan</h3>
+-        </div>
+-        <!-- Card 3 -->
+-        <div class="p-6 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+-            <div class="mb-4 p-3 bg-black/30 rounded-lg w-fit text-cyber-success">
+-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+-            </div>
+-            <h3 class="text-white font-semibold mb-2">Generate Reports</h3>
++      <div class="step-card glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-specular"></div>
++        <div class="glass-content">
++          <div class="step-number">02</div>
++          <div class="step-connector"></div>
++          <h3>AI-Powered Scan</h3>
++          <p>Our engine runs 100+ vulnerability checks including XSS, SQLi, CSRF, and zero-day patterns.</p>
++        </div>
++      </div>
++      <div class="step-card glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-specular"></div>
++        <div class="glass-content">
++          <div class="step-number">03</div>
++          <h3>Get Detailed Report</h3>
++          <p>Receive an actionable PDF report with severity ratings, remediation guides, and compliance mappings.</p>
++        </div>
++      </div>
++    </div>
++  </div>
++</div>
++
++<!-- ΓòÉΓòÉΓòÉ TRUST BADGES ΓòÉΓòÉΓòÉ -->
++<div class="section trust-section animate-on-scroll">
++  <div class="section-label-center">Trusted Worldwide</div>
++  <p class="trust-tagline">Join 500+ companies securing their infrastructure with VulnCraft</p>
++  <div class="trust-scroller">
++    <div class="trust-track">
++      <div class="trust-logo">FinSecure</div>
++      <div class="trust-logo">DataVault</div>
++      <div class="trust-logo">CloudScale</div>
++      <div class="trust-logo">NetGuard</div>
++      <div class="trust-logo">CyberOps</div>
++      <div class="trust-logo">SecureAPI</div>
++      <div class="trust-logo">FinSecure</div>
++      <div class="trust-logo">DataVault</div>
++      <div class="trust-logo">CloudScale</div>
++      <div class="trust-logo">NetGuard</div>
++      <div class="trust-logo">CyberOps</div>
++      <div class="trust-logo">SecureAPI</div>
++    </div>
++  </div>
++</div>
++
++
++<!-- ΓòÉΓòÉΓòÉ TESTIMONIALS SECTION ΓòÉΓòÉΓòÉ -->
++<div class="section" id="testimonials">
++  <div class="section-label-center animate-on-scroll">Testimonials</div>
++  <h2 class="section-title animate-on-scroll">See What Others People<br>Are Saying</h2>
++  <p class="section-desc animate-on-scroll">Join thousands of security professionals who trust VulnCraft.</p>
++  <div class="testimonials-grid animate-on-scroll">
++    <div class="testimonial-card glass">
++      <div class="glass-filter"></div>
++      <div class="glass-overlay"></div>
++      <div class="glass-specular"></div>
++      <div class="glass-content">
++        <div class="testimonial-stars">ΓÿàΓÿàΓÿàΓÿàΓÿà</div>
++        <blockquote>"VulnCraft found 3 critical SQL injection flaws our previous scanner completely missed. The
++          AI-generated remediation guides saved our team weeks of work."</blockquote>
++        <div class="testimonial-author">
++          <div class="testimonial-avatar">MK</div>
++          <div>
++            <div class="name">Mike Kensington</div>
++            <div class="role">CTO, FinSecure Inc.</div>
++          </div>
++        </div>
++      </div>
++    </div>
++    <div class="testimonial-card glass">
++      <div class="glass-filter"></div>
++      <div class="glass-overlay"></div>
++      <div class="glass-specular"></div>
++      <div class="glass-content">
++        <div class="testimonial-stars">ΓÿàΓÿàΓÿàΓÿàΓÿà</div>
++        <blockquote>"The detailed PDF reports make our compliance audits seamless. Our SOC 2 certification process was
++          cut in half thanks to VulnCraft."</blockquote>
++        <div class="testimonial-author">
++          <div class="testimonial-avatar">SR</div>
++          <div>
++            <div class="name">Sarah Reynolds</div>
++            <div class="role">Security Lead, DataVault</div>
++          </div>
+         </div>
++      </div>
++    </div>
++    <div class="testimonial-card glass">
++      <div class="glass-filter"></div>
++      <div class="glass-overlay"></div>
++      <div class="glass-specular"></div>
++      <div class="glass-content">
++        <div class="testimonial-stars">ΓÿàΓÿàΓÿàΓÿàΓÿà</div>
++        <blockquote>"We integrated VulnCraft into our CI/CD pipeline. It catches vulnerabilities before code reaches
++          production. An absolute game-changer."</blockquote>
++        <div class="testimonial-author">
++          <div class="testimonial-avatar">JL</div>
++          <div>
++            <div class="name">James Liu</div>
++            <div class="role">DevOps Manager, CloudScale</div>
++          </div>
++        </div>
++      </div>
++    </div>
++  </div>
++</div>
++
++<!-- <app-pricing></app-pricing> -->
++<!-- ΓòÉΓòÉΓòÉ PRICING SECTION ΓòÉΓòÉΓòÉ -->
++<div class="section-dark">
++  <div class="section-inner" id="pricing">
++    <div class="section-label-center">Pricing</div>
++    <h2 class="section-title">Start Using Cyber<br>Security Protection</h2>
++    <p class="section-desc">Choose a plan that fits your security needs. All plans include our AI-powered scanning
++      engine.</p>
++    <div class="pricing-grid">
++      <!-- Standard -->
++      <div class="price-card glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-specular"></div>
++        <div class="glass-content">
++          <h3>Standard</h3>
++          <p class="price-desc">Perfect for small projects and personal websites.</p>
++          <div class="price-amount"><span class="currency">$</span><span class="amount">99</span><span
++              class="period">/mo</span></div>
++          <ul class="price-features">
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> 5 Scans per Month</li>
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> OWASP Top 10 Detection</li>
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> PDF Reports</li>
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> Email Support</li>
++          </ul>
++          <a routerLink="/checkout" [queryParams]="{plan: 'standard'}" class="btn-outline btn-lg home-style-3">Get
++            Started</a>
++        </div>
++      </div>
++      <!-- Pro (Featured) -->
++      <div class="price-card glass featured">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-specular"></div>
++        <div class="glass-content">
++          <div class="price-badge">Most Popular</div>
++          <h3>Professional</h3>
++          <p class="price-desc">For growing businesses with multiple assets.</p>
++          <div class="price-amount"><span class="currency">$</span><span class="amount">199</span><span
++              class="period">/mo</span></div>
++          <ul class="price-features">
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> 25 Scans per Month</li>
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> All Vulnerability Types</li>
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> API Access</li>
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> Priority Support</li>
++          </ul>
++
++          <a routerLink="/checkout" [queryParams]="{plan: 'premium'}" class="btn-primary btn-lg home-style-4">Get
++            Started</a>
++        </div>
++      </div>
++      <!-- Enterprise -->
++      <div class="price-card glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-specular"></div>
++        <div class="glass-content">
++          <h3>Enterprise</h3>
++          <p class="price-desc">For large organizations needing full coverage.</p>
++          <div class="price-amount"><span class="currency">$</span><span class="amount">499</span><span
++              class="period">/mo</span></div>
++          <ul class="price-features">
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> Unlimited Scans</li>
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> Custom Vulnerability Scripts</li>
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> Dedicated Account Manager</li>
++            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2.5">
++                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
++                <path d="m9 11 3 3L22 4" />
++              </svg> 24/7 Support + SLA</li>
++          </ul>
++          <a routerLink="/checkout" [queryParams]="{plan: 'enterprise'}" class="btn-outline btn-lg home-style-5">Get
++            Started</a>
++        </div>
++      </div>
++    </div>
++  </div>
++</div>
++
++<!-- ΓòÉΓòÉΓòÉ FAQ SECTION ΓòÉΓòÉΓòÉ -->
++<div class="section-dark">
++  <div class="section-inner" id="faq">
++    <div class="section-label-center">FAQ</div>
++    <h2 class="section-title">Frequently Asked<br>Questions</h2>
++    <p class="section-desc">Everything you need to know about VulnCraft and our security scanning platform.</p>
++    <div class="faq-list">
++      <div class="faq-item glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-specular"></div>
++        <button class="faq-question glass-content" (click)="toggleFaq(0)">
++          <span>How does the AI-powered scanning work?</span>
++          <svg class="faq-chevron" [class.open]="faqOpen[0]" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
++            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
++            <path d="m6 9 6 6 6-6" />
++          </svg>
++        </button>
++        @if (faqOpen[0]) {
++        <div class="faq-answer">
++          <p>Our AI engine uses machine learning models trained on millions of known vulnerability patterns. It performs
++            deep crawling, parameter fuzzing, and contextual analysis to detect threats that rule-based scanners miss ΓÇö
++            including zero-day patterns.</p>
++        </div>
++        }
++      </div>
++      <div class="faq-item glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-specular"></div>
++        <button class="faq-question glass-content" (click)="toggleFaq(1)">
++          <span>Will scanning affect my website's performance?</span>
++          <svg class="faq-chevron" [class.open]="faqOpen[1]" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
++            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
++            <path d="m6 9 6 6 6-6" />
++          </svg>
++        </button>
++        @if (faqOpen[1]) {
++        <div class="faq-answer">
++          <p>No. VulnCraft uses non-intrusive scanning techniques with intelligent rate limiting. Our scanner is
++            designed to operate without impacting your site's performance or availability for end users.</p>
++        </div>
++        }
++      </div>
++      <div class="faq-item glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-specular"></div>
++        <button class="faq-question glass-content" (click)="toggleFaq(2)">
++          <span>What types of vulnerabilities can you detect?</span>
++          <svg class="faq-chevron" [class.open]="faqOpen[2]" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
++            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
++            <path d="m6 9 6 6 6-6" />
++          </svg>
++        </button>
++        @if (faqOpen[2]) {
++        <div class="faq-answer">
++          <p>We detect 100+ vulnerability types including the OWASP Top 10 (XSS, SQL Injection, CSRF, SSRF, etc.),
++            misconfigurations, outdated dependencies, insecure headers, authentication flaws, and more.</p>
++        </div>
++        }
++      </div>
++      <div class="faq-item glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-specular"></div>
++        <button class="faq-question glass-content" (click)="toggleFaq(3)">
++          <span>Can I integrate VulnCraft into my CI/CD pipeline?</span>
++          <svg class="faq-chevron" [class.open]="faqOpen[3]" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
++            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
++            <path d="m6 9 6 6 6-6" />
++          </svg>
++        </button>
++        @if (faqOpen[3]) {
++        <div class="faq-answer">
++          <p>Absolutely! Our Enterprise plan includes full API access and webhook support. Integrate with GitHub
++            Actions, GitLab CI, Jenkins, or any CI/CD tool to scan automatically on every deployment.</p>
++        </div>
++        }
++      </div>
++    </div>
++  </div>
++</div>
++
++<!-- ΓòÉΓòÉΓòÉ STATS SECTION ΓòÉΓòÉΓòÉ -->
++<div class="section-dark">
++  <section class="section-inner">
++    <div class="stats-cards">
++      <div class="stat-box glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-content">
++          <div class="stat-num">10K+</div>
++          <div class="stat-text">Scans Completed</div>
++        </div>
++      </div>
++      <div class="stat-box glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-content">
++          <div class="stat-num">99.9%</div>
++          <div class="stat-text">Uptime Guaranteed</div>
++        </div>
++      </div>
++      <div class="stat-box glass">
++        <div class="glass-filter"></div>
++        <div class="glass-overlay"></div>
++        <div class="glass-content">
++          <div class="stat-num">500+</div>
++          <div class="stat-text">Companies Secured</div>
++        </div>
++      </div>
+     </div>
+-</section>
+\ No newline at end of file
++  </section>
++</div>
+\ No newline at end of file

@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './reports.html',
-  styles: []
+  styleUrls: ['./reports.css']
 })
 export class Reports {
   searchTerm = '';
@@ -27,18 +27,18 @@ export class Reports {
       return matchesSearch && matchesFilter;
     });
   }
-  
+
   getTypeClass(type: string) {
-      const typeMap: {[key: string]: string} = {
-          'weekly': 'bg-blue-500/10 text-blue-500',
-          'monthly': 'bg-purple-500/10 text-purple-500',
-          'custom': 'bg-orange-500/10 text-orange-500'
-      };
-      return typeMap[type] || 'bg-blue-500/10 text-blue-500';
+    const typeMap: { [key: string]: string } = {
+      'weekly': 'badge-info',
+      'monthly': 'badge-purple',
+      'custom': 'badge-warning'
+    };
+    return typeMap[type] || 'badge-info';
   }
-  
+
   getStatusClass(status: string) {
-      return status === 'ready' ? 'bg-green-500/10 text-green-500' : 'bg-blue-500/10 text-blue-500';
+    return status === 'ready' ? 'badge-success' : 'badge-info';
   }
 
   download(id: number) {

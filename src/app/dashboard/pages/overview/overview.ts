@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// import { QuickActions } from '../../quick-actions/quick-actions';
 import { Stats } from '../../stats/stats';
 
 @Component({
@@ -8,6 +7,6 @@ import { Stats } from '../../stats/stats';
   standalone: true,
   imports: [CommonModule, Stats],
   templateUrl: './overview.html',
-  styles: []
+  styleUrls: ['./overview.css']
 })
-export class Overview {}
+export class Overview { }

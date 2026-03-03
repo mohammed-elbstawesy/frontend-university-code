@@ -1,0 +1,254 @@
+/* Extracted inline styles for checkout */
+.btn-cancel {
+    color: white;
+    text-decoration: none;
+}
+
+.select-country {
+    appearance: auto;
+}
+
+.btn-checkout-submit {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+/* c:\Users\yassa\Desktop\final-UI-vulnweb-main\checkout.css */
+
+.checkout-section {
+    padding: 7rem 2rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.checkout-title,
+.summary-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+.checkout-form .glass-content,
+.order-summary .glass-content {
+    padding: 2rem;
+}
+
+/* Payment Methods Toggle */
+.payment-methods {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.method-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.method-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.method-btn.active {
+    background: rgba(var(--accent-rgb), 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.1);
+}
+
+.method-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Views */
+.payment-view {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.payment-view.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card Inputs */
+.card-input-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.card-row {
+    display: flex;
+    gap: 0.8rem;
+}
+
+/* PayPal View */
+.paypal-view {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.paypal-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+    color: #003087;
+    /* PayPal Blue */
+}
+
+.paypal-desc {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.paypal-btn {
+    background: #ffc439;
+    /* PayPal Gold */
+    color: #003087;
+    font-weight: 700;
+    width: 100%;
+    padding: 0.9rem;
+    border-radius: var(--radius-sm);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.paypal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 196, 57, 0.3);
+}
+
+/* Order Summary Styles */
+.plan-preview {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.plan-info h4 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.2rem;
+}
+
+.plan-cycle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.plan-price {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.summary-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.summary-row.total {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 0.5rem;
+}
+
+.secure-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Promo Code */
+.promo-section {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.promo-input-wrap {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.promo-input-wrap .form-input {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+}
+
+.promo-msg {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    min-height: 1.2em;
+}
+
+.promo-msg.success {
+    color: var(--success);
+}
+
+.promo-msg.error {
+    color: var(--danger);
+}

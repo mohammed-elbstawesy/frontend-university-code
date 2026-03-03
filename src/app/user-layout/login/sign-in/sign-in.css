@@ -1,0 +1,222 @@
+/* Sign In Component */
+.signin-forgot-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.25rem;
+}
+
+.signin-forgot-link {
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-weight: 500;
+}
+
+.signin-password-input {
+    padding-right: 2.8rem;
+}
+
+.signin-toggle-pw {
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    z-index: 4;
+}
+
+.signin-error-box {
+    background: rgba(255, 77, 106, 0.1);
+    border: 1px solid rgba(255, 77, 106, 0.3);
+    color: var(--danger);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.signin-signup-link {
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 0.85rem;
+}
+
+/* --- Appended from auth.css --- */
+/* c:\Users\yassa\Desktop\final-UI-vulnweb-main\auth.css */
+
+/* ============================================================
+   AUTH PAGES (Login, Register, Forgot Password, Edit Profile)
+   ============================================================ */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 2rem 3rem;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.auth-card.glass {
+    width: 100%;
+    max-width: 440px;
+    padding: 0;
+}
+
+.auth-card .glass-content {
+    padding: 2.5rem;
+}
+
+.auth-card .glass-overlay {
+    background: var(--lg-bg-solid);
+}
+
+/* Shimmer bar on top */
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), #3b82f6, var(--accent));
+    background-size: 200% 100%;
+    animation: shimmerBar 3s ease infinite;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+@keyframes shimmerBar {
+    0% {
+        background-position: -200% 0
+    }
+
+    100% {
+        background-position: 200% 0
+    }
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-icon {
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--accent-glow);
+    border: 1px solid var(--lg-border-accent);
+    color: var(--accent);
+    margin-bottom: 1rem;
+}
+
+.auth-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+}
+
+.auth-subtitle {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.auth-submit {
+    width: 100%;
+    margin-top: 1.5rem;
+    justify-content: center;
+}
+
+.auth-toggle {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.auth-toggle button {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.auth-disclaimer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    max-width: 360px;
+}
+
+.back-btn {
+    position: absolute;
+    top: 1.5rem;
+    left: 2rem;
+    z-index: 10;
+}
+
+.btn-loader {
+    display: none;
+    animation: spin 1s linear infinite;
+}
+
+.btn-loading .btn-text {
+    opacity: 0;
+}
+
+.btn-loading .btn-loader {
+    display: inline-block;
+    position: absolute;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+@media (max-width: 768px) {
+    .auth-card .glass-content {
+        padding: 1.75rem;
+    }
+
+    .back-btn {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-bottom: 1rem;
+    }
+}
+
+
+/* --- Appended from login.css --- */
+/* c:\Users\yassa\Desktop\final-UI-vulnweb-main\login.css */
+/* Specific styles for Login Page */
+/* Currently inherits shared Auth styles from main.css */

@@ -9,12 +9,12 @@ import { Navbar } from './navbar/navbar';
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet, 
+    RouterOutlet,
     Navbar,
     Header
   ],
   templateUrl: './dashboard.html',
-  styles: []
+  styleUrls: ['./dashboard.css']
 })
 export class Dashboard {
   isSidebarOpen = signal(false);

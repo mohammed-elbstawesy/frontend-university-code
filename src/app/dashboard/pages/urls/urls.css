@@ -1,0 +1,53 @@
+/* URLs Page */
+.urls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.urls-table-scroll {
+    overflow-x: auto;
+}
+
+.urls-link {
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.urls-user-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.urls-time-cell {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+}
+
+.urls-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.urls-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.urls-site-name {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.urls-row-num {
+    font-weight: 500;
+    color: var(--text-muted);
+}

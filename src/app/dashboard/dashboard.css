@@ -1,0 +1,349 @@
+/* Dashboard Layout — Sidebar Overlay */
+.sidebar-overlay {
+    z-index: 40;
+    background: rgba(0, 0, 0, 0.5);
+    display: block;
+}
+/* --- Appended from dashboard.css --- */
+/* ============================================================
+   DASHBOARD / ACCOUNT PROFILE PAGE
+   ============================================================ */
+.account-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Changed from center to prevent top cut-off on small screens */
+    padding: 7rem 2rem 4rem; /* Increased top padding for navbar */
+    position: relative;
+    z-index: 10;
+}
+
+.account-card {
+    width: 100%;
+    max-width: 900px;
+    border-radius: var(--radius-lg);
+    padding: 3rem;
+}
+
+/* Header Section */
+.acc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.acc-profile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Avatar styling */
+.acc-avatar-wrap {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.acc-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(14, 212, 196, 0.05); 
+    border: 1px solid rgba(14, 212, 196, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    box-shadow: inset 0 0 20px rgba(14, 212, 196, 0.1);
+}
+
+.acc-avatar-ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid rgba(14, 212, 196, 0.3);
+    box-shadow: 0 0 15px rgba(14, 212, 196, 0.15);
+    animation: slowPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes slowPulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.05); opacity: 0.3; }
+}
+
+.acc-status-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    background: #84cc16; 
+    border-radius: 50%;
+    border: 3px solid #0f172a; /* match dark background */
+    box-shadow: 0 0 8px #84cc16;
+}
+
+/* Info right of avatar */
+.acc-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.acc-info-top {
+    display: flex;
+    align-items: center;
+}
+
+.acc-badge {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.35rem 0.8rem;
+    border-radius: 12px;
+    letter-spacing: 0.05em;
+    display: inline-block;
+}
+
+.acc-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.acc-edit-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+}
+
+/* Grid layout for fields */
+.acc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Individual data fields */
+.acc-field {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.acc-field label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.acc-val {
+    min-height: 1.5rem;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+/* Status fields */
+.status-field label {
+    margin-bottom: 0.2rem;
+}
+
+.acc-status-val {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #84cc16;
+    letter-spacing: 0.02em;
+}
+
+/* Stats Dashboard */
+.acc-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 1.25rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.acc-stat-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.acc-stat-card h4 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    width: 100%;
+    text-align: left;
+}
+
+/* Circular Chart */
+.circular-chart {
+    display: block;
+    margin: 0 auto;
+    max-width: 80%;
+    max-height: 120px;
+}
+.circle-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.05);
+    stroke-width: 2.5;
+}
+.circle {
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke: var(--accent);
+    animation: progress 1s ease-out forwards;
+}
+.percentage {
+    fill: var(--text-primary);
+    font-family: var(--font-heading);
+    font-weight: bold;
+    font-size: 0.5em;
+    text-anchor: middle;
+}
+
+/* Distribution Bars */
+.dist-bars { width: 100%; display: flex; flex-direction: column; gap: 0.8rem; }
+.dist-row { display: flex; align-items: center; gap: 1rem; font-size: 0.85rem; color: var(--text-secondary); }
+.dist-label { width: 60px; }
+.dist-track { flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+.dist-fill { height: 100%; border-radius: 3px; }
+.dist-fill.critical { background: #ff4d6a; }
+.dist-fill.high { background: #ff9f43; }
+.dist-fill.medium { background: #ffd43b; }
+
+/* History Section */
+.acc-history-section {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.acc-history-title {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.history-table th {
+    text-align: left;
+    padding: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.history-table td {
+    padding: 1rem 0.75rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.history-table tr:last-child td {
+    border-bottom: none;
+}
+
+.badge-risk {
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.risk-critical { background: rgba(255, 77, 106, 0.15); color: #ff4d6a; }
+.risk-high { background: rgba(255, 159, 67, 0.15); color: #ff9f43; }
+.risk-safe { background: rgba(34, 211, 167, 0.15); color: #22d3a7; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .acc-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+    .acc-grid {
+        grid-template-columns: 1fr;
+    }
+    .account-card {
+        padding: 2rem 1.5rem;
+    }
+    .acc-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Light Mode Overrides */
+body.light-mode .acc-field,
+body.light-mode .acc-stat-card {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-mode .acc-header {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+body.light-mode .acc-badge {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-primary);
+}
+body.light-mode .history-table th {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+body.light-mode .history-table td {
+    border-bottom-color: rgba(0, 0, 0, 0.04);
+}
+body.light-mode .dist-track {
+    background: rgba(0, 0, 0, 0.06);
+}
+body.light-mode .circle-bg {
+    stroke: rgba(0, 0, 0, 0.06);
+}
+body.light-mode .acc-status-dot {
+    border-color: var(--bg-secondary);
+    background: var(--success);
+    box-shadow: 0 0 8px var(--success);
+}
+body.light-mode .acc-status-val {
+    color: var(--success);
+}
+body.light-mode .acc-avatar {
+    background: rgba(var(--accent-rgb), 0.05);
+    border-color: rgba(var(--accent-rgb), 0.2);
+    box-shadow: inset 0 0 20px rgba(var(--accent-rgb), 0.1);
+}
+body.light-mode .acc-avatar-ring {
+    border-color: rgba(var(--accent-rgb), 0.3);
+    box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.15);
+}

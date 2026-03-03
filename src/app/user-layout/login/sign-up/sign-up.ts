@@ -1,25 +1,33 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ScanService } from '../../../core/services/scan.service';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink], 
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './sign-up.html',
-  styles: []
+  styleUrls: ['./sign-up.css','./../login.css']
 })
 export class SignUp {
   scanService = inject(ScanService);
   fb = inject(FormBuilder);
-  
+
+  goToSignIn() {
+    this.router.navigate(['/login/signin']);
+  }
+
+  goBack() {
+    this.router.navigate(['/login/signin']);
+  }
+
   readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,}$/;
   isLoading = false;
   signUpForm: FormGroup;
-  
+
   countries = [
     { name: 'Egypt', code: '+20' },
     { name: 'Saudi Arabia', code: '+966' },
@@ -41,7 +49,7 @@ export class SignUp {
   showPassword = false;
   showRePassword = false;
 
-  constructor(private _authService: AuthService, private router: Router) {    
+  constructor(private _authService: AuthService, private router: Router) {
     this.signUpForm = this.fb.group({
       fristName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
@@ -49,21 +57,21 @@ export class SignUp {
       password: ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
       rePassword: ['', [Validators.required]], // حقل تأكيد الباسورد
       country: ['', Validators.required],
-// تم تعطيل الحقل افتراضياً حتى يختار الدولة
-      location: [{value: '', disabled: true}, Validators.required],
+      // تم تعطيل الحقل افتراضياً حتى يختار الدولة
+      location: [{ value: '', disabled: true }, Validators.required],
       // تم تعديل الفاليديتور ليقبل الأرقام فقط (لأن الرمز + سيتم دمجه لاحقاً)
-      phone: [{value: '', disabled: true}, [Validators.required, Validators.pattern('^[0-9]+$'), Validators.minLength(7)]],
+      phone: [{ value: '', disabled: true }, [Validators.required, Validators.pattern('^[0-9]+$'), Validators.minLength(7)]],
       nationalID: ['', [Validators.required, Validators.minLength(10)]],
       age: ['', [Validators.required, Validators.min(21)]],
-      image: [null], 
+      image: [null],
       agreement: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator }); // إضافة الـ Validator هنا للمجموعة كاملة
   }
   onCountryChange(event: any) {
-    const selectedCode = event.target.value; 
+    const selectedCode = event.target.value;
     // البحث عن الدولة المختارة
     const country = this.countries.find(c => c.code === selectedCode);
-    
+
     if (country) {
       this.selectedCountryCode = country.code;
       this.selectedCountryName = country.name;
@@ -71,7 +79,7 @@ export class SignUp {
       // 🔥 تفعيل حقول الهاتف والموقع الآن
       this.signUpForm.get('phone')?.enable();
       this.signUpForm.get('location')?.enable();
-      
+
       // (اختياري) تصفير الحقول لضمان عدم وجود بيانات قديمة
       // this.signUpForm.get('location')?.setValue('');
     }
@@ -98,11 +106,11 @@ export class SignUp {
         }
       }
     }
-    return null; 
+    return null;
   }
 
   get pass() { return this.signUpForm.get('password'); }
-  
+
   hasLowerCase() { return /[a-z]/.test(this.pass?.value || ''); }
   hasUpperCase() { return /[A-Z]/.test(this.pass?.value || ''); }
   hasNumber() { return /\d/.test(this.pass?.value || ''); }
@@ -111,27 +119,16 @@ export class SignUp {
 
   getFieldClass(fieldName: string): string {
     const field = this.signUpForm.get(fieldName);
-    
-    if (!field || !field.touched) {
-      return 'border-slate-700 focus-within:border-[#00f0ff]'; 
-    }
-
-    if (field.valid) {
-      return 'border-green-500 focus-within:border-green-500 text-green-500'; 
-    }
-
-    return 'border-red-500 focus-within:border-red-500 text-red-500 animate-pulse';
+    if (!field || !field.touched) return 'field-default';
+    if (field.valid) return 'field-valid';
+    return 'field-invalid';
   }
 
   getCheckboxClass(): string {
     const field = this.signUpForm.get('agreement');
-    if (field?.value === true) {
-        return 'border-green-500 bg-green-500/10 text-green-500';
-    }
-    if (field?.invalid && field?.touched) {
-        return 'border-red-500 bg-red-500/10 text-red-500 animate-pulse';
-    }
-    return 'border-[#ff003c]/30 bg-[#ff003c]/10';
+    if (field?.value === true) return 'checkbox-valid';
+    if (field?.invalid && field?.touched) return 'checkbox-invalid';
+    return 'checkbox-default';
   }
 
   onFileSelected(event: any) {
@@ -146,8 +143,8 @@ export class SignUp {
       this.signUpForm.markAllAsTouched();
       return;
     }
-  
-    this.isLoading = true; 
+
+    this.isLoading = true;
 
     const formData = new FormData();
     // دمج البيانات هنا قبل الإرسال (مهم جداً للباك إند)
@@ -163,26 +160,26 @@ export class SignUp {
     formData.append('phone', fullPhone);
     formData.append('nationalID', this.signUpForm.value.nationalID);
     formData.append('age', this.signUpForm.value.age);
-  
+
     if (this.signUpForm.value.image) {
       formData.append('image', this.signUpForm.value.image);
     }
-  
+
     this._authService.signup(formData).subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.router.navigate(['/login/verify'], { 
-          queryParams: { email: this.signUpForm.value.email } 
+        this.router.navigate(['/login/verify'], {
+          queryParams: { email: this.signUpForm.value.email }
         });
       },
       error: (err) => {
         this.isLoading = false;
         console.error("Signup failed", err);
         // عرض رسالة خطأ لو الإيميل موجود
-        if(err.error && err.error.message) {
-            alert(err.error.message); // هيطلع "Email already exists"
+        if (err.error && err.error.message) {
+          alert(err.error.message); // هيطلع "Email already exists"
         }
-        
+
       }
     });
   }

@@ -1,0 +1,61 @@
+/* ============================================================
+   4-LAYER LIQUID GLASS SYSTEM  —  Apple-style */
+.glass {
+    position: relative;
+    overflow: hidden !important;
+    border: 1px solid var(--lg-border) !important;
+    border-radius: var(--radius-lg) !important;
+    transition: all 0.4s var(--lg-bounce);
+}
+
+.glass-filter {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    backdrop-filter: blur(var(--lg-blur)) saturate(140%);
+    -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(140%);
+    filter: url(#lg-dist);
+    border-radius: inherit;
+}
+
+.glass-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--lg-bg);
+    border-radius: inherit;
+}
+
+.glass-specular {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    box-shadow:
+        inset 1px 1px 0 var(--lg-specular),
+        inset -1px -1px 0 rgba(255, 255, 255, 0.04),
+        inset 0 0 12px rgba(255, 255, 255, 0.06);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.glass-content {
+    position: relative;
+    z-index: 3;
+}
+
+/* Hover boost */
+.glass:hover {
+    border-color: var(--lg-border-accent);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35), 0 0 30px rgba(var(--accent-rgb), 0.06);
+}
+
+.glass:hover .glass-specular {
+    box-shadow:
+        inset 1px 1px 0 rgba(255, 255, 255, 0.7),
+        inset -1px -1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 0 20px rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================================
+*/
