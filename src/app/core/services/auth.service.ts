@@ -110,7 +110,17 @@ forgotPassword(email: string): Observable<any> {
   return this._http.post(`${environment.apiUrl}users/forgot-password`, { email });
 }
 
-resetPassword(data: { email: string, otp: string, newPassword: string }): Observable<any> {
+// resetPassword(data: { email: string, otp: string, newPassword: string }): Observable<any> {
+//   return this._http.post(`${environment.apiUrl}users/reset-password`, data);
+// }
+
+// دالة جديدة للتحقق من الـ OTP والحصول على التوكن
+verifyOTP(email: string, otp: string): Observable<{resetToken: string}> {
+  return this._http.post<{resetToken: string}>(`${environment.apiUrl}users/verify-otp`, { email, otp });
+}
+
+// تعديل الدالة القديمة لترسل التوكن والباسورد الجديد فقط
+resetPassword(data: { resetToken: string, newPassword: string }): Observable<any> {
   return this._http.post(`${environment.apiUrl}users/reset-password`, data);
 }
 }

@@ -16,6 +16,7 @@ export class ResetPassword implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   authService = inject(AuthService);
+  resetToken = ''
 
   resetForm: FormGroup;
   email = '';
@@ -47,15 +48,25 @@ export class ResetPassword implements OnInit {
   }
 
   // الانتقال للخطوة الثانية بعد التأكد من فورمات الـ OTP
-  goToStepTwo() {
-    if (this.resetForm.get('otp')?.valid) {
-      this.step = 2;
-      this.error = '';
-      this.message = '';
-    } else {
-      this.resetForm.get('otp')?.markAsTouched();
-    }
-  }
+  // goToStepTwo() {
+  //   if (this.resetForm.get('otp')?.valid) {
+  //     this.isLoading = true;
+  //     const otp = this.resetForm.get('otp')?.value;
+
+  //     this.authService.verifyOTP(this.email, otp).subscribe({
+  //       next: (res) => {
+  //         this.resetToken = res.resetToken; // حفظ التوكن المستلم
+  //         this.step = 2;
+  //         this.isLoading = false;
+  //         this.error = '';
+  //       },
+  //       error: (err) => {
+  //         this.isLoading = false;
+  //         this.error = err.error?.message || 'Invalid or expired code';
+  //       }
+  //     });
+  //   }
+  // }
 
   // ميثود إعادة إرسال الكود
   resendOtp() {
@@ -107,8 +118,74 @@ export class ResetPassword implements OnInit {
     return pass.value === confirm.value ? null : { mismatch: true };
   };
 
+  // onSubmit() {
+  //   if (this.resetForm.invalid) {
+  //       this.resetForm.markAllAsTouched();
+  //       return;
+  //   }
+
+  //   this.isLoading = true;
+  //   this.error = '';
+  //   this.message = '';
+
+  //   const data = {
+  //     email: this.email,
+  //     otp: this.resetForm.value.otp,
+  //     newPassword: this.resetForm.value.password,
+  //     resetToken: this.resetToken,
+
+  //   };
+
+
+  //   this.authService.resetPassword(data).subscribe({
+  //     next: (res) => {
+  //       this.isLoading = false;
+  //       this.message = 'Password reset successfully! Redirecting...';
+  //       setTimeout(() => this.router.navigate(['/login/signin']), 2000);
+  //     },
+  //     error: (err) => {
+  //       this.isLoading = false;
+  //       this.error = err.error?.message || 'Session expired, please try again';
+  //       if (this.error.includes('expired')) this.step = 1;
+  //     },
+      
+  //   });
+  // }
+
+
+  goToStepTwo() {
+    if (this.resetForm.get('otp')?.valid) {
+      this.isLoading = true;
+      this.error = ''; // تصغير الـ error قبل البدء
+      const otp = this.resetForm.get('otp')?.value;
+
+      this.authService.verifyOTP(this.email, otp).subscribe({
+        next: (res) => {
+          this.resetToken = res.resetToken; 
+          this.step = 2;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.isLoading = false;
+          
+          // --- هنا الكود الجديد للتعامل مع الأخطاء ---
+          if (err.status === 429) {
+            // لو اليوزر اتحظر بسبب الـ Rate Limiter
+            this.error = err.error?.message || 'Too many attempts. Please try again in 15 minutes.';
+          } else if (err.status === 400) {
+            // لو الـ OTP غلط أو منتهي
+            this.error = err.error?.message || 'The code you entered is incorrect.';
+          } else {
+            this.error = 'Something went wrong. Please try again later.';
+          }
+        }
+      });
+    }
+  }
+
+  // 2. تعديل ميثود تغيير الباسورد النهائية
   onSubmit() {
-    if (this.resetForm.invalid) {
+    if (this.resetForm.invalid || !this.resetToken) {
         this.resetForm.markAllAsTouched();
         return;
     }
@@ -117,9 +194,9 @@ export class ResetPassword implements OnInit {
     this.error = '';
     this.message = '';
 
+    // لاحظ هنا: بعتنا الـ resetToken والباسورد الجديد بس (زي ما عملنا في الباك إند)
     const data = {
-      email: this.email,
-      otp: this.resetForm.value.otp,
+      resetToken: this.resetToken,
       newPassword: this.resetForm.value.password
     };
 
@@ -131,12 +208,20 @@ export class ResetPassword implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        this.error = err.error?.message || 'Invalid code or expired';
-        // إذا كان الخطأ في الكود، نرجعه للخطوة الأولى ليجرب مرة أخرى
-        if (this.error.toLowerCase().includes('otp') || this.error.toLowerCase().includes('code')) {
-            this.step = 1;
+        
+        // --- تعامل ذكي مع أخطاء الخطوة الأخيرة ---
+        if (err.status === 429) {
+          this.error = err.error?.message || 'Too many attempts.';
+        } else if (err.status === 401 || err.status === 403) {
+          // لو التوكن منتهي الصلاحية (بعد 5 دقائق)
+          this.error = 'Your session has expired. Please verify your OTP again.';
+          this.step = 1; // رجعه لخطوة الـ OTP
+        } else {
+          this.error = err.error?.message || 'An error occurred. Please try again.';
         }
       }
     });
   }
+
+
 }
