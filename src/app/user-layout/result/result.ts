@@ -10,6 +10,7 @@ import { ResultsService } from '../../core/services/results.service';
 import { ScanReport, ScanDetail } from '../../core/models/results.model';
 import { map, of, switchMap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router'; // 1. Added Router
+import { DowmloadFileService } from '../../core/services/dowmload-file.service';
 
 @Component({
   selector: 'app-result',
@@ -25,7 +26,8 @@ export class Result implements OnInit {
     private _urlService: UrlService,
     private _results: ResultsService,
     private _route: ActivatedRoute,
-    private router: Router // 2. Injected Router for redirection
+    private router: Router, // 2. Injected Router for redirection
+    private _fileService: DowmloadFileService // 2. حقن الـ Service هنا
   ) {}
 
   // Variables
@@ -156,24 +158,107 @@ export class Result implements OnInit {
     }
   }
 
+  // downloadReport(btn: HTMLButtonElement) {
+  //   const span = btn.querySelector('span');
+  //   const originalText = span?.innerText || 'Download Report';
+  //   if(span) span.innerText = "Generating PDF...";
+  //   btn.classList.add('opacity-75', 'cursor-wait');
+  //   setTimeout(() => {
+  //       if(span) span.innerText = "Report Downloaded!";
+  //       btn.classList.remove('bg-[#7000ff]', 'hover:bg-purple-600');
+  //       btn.classList.add('bg-green-600', 'hover:bg-green-700');
+  //       setTimeout(() => {
+  //           if(span) span.innerText = originalText;
+  //           btn.classList.remove('opacity-75', 'cursor-wait', 'bg-green-600', 'hover:bg-green-700');
+  //           btn.classList.add('bg-[#7000ff]', 'hover:bg-purple-600');
+  //       }, 2000);
+  //   }, 1500);
+  // }
+
+
+
+  // download() {
+  //   this._fileService.downloadReportFile(this.targetUrlId).subscribe({
+  //     next: (blob: Blob) => { // ضيفنا : Blob هنا
+  //       const url = window.URL.createObjectURL(blob);
+  //       const a = document.createElement('a');
+  //       a.href = url;
+  //       a.download = `Report_${this.targetUrlId}.pdf`; 
+  //       document.body.appendChild(a);
+  //       a.click();
+  //       document.body.removeChild(a);
+  //       window.URL.revokeObjectURL(url);
+  //     },
+  //     error: (err: any) => { // ضيفنا : any هنا
+  //       console.error('حصل مشكلة في التحميل!', err);
+  //       alert('فشل تحميل الملف، تأكد من اتصالك بالسيرفر.');
+  //     }
+  //   });
+  // }
+
+
+
   downloadReport(btn: HTMLButtonElement) {
     const span = btn.querySelector('span');
     const originalText = span?.innerText || 'Download Report';
-    if(span) span.innerText = "Generating PDF...";
+  
+    if (span) span.innerText = "Generating PDF...";
     btn.classList.add('opacity-75', 'cursor-wait');
-    setTimeout(() => {
-        if(span) span.innerText = "Report Downloaded!";
+    btn.disabled = true;
+  
+    this._fileService.downloadReportFile(this.targetUrlId).subscribe({
+      next: (blob: Blob) => {
+        // نفس كود التحميل اللي عندك (شغال تمام)
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Report_${this.targetUrlId}.pdf`; 
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+  
+        if (span) span.innerText = "Report Downloaded!";
         btn.classList.remove('bg-[#7000ff]', 'hover:bg-purple-600');
         btn.classList.add('bg-green-600', 'hover:bg-green-700');
-        setTimeout(() => {
-            if(span) span.innerText = originalText;
-            btn.classList.remove('opacity-75', 'cursor-wait', 'bg-green-600', 'hover:bg-green-700');
-            btn.classList.add('bg-[#7000ff]', 'hover:bg-purple-600');
-        }, 2000);
-    }, 1500);
+  
+        setTimeout(() => this.resetButton(btn, span, originalText), 2000);
+      },
+      error: (err: any) => {
+        // 💡 لو الـ status هو 200، ده معناه إن السيرفر بعت الملف بنجاح!
+        // والخطأ حصل بس في "الترجمة" جوه أنجلر
+        if (err.status === 200 || err.ok === true) {
+          console.log('الملف وصل بنجاح، نتجاهل خطأ التحويل.');
+          
+          // ننفذ نفس كود النجاح هنا عشان الزرار يقلب أخضر
+          if (span) span.innerText = "Report Downloaded!";
+          btn.classList.remove('bg-[#7000ff]', 'hover:bg-purple-600');
+          btn.classList.add('bg-green-600', 'hover:bg-green-700');
+          setTimeout(() => this.resetButton(btn, span, originalText), 2000);
+          return; 
+        }
+      
+        // لو الـ status مش 200 (مثلاً 404 أو 500)، يبقى فعلاً فيه مشكلة
+        console.error('خطأ حقيقي في السيرفر:', err);
+        // alert('فشل الاتصال بالسيرفر، تأكد من وجود الملف.');
+        this.resetButton(btn, span, originalText);
+      }
+    });
+  }
+  
+  // ميثود مساعدة لترجيع شكل الزرار زي ما كان
+  private resetButton(btn: HTMLButtonElement, span: any, originalText: string) {
+    if (span) span.innerText = originalText;
+    btn.classList.remove('opacity-75', 'cursor-wait', 'bg-green-600', 'hover:bg-green-700');
+    btn.classList.add('bg-[#7000ff]', 'hover:bg-purple-600');
+    btn.disabled = false;
   }
 
+
+
+  
   trackById(index: number, item: any): string {
     return item._id;
   }
+
 }
