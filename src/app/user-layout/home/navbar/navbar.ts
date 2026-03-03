@@ -38,7 +38,7 @@ export class Navbar implements OnInit {
   getUserData() {
     const token = this._authService.getToken();
     if (token) {
-      try { //  إضافة try-catch للأمان
+      try {
         const decoded: any = jwtDecode(token);
         this._userService.getUser(decoded.id).subscribe({
           next: (res: any) => {
@@ -46,7 +46,6 @@ export class Navbar implements OnInit {
           },
           error: (err) => {
             console.error(err);
-            // لو فشل جلب اليوزر (مثلاً اليوزر اتمسح)، نخرج
             if (err.status === 401 || err.status === 404) this.logout();
           }
         });
@@ -72,12 +71,15 @@ export class Navbar implements OnInit {
     this.isMobileMenuOpen = false;
   }
 
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   get isadmin(): boolean {
     return this._authService.getRole() === 'admin';
   }
 
   get islogin(): boolean {
-    //  الاعتماد على الدالة المحدثة في السيرفس
     return this._authService.getToken() !== null;
   }
 
@@ -114,7 +116,6 @@ export class Navbar implements OnInit {
     const sections = ['hero', 'about', 'services', 'pricing'];
     let current = 'hero';
 
-    // Default to hero if at the very top to avoid sticking to other sections when scrolling up quickly
     if (window.scrollY < 100) {
       this.activeSection = 'hero';
       return;
@@ -123,9 +124,7 @@ export class Navbar implements OnInit {
     for (const section of sections) {
       const element = document.getElementById(section);
       if (element) {
-        // Get the distance from the top of the viewport
         const top = element.getBoundingClientRect().top;
-        // If the top of the section is within the top third of the viewport, consider it active
         if (top <= window.innerHeight / 3) {
           current = section;
         }
