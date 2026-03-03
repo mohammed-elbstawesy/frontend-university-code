@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
+import { Navbar } from "../home/navbar/navbar";
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Navbar],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

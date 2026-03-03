@@ -1,0 +1,233 @@
+/* Users Info Page */
+.info-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.info-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.info-filters {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.info-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.info-status-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.info-actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.info-view-btn {
+    padding: 0.5rem;
+}
+
+.info-table-scroll {
+    overflow-x: auto;
+}
+
+/* Modal - Profile */
+.info-modal-icon {
+    padding: 0.5rem;
+    background: rgba(76, 110, 245, 0.1);
+    border-radius: var(--radius-md);
+    color: #748ffc;
+    border: 1px solid rgba(76, 110, 245, 0.2);
+    display: flex;
+}
+
+.info-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.info-modal-close {
+    padding: 0.25rem;
+}
+
+.info-modal-content {
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.info-profile-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    min-width: 200px;
+    padding-right: 1.5rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.info-profile-avatar {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--bg-secondary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.info-profile-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.info-profile-email {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+.info-profile-center {
+    text-align: center;
+    width: 100%;
+}
+
+.info-meta-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.info-meta-item {
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-meta-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+
+.info-right {
+    flex: 1;
+}
+
+.info-section-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.info-section-icon {
+    color: var(--accent);
+}
+
+.info-field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 1rem;
+}
+
+.info-field-label {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.info-field-value {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.info-field-value-mono {
+    color: var(--text-primary);
+    font-weight: 500;
+    font-family: var(--font-mono);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: inline-block;
+}
+
+.info-field-value-phone {
+    color: var(--text-primary);
+    font-weight: 500;
+    font-family: var(--font-mono);
+}
+
+.info-field-location {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.info-field-location-icon {
+    color: var(--text-muted);
+}
+
+.info-field-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.info-field-full {
+    grid-column: 1 / -1;
+}
+
+.info-sysid {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+}
+
+.info-modal-close-bar {
+    padding: 0.5rem 1.25rem;
+}
+
+/* --- Auto-extracted inline styles --- */
+.users-info-style-1 { max-width:42rem; }

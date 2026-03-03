@@ -1,20 +1,37 @@
+/* ============================================================
+   VulnCraft — Global Stylesheet
+   Cyberpunk Dark × Liquid Glass Design System
+   
+   This file imports all modular CSS in the correct order:
+   1. Variables & base (colors, fonts, light mode overrides)
+   2. Resets & Document Setup
+   3. Liquid Glass Mixins
+   4. UI Components (Buttons, Forms, Inputs)
+   5. Layout constructs (Navbar, Sections, Footer, etc.)
+   6. Custom Animations
+   ============================================================ */
+
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ── Core Modules ── */
+@import './styles/_variables.css';
+@import './styles/_reset.css';
+@import './styles/_glass.css';
+
+/* ── UI Components ── */
+@import './styles/_components.css';
+
+/* ── Layout ── */
+@import './styles/_layout.css';
+
+/* ── Animations ── */
+@import './styles/_animations.css';
+
+/* ── Admin Panel / Legacy ── */
+@import './admin.css';
+
+/* ── TailWind ── */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
-
-/* Custom Scrollbar from your original CSS */
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
-    background: #0a0a0f; 
-}
-::-webkit-scrollbar-thumb {
-    background: #334155; 
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #475569; 
-}

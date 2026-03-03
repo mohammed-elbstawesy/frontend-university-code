@@ -1,5 +1,4 @@
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Navbar } from '../home/navbar/navbar';
 import { CommonModule } from '@angular/common';
@@ -8,6 +7,8 @@ import { UrlService } from '../../core/services/url.service';
 import { ResultsService } from '../../core/services/results.service'; // 🔥 إضافة السيرفس
 import { jwtDecode } from 'jwt-decode';
 import { AuthService } from '../../core/services/auth.service';
+import { Subject, timer } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-urls',
@@ -16,10 +17,11 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './user-urls.html',
   styleUrl: './user-urls.css',
 })
-export class UserUrls implements OnInit {
+export class UserUrls implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   userUrls: any[] = [];
   filteredUrls: any[] = [];
-  
+
   // الفلاتر
   searchQuery: string = '';
   filterStatus: string = 'all';
@@ -37,16 +39,21 @@ export class UserUrls implements OnInit {
 
   token: any = '';
   userId: string = '';
-  
+
   constructor(
-    private _urlService: UrlService, 
+    private _urlService: UrlService,
     private _resultService: ResultsService, // 🔥 حقن سيرفس النتائج
-    private router: Router, 
+    private router: Router,
     private _authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userIdByToken();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   userIdByToken() {
@@ -54,19 +61,21 @@ export class UserUrls implements OnInit {
     if (this.token) {
       const decoded: any = jwtDecode(this.token);
       this.userId = decoded.id;
-      this.loadData();
+      this.startPolling();
     }
   }
 
-  // دالة منفصلة لتحميل البيانات ليسهل استدعاؤها بعد التحديث
-  loadData() {
-    this._urlService.getUrlByUserId(this.userId).subscribe({
+  startPolling() {
+    timer(0, 5000).pipe(
+      switchMap(() => this._urlService.getUrlByUserId(this.userId)),
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (res: any) => {
         // تحويل بيانات الباك إند لتناسب واجهة المستخدم
         this.userUrls = res.map((item: any) => {
           // تحديد الحالة للعرض بناءً على بيانات الباك إند
           let displayStatus = 'Scanning';
-          
+
           if (item.status === 'Scanning') displayStatus = 'Scanning';
           else if (item.status === 'UnScaned') displayStatus = 'Unscanned';
           else if (item.status === 'Failed') displayStatus = 'Failed';
@@ -74,7 +83,7 @@ export class UserUrls implements OnInit {
             // لو الفحص خلص، نعرض الخطورة
             // Backend: 'High', 'Medium', 'Low', 'Critical', 'safe'
             // Frontend UI expects: 'High Risk', 'Medium Risk', etc.
-            switch(item.severity) {
+            switch (item.severity) {
               case 'Critical': displayStatus = 'Critical'; break;
               case 'High': displayStatus = 'High Risk'; break;
               case 'Medium': displayStatus = 'Medium Risk'; break;
@@ -89,7 +98,7 @@ export class UserUrls implements OnInit {
             url: item.originalUrl,
             date: this.formatDate(item.createdAt),
             // البيانات الحقيقية
-            status: displayStatus, 
+            status: displayStatus,
             vulnCount: item.numberOfvuln || 0,
             isScanning: item.status === 'Scanning', // لتشغيل الأنيميشن
             lastIncident: item.updatedAt ? this.formatDate(item.updatedAt) : 'N/A'
@@ -121,7 +130,7 @@ export class UserUrls implements OnInit {
     let filtered = [...this.userUrls];
 
     if (this.searchQuery) {
-      filtered = filtered.filter(url => 
+      filtered = filtered.filter(url =>
         url.url.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     }
@@ -131,7 +140,7 @@ export class UserUrls implements OnInit {
     }
 
     filtered.sort((a, b) => {
-      switch(this.sortBy) {
+      switch (this.sortBy) {
         case 'vulns': return b.vulnCount - a.vulnCount;
         case 'name': return a.url.localeCompare(b.url);
         case 'date': return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -149,13 +158,13 @@ export class UserUrls implements OnInit {
 
   goToResult(urlItem: any): void {
     // نسمح بالدخول للصفحة حتى لو بيعمل سكان، عشان يشوف الهيستوري القديم
-    this.router.navigate(['/result', urlItem.id]); 
+    this.router.navigate(['/result', urlItem.id]);
   }
 
   // 🔥 إعادة فحص الكل
   handleRefreshAll(): void {
-    if(!confirm('Are you sure you want to rescan ALL assets? This might take time.')) return;
-    
+    if (!confirm('Are you sure you want to rescan ALL assets? This might take time.')) return;
+
     // تغيير الحالة محلياً فوراً
     this.userUrls.forEach(url => {
       url.isScanning = true;
@@ -178,10 +187,10 @@ export class UserUrls implements OnInit {
   // 🔥 إعادة فحص رابط واحد
   refreshUrl(urlItem: any, event?: Event): void {
     if (event) event.stopPropagation();
-    
+
     urlItem.isScanning = true;
     urlItem.status = 'Scanning';
-    
+
     this._resultService.runNewScan(urlItem.id).subscribe({
       next: () => {
         // لا نحتاج لعمل شيء، الباك إند شغال

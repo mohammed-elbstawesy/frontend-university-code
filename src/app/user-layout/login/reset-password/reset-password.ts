@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './reset-password.html',
-  styleUrl: './reset-password.css',
+  styleUrls: ['./reset-password.css','./../login.css'],
 })
 export class ResetPassword implements OnInit {
   fb = inject(FormBuilder);
@@ -22,15 +22,15 @@ export class ResetPassword implements OnInit {
   isLoading = false;
   message = '';
   error = '';
-  
+
   // التحكم في الخطوات: 1 للـ OTP و 2 للباسورد
-  step: 1 | 2 = 1; 
-  
+  step: 1 | 2 = 1;
+
   // متغيرات إعادة الإرسال
   resendTimer = 0;
   isResending = false;
 
-  showPassword = false; 
+  showPassword = false;
   showConfirmPassword = false;
   readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,}$/;
 
@@ -44,6 +44,10 @@ export class ResetPassword implements OnInit {
 
   ngOnInit() {
     this.email = this.route.snapshot.queryParams['email'];
+  }
+
+  goBack() {
+    this.router.navigate(['/login/forgot-password']);
   }
 
   // الانتقال للخطوة الثانية بعد التأكد من فورمات الـ OTP
@@ -95,13 +99,13 @@ export class ResetPassword implements OnInit {
 
   getFieldClass(fieldName: string): string {
     const field = this.resetForm.get(fieldName);
-    if (!field || !field.touched) return 'border-slate-700 focus-within:border-[#00f0ff]';
-    if (field.valid) return 'border-green-500 focus-within:border-green-500 text-green-500';
-    return 'border-red-500 focus-within:border-red-500 text-red-500';
+    if (!field || !field.touched) return 'field-default';
+    if (field.valid) return 'field-valid';
+    return 'field-invalid';
   }
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const pass = control.get('password'); 
+    const pass = control.get('password');
     const confirm = control.get('confirmPassword');
     if (!pass || !confirm) return null;
     return pass.value === confirm.value ? null : { mismatch: true };
@@ -109,8 +113,8 @@ export class ResetPassword implements OnInit {
 
   onSubmit() {
     if (this.resetForm.invalid) {
-        this.resetForm.markAllAsTouched();
-        return;
+      this.resetForm.markAllAsTouched();
+      return;
     }
 
     this.isLoading = true;
@@ -134,7 +138,7 @@ export class ResetPassword implements OnInit {
         this.error = err.error?.message || 'Invalid code or expired';
         // إذا كان الخطأ في الكود، نرجعه للخطوة الأولى ليجرب مرة أخرى
         if (this.error.toLowerCase().includes('otp') || this.error.toLowerCase().includes('code')) {
-            this.step = 1;
+          this.step = 1;
         }
       }
     });

@@ -1,0 +1,47 @@
+/* Users Page (Approve) */
+.users-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.users-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.users-img-wrap {
+    position: relative;
+    cursor: pointer;
+}
+
+.users-close-btn {
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+}
+
+.users-close-wrap {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+}
+
+.users-modal-img-wrap {
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.users-modal-img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: var(--radius-lg);
+}
+
+/* --- Auto-extracted inline styles --- */
+.users-style-1 { max-width:56rem;max-height:90vh; }

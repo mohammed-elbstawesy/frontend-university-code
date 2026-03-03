@@ -19,14 +19,14 @@ import { LogEntry } from '../../core/models/log.model';
   styleUrls: ['./stats.css']
 })
 export class Stats implements OnInit {
-  
+
   constructor(
     private _vulnService: VulnService,
     private _user: UserService,
     private _url: UrlService,
     private _result: ResultsService,
     private _logService: LogService
-  ) {}
+  ) { }
 
   // المتغيرات
   vuln: Vulnerability[] = [];
@@ -39,13 +39,14 @@ export class Stats implements OnInit {
   numberOFusers: number = 0;
   numberOFpending: number = 0;
   numberOFurls: number = 0;
-  
+
   totalIssuesDetected: number = 0;
   totalReportsGenerated: number = 0;
 
   // متغيرات اللوجز
   logs: LogEntry[] = [];
   isLoadingLogs: boolean = false;
+  errorLogsCount: number = 0;
 
   // مصفوفة الإحصائيات
   stats = [
@@ -63,6 +64,7 @@ export class Stats implements OnInit {
     this.fetchUrls();
     this.fetchReports();
     this.fetchLogs();
+    this.fetchErrorLogsCount();
   }
 
   fetchVulnerabilities() {
@@ -123,14 +125,47 @@ export class Stats implements OnInit {
 
   // --- دوال اللوجز ---
 
+  fetchErrorLogsCount() {
+    this._logService.getLogs(1, 1, '', 'error').subscribe({
+      next: (res) => {
+        const totalLogs = res.totalLogs || 0;
+        const baselineStr = localStorage.getItem('errorLogsBaseline');
+        const baseline = baselineStr ? parseInt(baselineStr, 10) : 0;
+
+        // Ensure baseline doesn't exceed total (e.g. if DB was cleared)
+        const validBaseline = Math.min(baseline, totalLogs);
+
+        this.errorLogsCount = totalLogs - validBaseline;
+
+        // If baseline was invalid/missing, optionally correct it silently
+        if (baseline !== validBaseline) {
+          localStorage.setItem('errorLogsBaseline', validBaseline.toString());
+        }
+      },
+      error: (err) => console.error('Error fetching error logs count:', err)
+    });
+  }
+
+  resetErrorLogs() {
+    this._logService.getLogs(1, 1, '', 'error').subscribe({
+      next: (res) => {
+        const totalLogs = res.totalLogs || 0;
+        localStorage.setItem('errorLogsBaseline', totalLogs.toString());
+        this.errorLogsCount = 0;
+      },
+      error: (err) => console.error('Error during reset:', err)
+    });
+  }
+
   fetchLogs() {
     this.isLoadingLogs = true;
-    
+
     // 🔥 التعديل هنا: تمرير قيم افتراضية للدالة
     // الصفحة 1، عدد 15 عنصر، بحث فارغ، كل المستويات
-    this._logService.getLogs(1, 15, '', 'all').subscribe({
+    this._logService.getLogs(1, 50, '', 'all').subscribe({
       next: (res) => {
-        this.logs = res.data;
+        // Filter out 'error' logs and take exactly the first 10
+        this.logs = res.data.filter((l: any) => l.level !== 'error').slice(0, 10);
         this.isLoadingLogs = false;
       },
       error: (err) => {
@@ -142,10 +177,10 @@ export class Stats implements OnInit {
 
   getLogLevelClass(level: string): string {
     switch (level.toLowerCase()) {
-      case 'error': return 'bg-red-500/10 text-red-500 border-red-500/20';
-      case 'warn': return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20';
-      case 'info': return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
-      default: return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+      case 'error': return 'badge-danger';
+      case 'warn': return 'badge-warning';
+      case 'info': return 'badge-info';
+      default: return 'badge-info';
     }
   }
 }

@@ -1,0 +1,15 @@
+/* Quick Actions Component */
+.qa-wrap {
+    height: 100%;
+}
+
+.qa-inner {
+    padding: 1.5rem;
+}
+
+.qa-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}

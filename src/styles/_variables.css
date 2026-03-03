@@ -1,0 +1,175 @@
+/* ── Variables ── */
+:root {
+    --bg-primary: #060b18;
+    --bg-secondary: #0c1222;
+    --accent: #0ed4c4;
+    --accent-dark: #0ab3a5;
+    --accent-rgb: 14, 212, 196;
+    --accent-glow: rgba(14, 212, 196, 0.15);
+    --danger: #ff4d6a;
+    --danger-rgb: 255, 77, 106;
+    --warning: #ff9f43;
+    --warning-rgb: 255, 159, 67;
+    --yellow: #ffd43b;
+    --yellow-rgb: 255, 212, 59;
+    --info: #3b82f6;
+    --info-rgb: 59, 130, 246;
+    --success: #22d3a7;
+    --success-rgb: 34, 211, 167;
+    --text-primary: #ffffff;
+    --text-secondary: #8892a4;
+    --text-muted: #5a6478;
+
+    /* Liquid Glass tokens */
+    --lg-bg: rgba(12, 18, 34, 0.45);
+    --lg-bg-solid: rgba(15, 22, 41, 0.65);
+    --lg-border: rgba(255, 255, 255, 0.1);
+    --lg-border-accent: rgba(14, 212, 196, 0.2);
+    --lg-specular: rgba(255, 255, 255, 0.55);
+    --lg-blur: 14px;
+    --lg-bounce: cubic-bezier(0.175, 0.885, 0.32, 2.2);
+    --lg-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Space Grotesk', 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+}
+
+/* ── Light Mode Overrides ── */
+body.light-mode {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+
+    /* Glass Tokens for Light Mode */
+    --lg-bg: rgba(255, 255, 255, 0.6);
+    --lg-bg-solid: rgba(255, 255, 255, 0.9);
+    --lg-border: rgba(0, 0, 0, 0.08);
+    --lg-border-accent: rgba(59, 130, 246, 0.5);
+    --lg-specular: rgba(255, 255, 255, 0.8);
+
+    /* Force Blue Accent in Light Mode */
+    --accent: #3b82f6;
+    --accent-dark: #2563eb;
+    --accent-rgb: 59, 130, 246;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    --success: #3b82f6;
+    --success-rgb: 59, 130, 246;
+}
+
+/* Specific Light Mode Adjustments */
+body.light-mode .glass-overlay {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+}
+
+body.light-mode .glass-specular {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, transparent 40%);
+}
+
+body.light-mode .section-dark,
+body.light-mode .site-footer {
+    background: linear-gradient(180deg, #e2e8f0, #f1f5f9);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .form-input,
+body.light-mode .reg-input {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+body.light-mode .nav-brand-text {
+    color: #0f172a;
+}
+
+body.light-mode .sun-icon {
+    display: none;
+}
+
+body.light-mode .moon-icon {
+    display: block !important;
+}
+
+body.light-mode .glass {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .site-navbar .glass-overlay {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+body.light-mode .site-navbar {
+    border-bottom-color: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .nav-links a {
+    color: var(--text-secondary);
+}
+
+body.light-mode .nav-links a:hover,
+body.light-mode .nav-links a.active {
+    color: var(--accent-dark);
+}
+
+body.light-mode .trust-logo {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.03);
+    color: var(--text-muted);
+}
+
+body.light-mode .hero-form {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .form-input {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+body.light-mode .form-input:focus {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: var(--accent);
+}
+
+body.light-mode .btn-ghost:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .service-icon,
+body.light-mode .form-select {
+    background-color: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+body.light-mode .form-select:focus {
+    background-color: rgba(0, 0, 0, 0.06);
+    border-color: var(--accent);
+}
+
+body.light-mode .feature-item-icon,
+body.light-mode .auth-icon {
+    background: rgba(var(--accent-rgb), 0.1);
+    border-color: rgba(var(--accent-rgb), 0.2);
+    box-shadow: none;
+}
+
+body.light-mode .price-card.featured {
+    border-color: var(--accent);
+    box-shadow: 0 12px 40px rgba(var(--accent-rgb), 0.15);
+}
+
+body.light-mode .price-card.featured .glass-overlay {
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.08), rgba(var(--accent-rgb), 0.02));
+}

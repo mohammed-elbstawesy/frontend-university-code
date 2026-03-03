@@ -1,13 +1,17 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quick-actions',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './quick-actions.html',
-  styles: []
+  styleUrls: ['./quick-actions.css']
 })
 export class QuickActions {
+  constructor(private router: Router) { }
 
+  goTo(path: string) {
+    this.router.navigate(['/dashboard/' + path]);
+  }
 }

@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResultsService } from '../../core/services/results.service';
+import { Navbar } from "../home/navbar/navbar";
 
 @Component({
   selector: 'app-scaning-wait',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Navbar],
   templateUrl: './scaning-wait.html',
   styleUrl: './scaning-wait.css',
 })

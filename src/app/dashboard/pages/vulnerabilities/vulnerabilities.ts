@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VulnService } from '../../../core/services/vuln.service';
 import { Vulnerability } from '../../../core/models/vuln.model';
-import { RouterLink } from "@angular/router"; // Router لم نعد بحاجة له في الـ constructor للتعديل
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vulnerabilities',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './vulnerabilities.html',
-  styles: []
+  styleUrls: ['./vulnerabilities.css']
 })
 export class Vulnerabilities implements OnInit {
   selectedFile: File | null = null;
@@ -23,10 +23,14 @@ export class Vulnerabilities implements OnInit {
   isEditModalOpen: boolean = false;
   editingVuln: Vulnerability | null = null; // لتخزين نسخة من الثغرة أثناء التعديل
 
-  constructor(private _vulnService: VulnService) {}
+  constructor(private _vulnService: VulnService, private router: Router) { }
 
   ngOnInit(): void {
     this.fetchVulns();
+  }
+
+  goToAdd() {
+    this.router.navigate(['/dashboard/vulnerabilities/add']);
   }
 
   fetchVulns() {
@@ -41,69 +45,68 @@ export class Vulnerabilities implements OnInit {
   // 🔥 1. دالة فتح الـ Popup
   openEditModal(vuln: Vulnerability) {
     // بناخد نسخة طبق الأصل عشان التعديل ميبانش في الجدول غير لما ندوس حفظ
-    this.editingVuln = JSON.parse(JSON.stringify(vuln)); 
+    this.editingVuln = JSON.parse(JSON.stringify(vuln));
     this.isEditModalOpen = true;
     document.body.style.overflow = 'hidden'; // منع السكرول في الخلفية
   }
 
   // 🔥 2. دالة غلق الـ Popup
   closeEditModal() {
-  this.isEditModalOpen = false;
-  this.editingVuln = null;
-  this.selectedFile = null; // 🔥 تصفير الملف
-  document.body.style.overflow = 'auto';
-}
-onFileSelected(event: any) {
-  const file = event.target.files[0];
-  if (file) {
-    this.selectedFile = file;
+    this.isEditModalOpen = false;
+    this.editingVuln = null;
+    this.selectedFile = null; // 🔥 تصفير الملف
+    document.body.style.overflow = 'auto';
   }
-}
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
 
   // 🔥 3. دالة حفظ التعديلات
- saveEdit() {
-  if (!this.editingVuln || !this.editingVuln._id) return;
+  saveEdit() {
+    if (!this.editingVuln || !this.editingVuln._id) return;
 
-  // 🔥 استخدام FormData بدل الـ Object العادي
-  const formData = new FormData();
+    // 🔥 استخدام FormData بدل الـ Object العادي
+    const formData = new FormData();
 
-  // إضافة البيانات النصية
-  formData.append('name', this.editingVuln.name);
-  formData.append('severity', this.editingVuln.severity);
-  formData.append('description', this.editingVuln.description);
-  formData.append('smallDescription', this.editingVuln.smallDescription || '');
-  
-  // 🔥 إضافة الملف فقط لو المستخدم اختار ملف جديد
-  if (this.selectedFile) {
-    formData.append('scriptFile', this.selectedFile);
-  }
+    // إضافة البيانات النصية
+    formData.append('name', this.editingVuln.name);
+    formData.append('severity', this.editingVuln.severity);
+    formData.append('description', this.editingVuln.description);
+    formData.append('smallDescription', this.editingVuln.smallDescription || '');
 
-  // إرسال الـ FormData للسيرفس
-  this._vulnService.editVulnerability(this.editingVuln._id, formData).subscribe({
-    next: (res) => {
-      // تحديث البيانات محلياً
-      const index = this.vulns.findIndex(v => v._id === this.editingVuln?._id);
-      if (index !== -1 && this.editingVuln) {
-        // تحديث البيانات النصية
-        this.vulns[index] = { ...this.editingVuln }; 
-        
-        // لو رفعنا ملف جديد، نحدث اسمه في العرض (اختياري)
-        if (this.selectedFile) {
-           this.vulns[index].scriptFile = this.selectedFile.name;
-        }
-      }
-      alert("The Vulnerability of {" + this.editingVuln?.name + "} updated successfully ");
-      // console.log('Vulnerability updated successfully');
-
-      this.closeEditModal();
-      this.selectedFile = null; // تصفير الملف
-    },
-    error: (err) => {
-      console.error('Error updating vulnerability:', err);
-      alert('Failed to update vulnerability');
+    // 🔥 إضافة الملف فقط لو المستخدم اختار ملف جديد
+    if (this.selectedFile) {
+      formData.append('scriptFile', this.selectedFile);
     }
-  });
-}
+
+    // إرسال الـ FormData للسيرفس
+    this._vulnService.editVulnerability(this.editingVuln._id, formData).subscribe({
+      next: (res) => {
+        // تحديث البيانات محلياً
+        const index = this.vulns.findIndex(v => v._id === this.editingVuln?._id);
+        if (index !== -1 && this.editingVuln) {
+          // تحديث البيانات النصية
+          this.vulns[index] = { ...this.editingVuln };
+
+          // لو رفعنا ملف جديد، نحدث اسمه في العرض (اختياري)
+          if (this.selectedFile) {
+            this.vulns[index].scriptFile = this.selectedFile.name;
+          }
+        }
+        alert("The Vulnerability of {" + this.editingVuln?.name + "} updated successfully ");
+
+        this.closeEditModal();
+        this.selectedFile = null; // تصفير الملف
+      },
+      error: (err) => {
+        console.error('Error updating vulnerability:', err);
+        alert('Failed to update vulnerability');
+      }
+    });
+  }
 
   // ... (باقي الجيترز والوظائف القديمة زي ما هي) ...
   get filteredVulns(): Vulnerability[] {
@@ -117,8 +120,8 @@ onFileSelected(event: any) {
       const status = this.statusFilter.toLowerCase();
       let matchesStatus = true;
       if (status !== 'all') {
-         if (status === 'available') matchesStatus = v.isActive === true;
-         else if (status === 'cancelled') matchesStatus = v.isActive === false;
+        if (status === 'available') matchesStatus = v.isActive === true;
+        else if (status === 'cancelled') matchesStatus = v.isActive === false;
       }
       return matchesSearch && matchesSeverity && matchesStatus;
     });
@@ -126,22 +129,22 @@ onFileSelected(event: any) {
 
   getSeverityClass(severity: string | undefined): string {
     const map: { [k: string]: string } = {
-      'critical': 'bg-red-500/15 text-red-500 border-red-500/30',
-      'high': 'bg-orange-500/15 text-orange-500 border-orange-500/30',
-      'medium': 'bg-blue-500/15 text-blue-500 border-blue-500/30',
-      'low': 'bg-slate-500/15 text-slate-400 border-slate-500/30'
+      'critical': 'badge-danger',
+      'high': 'badge-warning',
+      'medium': 'badge-info',
+      'low': 'badge-info'
     };
     return map[(severity || '').toLowerCase()] || map['low'];
   }
 
   getStatusClass(isActive?: boolean): string {
-    if (isActive === undefined) return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
-    return isActive ? 'bg-orange-500/10 text-orange-500 border-orange-500/20' : 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+    if (isActive === undefined) return 'badge-info';
+    return isActive ? 'badge-warning' : 'badge-info';
   }
 
   getStatusDotClass(isActive?: boolean): string {
-    if (isActive === undefined) return 'bg-slate-400';
-    return isActive ? 'bg-orange-500 shadow-[0_0_8px_rgba(255,140,66,0.6)] animate-pulse' : 'bg-slate-400';
+    if (isActive === undefined) return 'dot-indicator';
+    return isActive ? 'dot-indicator dot-green-pulse' : 'dot-indicator dot-red';
   }
 
   toggleActive(vuln: Vulnerability) {

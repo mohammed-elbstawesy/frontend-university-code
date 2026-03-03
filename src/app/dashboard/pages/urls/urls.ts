@@ -1,34 +1,56 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Url } from '../../../core/models/url.model';
 import { UrlService } from '../../../core/services/url.service';
 import { ResultsService } from '../../../core/services/results.service';
-import { Router } from '@angular/router'; // 1. استدعاء Router
+import { Router } from '@angular/router';
+import { Subject, timer } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-urls',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './urls.html',
+  styleUrls: ['./urls.css']
 })
-export class Urls implements OnInit {
-  
+export class Urls implements OnInit, OnDestroy {
+
   constructor(
     private _url: UrlService,
     private _result: ResultsService,
     private _router: Router // 2. حقن Router
-  ) {}
+  ) { }
 
   searchTerm = '';
   URLS: Url[] = [];
+  private destroy$ = new Subject<void>();
 
   ngOnInit() {
-    this.loadUrls();
+    this.startPollingUrls();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadUrls() {
     this._url.getUrls().subscribe({
+      next: (res: Url[]) => {
+        this.URLS = res;
+      },
+      error: (err) => console.error('Error fetching URLs:', err)
+    });
+  }
+
+  startPollingUrls() {
+    // يراقب أي تحديثات كل 5 ثواني
+    timer(0, 5000).pipe(
+      switchMap(() => this._url.getUrls()),
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (res: Url[]) => {
         this.URLS = res;
       },
@@ -59,7 +81,7 @@ export class Urls implements OnInit {
     if (!url) return '';
     // لو الرابط مفيهوش http أو https بنضيفهم عشان المتصفح يفهم إنه رابط خارجي
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        return 'http://' + url;
+      return 'http://' + url;
     }
     return url;
   }
@@ -68,18 +90,18 @@ export class Urls implements OnInit {
 
   // دالة إعادة الفحص (تركتها لك لو احتجتها لاحقاً)
   rescan(urlObj: Url) {
-    if(!confirm(`Start scanning ${urlObj.originalUrl}?`)) return;
+    if (!confirm(`Start scanning ${urlObj.originalUrl}?`)) return;
 
-    urlObj.status = 'Scanning'; 
+    urlObj.status = 'Scanning';
 
     this._result.runNewScan(urlObj._id).subscribe({
       next: (response) => {
         alert('Scan started successfully!');
-        this.loadUrls(); 
+        this.loadUrls();
       },
       error: (err) => {
         console.error(err);
-        urlObj.status = 'Failed'; 
+        urlObj.status = 'Failed';
         alert('Failed to start scan.');
       }
     });
@@ -88,29 +110,30 @@ export class Urls implements OnInit {
   extractSiteName(url: string): string {
     if (!url) return '';
     try {
-        const hostname = new URL(this.ensureProtocol(url)).hostname; // استخدام ensureProtocol هنا أيضاً لتجنب الأخطاء
-        return hostname.replace('www.', '');
+      const hostname = new URL(this.ensureProtocol(url)).hostname; // استخدام ensureProtocol هنا أيضاً لتجنب الأخطاء
+      return hostname.replace('www.', '');
     } catch {
-        let domain = url.replace(/(^\w+:|^)\/\//, '');
-        domain = domain.replace('www.', '');
-        return domain.split('/')[0];
+      let domain = url.replace(/(^\w+:|^)\/\//, '');
+      domain = domain.replace('www.', '');
+      return domain.split('/')[0];
     }
   }
-  
+
   getStatusBadgeClass(status: string | undefined) {
-        const statusMap: {[key: string]: string} = {
-            'Finished': 'bg-green-500/10 text-green-500 border border-green-500/20',
-            'Scanning': 'bg-blue-500/10 text-blue-500 border border-blue-500/20 animate-pulse',
-            'Failed': 'bg-red-500/10 text-red-500 border border-red-500/20',
-            'UnScaned': 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
-        };
-        return statusMap[status || 'UnScaned'] || 'bg-slate-500/10 text-slate-400';
+    const statusMap: { [key: string]: string } = {
+      'Finished': 'badge-success',
+      'Scanning': 'badge-info',
+      'Failed': 'badge-danger',
+      'UnScaned': 'badge-info'
+    };
+    return statusMap[status || 'UnScaned'] || 'badge-info';
   }
-    
+
   getVulnCountClass(count: number | undefined) {
-      const c = count || 0;
-      if (c >= 5) return 'bg-red-500/10 text-red-500 border border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.2)]';
-      if (c > 0) return 'bg-orange-500/10 text-orange-500 border border-orange-500/20';
-      return 'bg-slate-800 text-slate-500'; 
+    const c = count || 0;
+    if (c >= 5) return 'badge-danger';
+    if (c > 0) return 'badge-warning';
+    return 'badge-info';
   }
+
 }

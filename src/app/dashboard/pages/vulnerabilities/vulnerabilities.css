@@ -1,0 +1,112 @@
+/* Vulnerabilities Page */
+.vulns-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.vulns-filters {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.vulns-table-scroll {
+    overflow-x: auto;
+}
+
+.vulns-filter-bar {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 1.5rem;
+}
+
+.vulns-title-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.vulns-title-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.vulns-title-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.vulns-script-cell {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    opacity: 0.9;
+    background: rgba(14, 212, 196, 0.08);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.vulns-status-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.vulns-actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.vulns-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.vulns-toggle-label-on {
+    font-weight: 700;
+    color: var(--success);
+}
+
+.vulns-toggle-label-off {
+    font-weight: 700;
+    color: var(--danger);
+}
+
+.vulns-edit-btn {
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vulns-current-file {
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: rgba(14, 212, 196, 0.08);
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius-sm);
+    display: inline-block;
+    font-family: var(--font-mono);
+    margin-bottom: 0.5rem;
+}
+
+.vulns-file-hint {
+    font-size: 0.625rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+/* --- Auto-extracted inline styles --- */
+.vulnerabilities-style-1 { max-width:32rem; }

@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './header.html',
-  styles: []
+  styleUrls: ['./header.css']
 })
 export class Header {
   @Output() toggleSidebar = new EventEmitter<void>();

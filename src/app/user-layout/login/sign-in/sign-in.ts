@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
-import { Router, RouterLink, ActivatedRoute } from '@angular/router'; 
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ScanService } from '../../../core/services/scan.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
@@ -10,29 +10,41 @@ import { UrlService } from '../../../core/services/url.service';
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './sign-in.html',
-  styles: []
+  styleUrls: ['./sign-in.css','./../login.css']
 })
 export class SignIn {
-  
+
   constructor(
     private _authService: AuthService,
     private router: Router,
     private _urlService: UrlService,
-    private route: ActivatedRoute 
-  ) {}
+    private route: ActivatedRoute
+  ) { }
   showPassword = false;
   scanService = inject(ScanService);
   isLoading = false;
   errorMessage: string = '';
-  
+
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
   togglePassword() {
     this.showPassword = !this.showPassword;
+  }
+
+  goToForgotPassword() {
+    this.router.navigate(['/login/forgot-password']);
+  }
+
+  goToSignUp() {
+    this.router.navigate(['/login/signup']);
+  }
+
+  goBack() {
+    this.router.navigate(['/']);
   }
 
   onSubmit() {
@@ -42,7 +54,7 @@ export class SignIn {
     const password = this.loginForm.get('password')!.value;
     const data = { email: email!, password: password! };
 
-    this.isLoading = true; 
+    this.isLoading = true;
 
     this._authService.login(data).subscribe({
       next: (res) => {
@@ -58,7 +70,7 @@ export class SignIn {
 
         if (returnUrl) {
           this.router.navigateByUrl(returnUrl);
-        } 
+        }
         else {
           // 2. اللوجيك القديم (Pending Data & Default Redirect)
           const pendingUrl = localStorage.getItem('pendingData');
@@ -67,7 +79,7 @@ export class SignIn {
             this._urlService.addUrl({ originalUrl: pendingUrl }).subscribe({
               next: (res) => {
                 localStorage.removeItem('pendingData');
-                this.router.navigate(['/result']); 
+                this.router.navigate(['/result']);
               },
               error: (err) => {
                 console.error('Failed to save pending URL', err);
@@ -79,7 +91,7 @@ export class SignIn {
             if (role === 'admin') {
               this.router.navigate(['/dashboard']);
             } else {
-              this.router.navigate(['']); 
+              this.router.navigate(['']);
             }
           }
         }
@@ -91,11 +103,11 @@ export class SignIn {
         // 🔥🔥🔥 التعديل الجديد هنا 🔥🔥🔥
         // التحقق هل الحساب غير مفعل؟
         if (err.error && err.error.notVerified) {
-            // توجيه المستخدم لصفحة الـ OTP مع تمرير الإيميل
-            this.router.navigate(['/login/verify'], {
-                queryParams: { email: email }
-            });
-            return; // وقف التنفيذ
+          // توجيه المستخدم لصفحة الـ OTP مع تمرير الإيميل
+          this.router.navigate(['/login/verify'], {
+            queryParams: { email: email }
+          });
+          return; // وقف التنفيذ
         }
 
         // إظهار رسائل الخطأ العادية

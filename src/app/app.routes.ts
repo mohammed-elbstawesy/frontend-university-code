@@ -1,72 +1,57 @@
 import { Routes } from '@angular/router';
-import { UserLayout } from './user-layout/user-layout';
-import { Home } from './user-layout/home/home';
-import { Result } from './user-layout/result/result';
-import { Login } from './user-layout/login/login';
-import { SignIn } from './user-layout/login/sign-in/sign-in';
-import { SignUp } from './user-layout/login/sign-up/sign-up';
-import { Dashboard } from './dashboard/dashboard';
-import { Urls } from './dashboard/pages/urls/urls';
-import { Reports } from './dashboard/pages/reports/reports';
-import { Vulnerabilities } from './dashboard/pages/vulnerabilities/vulnerabilities';
-import { Overview } from './dashboard/pages/overview/overview';
-import { UsersInfo } from './dashboard/pages/users-info/users-info';
-import { Users } from './dashboard/pages/users/users';
 import { adminGuard } from './core/guards/admin.guard';
 import { userGuard } from './core/guards/user-guard';
-import { AddVulnerability } from './dashboard/pages/vulnerabilities/add-vulnerability/add-vulnerability';
-import { Profile } from './user-layout/profile/profile';
-import { UserUrls } from './user-layout/user-urls/user-urls';
-import { ScaningWait } from './user-layout/scaning-wait/scaning-wait';
 import { notloginGuard } from './core/guards/notlogin-guard';
-import { VerifyOtp } from './user-layout/login/verify-otp/verify-otp';
-import { ForgotPassword } from './user-layout/login/forgot-password/forgot-password';
-import { ResetPassword } from './user-layout/login/reset-password/reset-password';
-import { Log } from './dashboard/pages/log/log';
-
 
 export const routes: Routes = [
     {
         path: '',
-        component: UserLayout,
+        loadComponent: () => import('./user-layout/user-layout').then(m => m.UserLayout),
         children: [
-            { path: '', component: Home },
-            { path: 'result', component: Result,canActivate:[userGuard]},
-            { path: 'scanning-wait/:id', component: ScaningWait, canActivate: [userGuard] },
-            {path: 'profile',component:Profile},
-            {path:'user-urls',component:UserUrls,canActivate:[userGuard]},
-            // داخل مصفوفة children بتاعة login
-            { path: 'result/:id', component: Result,canActivate:[userGuard] },
-            { 
-                path: 'login', 
-                component: Login,
+            {
+                path: '',
+                loadComponent: () => import('./user-layout/home/footer/footer.component').then(m => m.FooterComponent),
                 children: [
-                    { path: 'signin', component: SignIn,canActivate:[notloginGuard] },
-                    { path: 'signup', component: SignUp },
-                    { path: 'verify', component: VerifyOtp },
-                    { path: 'forgot-password', component: ForgotPassword },
-                    { path: 'reset-password', component: ResetPassword },
+                    { path: '', loadComponent: () => import('./user-layout/home/home').then(m => m.Home) },
+                    { path: 'about', loadComponent: () => import('./user-layout/home/about/about.component').then(m => m.AboutComponent) },
+                    { path: 'services', loadComponent: () => import('./user-layout/home/services/services.component').then(m => m.ServicesComponent) },
+                    { path: 'pricing', loadComponent: () => import('./user-layout/home/pricing/pricing.component').then(m => m.PricingComponent) },
+                ]
+            },
+            { path: 'result', loadComponent: () => import('./user-layout/result/result').then(m => m.Result), canActivate: [userGuard] },
+            { path: 'scanning-wait/:id', loadComponent: () => import('./user-layout/scaning-wait/scaning-wait').then(m => m.ScaningWait), canActivate: [userGuard] },
+            { path: 'profile', loadComponent: () => import('./user-layout/profile/profile').then(m => m.Profile) },
+            { path: 'user-urls', loadComponent: () => import('./user-layout/user-urls/user-urls').then(m => m.UserUrls), canActivate: [userGuard] },
+            { path: 'checkout', loadComponent: () => import('./checkout/checkout').then(m => m.Checkout) },
+            { path: 'result/:id', loadComponent: () => import('./user-layout/result/result').then(m => m.Result), canActivate: [userGuard] },
+            {
+                path: 'login',
+                loadComponent: () => import('./user-layout/login/login').then(m => m.Login),
+                children: [
+                    { path: 'signin', loadComponent: () => import('./user-layout/login/sign-in/sign-in').then(m => m.SignIn), canActivate: [notloginGuard] },
+                    { path: 'signup', loadComponent: () => import('./user-layout/login/sign-up/sign-up').then(m => m.SignUp) },
+                    { path: 'verify', loadComponent: () => import('./user-layout/login/verify-otp/verify-otp').then(m => m.VerifyOtp) },
+                    { path: 'forgot-password', loadComponent: () => import('./user-layout/login/forgot-password/forgot-password').then(m => m.ForgotPassword) },
+                    { path: 'reset-password', loadComponent: () => import('./user-layout/login/reset-password/reset-password').then(m => m.ResetPassword) },
                     { path: '', redirectTo: 'signin', pathMatch: 'full' }
                 ]
             }
         ]
     },
-    
     {
         path: 'dashboard',
-        component: Dashboard, 
+        loadComponent: () => import('./dashboard/dashboard').then(m => m.Dashboard),
         children: [
-            { path: '', component: Overview },
-            { path: 'vulnerabilities/add', component: AddVulnerability },  
-            { path: 'urls', component: Urls },
-            { path: 'reports', component: Reports },
-            { path: 'vulnerabilities', component: Vulnerabilities },
-            { path: 'users', component: Users },
-            { path: 'users-info', component: UsersInfo },
-            { path: 'logs', component: Log }
+            { path: '', loadComponent: () => import('./dashboard/pages/overview/overview').then(m => m.Overview) },
+            { path: 'vulnerabilities/add', loadComponent: () => import('./dashboard/pages/vulnerabilities/add-vulnerability/add-vulnerability').then(m => m.AddVulnerability) },
+            { path: 'urls', loadComponent: () => import('./dashboard/pages/urls/urls').then(m => m.Urls) },
+            { path: 'reports', loadComponent: () => import('./dashboard/pages/reports/reports').then(m => m.Reports) },
+            { path: 'vulnerabilities', loadComponent: () => import('./dashboard/pages/vulnerabilities/vulnerabilities').then(m => m.Vulnerabilities) },
+            { path: 'users', loadComponent: () => import('./dashboard/pages/users/users').then(m => m.Users) },
+            { path: 'users-info', loadComponent: () => import('./dashboard/pages/users-info/users-info').then(m => m.UsersInfo) },
+            { path: 'logs', loadComponent: () => import('./dashboard/pages/log/log').then(m => m.Log) }
         ],
-    canActivate: [adminGuard],
-
+        canActivate: [adminGuard],
     },
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

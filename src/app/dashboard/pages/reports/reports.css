@@ -1,0 +1,44 @@
+/* Reports Page */
+.reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.reports-filters {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.reports-table-scroll {
+    overflow-x: auto;
+}
+
+.reports-name-cell {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.reports-name-icon {
+    color: var(--text-muted);
+}
+
+.reports-date-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.reports-vulns-count {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    color: var(--text-secondary);
+}
