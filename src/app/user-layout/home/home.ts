@@ -24,11 +24,10 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   urlForm!: FormGroup;
   errorMessage: string = '';
 
-  // Hero text cycling
-  heroWords = ['Detection', 'Analysis', 'Protection', 'Security'];
-  heroWord = 'Detection';
-  heroFade = true;
-  private heroInterval: any;
+  // Hero typing effect
+  typingWords = ['Digital Age', 'Enterprise Apps', 'Cloud Infrastructure', 'Web Applications', 'API Endpoints'];
+  typingText = '';
+  private typingTimeout: any;
 
   // FAQ accordion
   faqOpen: boolean[] = [false, false, false, false];
@@ -61,20 +60,42 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       ]),
     });
 
-    // Hero text cycling animation
-    let wordIndex = 0;
-    this.heroInterval = setInterval(() => {
-      this.heroFade = false;
-      setTimeout(() => {
-        wordIndex = (wordIndex + 1) % this.heroWords.length;
-        this.heroWord = this.heroWords[wordIndex];
-        this.heroFade = true;
-      }, 400);
-    }, 3000);
+    // Hero typing effect
+    this.initTyping();
   }
 
   ngOnDestroy() {
-    if (this.heroInterval) clearInterval(this.heroInterval);
+    if (this.typingTimeout) clearTimeout(this.typingTimeout);
+  }
+
+  initTyping() {
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    const type = () => {
+      const current = this.typingWords[wordIndex];
+      if (isDeleting) {
+        this.typingText = current.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        this.typingText = current.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let delay = isDeleting ? 40 : 80;
+
+      if (!isDeleting && charIndex === current.length) {
+        delay = 2000;
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % this.typingWords.length;
+        delay = 400;
+      }
+      this.typingTimeout = setTimeout(type, delay);
+    };
+    this.typingTimeout = setTimeout(type, 1200);
   }
 
   ngAfterViewInit() {
