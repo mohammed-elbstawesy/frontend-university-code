@@ -124,7 +124,7 @@
                             <label>Phone Number</label>
                             <div class="input-wrap sign-up-style-2">
                                 @if (selectedCountryCode) {
-                                <div class="sign-up-style-3" >
+                                <div class="sign-up-style-3">
                                     {{ selectedCountryCode }}</div>
                                 }
                                 <div class="input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -169,7 +169,7 @@
                             <div class="input-wrap">
                                 <input formControlName="password" [type]="showPassword ? 'text' : 'password'"
                                     class="form-input sign-up-style-4" placeholder="••••••••">
-                                <svg class="sign-up-style-5" (click)="showPassword = !showPassword" 
+                                <svg class="sign-up-style-5" (click)="showPassword = !showPassword"
                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2">
                                     <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
@@ -177,10 +177,10 @@
                                 </svg>
                             </div>
                             @if (pass?.invalid && (pass?.dirty || pass?.touched)) {
-                            <div class="sign-up-style-6" >
-                                <p class="sign-up-style-7" >
+                            <div class="sign-up-style-6">
+                                <p class="sign-up-style-7">
                                     Password Requirements:</p>
-                                <div class="sign-up-style-8" >
+                                <div class="sign-up-style-8">
                                     <span [style.color]="hasMinLength() ? 'var(--success)' : 'var(--text-muted)'">• At
                                         least 8 characters</span>
                                     <span [style.color]="hasUpperCase() ? 'var(--success)' : 'var(--text-muted)'">• One
@@ -202,7 +202,7 @@
                             <div class="input-wrap">
                                 <input formControlName="rePassword" [type]="showRePassword ? 'text' : 'password'"
                                     class="form-input sign-up-style-9" placeholder="••••••••">
-                                <svg class="sign-up-style-10" (click)="showRePassword = !showRePassword" 
+                                <svg class="sign-up-style-10" (click)="showRePassword = !showRePassword"
                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2">
                                     <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
@@ -267,14 +267,14 @@
                             <div class="file-wrap">
                                 <input title="image" type="file" (change)="onFileSelected($event)" accept="image/*">
                                 <div class="file-btn">Choose File</div>
-                                <div class="file-name">No file chosen</div>
+                                <div class="file-name">{{ selectedFileName }}</div>
                             </div>
                         </div>
 
                     </div><!-- /.reg-grid -->
 
                     <!-- Legal Disclaimer -->
-                    <div class="disclaimer">
+                    <div class="disclaimer" [class.disclaimer-accepted]="signUpForm.value.agreement">
                         <input formControlName="agreement" type="checkbox">
                         <div class="disclaimer-body">
                             <span class="d-title">LEGAL DISCLAIMER:</span>
@@ -288,7 +288,8 @@
                     }
 
                     <!-- Submit -->
-                    <button type="submit" [disabled]="isLoading || signUpForm.invalid" class="btn-primary btn-lg sign-up-style-12"  [style.opacity]="signUpForm.invalid ? '0.6' : '1'">
+                    <button type="submit" [disabled]="isLoading"
+                        class="btn-primary btn-lg sign-up-style-12" [style.opacity]="signUpForm.invalid ? '0.6' : '1'">
                         @if (isLoading) {
                         Creating Account...
                         } @else {

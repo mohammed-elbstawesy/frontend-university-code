@@ -10,7 +10,7 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './sign-up.html',
-  styleUrls: ['./sign-up.css','./../login.css']
+  styleUrls: ['./sign-up.css', './../login.css']
 })
 export class SignUp {
   scanService = inject(ScanService);
@@ -48,6 +48,8 @@ export class SignUp {
   // متغيرات للتحكم في ظهور الباسورد
   showPassword = false;
   showRePassword = false;
+
+  selectedFileName: string = 'No file chosen';
 
   constructor(private _authService: AuthService, private router: Router) {
     this.signUpForm = this.fb.group({
@@ -135,6 +137,10 @@ export class SignUp {
     const file: File = event.target.files[0];
     if (file) {
       this.signUpForm.patchValue({ image: file });
+      this.selectedFileName = file.name;
+    } else {
+      this.signUpForm.patchValue({ image: null });
+      this.selectedFileName = 'No file chosen';
     }
   }
 
