@@ -44,6 +44,7 @@
                 <tbody>
                     @for (user of filteredUsers; track user._id; let i = $index) {
                     <tr>
+                        @if(user.userPending==='accepted') {
                         <td class="info-name">{{ i + 1 }}</td>
                         <td class="info-name">{{ user.fristName }} {{user.lastName}}</td>
                         <td>{{ user.email }}</td>
@@ -90,6 +91,7 @@
                                 }
                             </div>
                         </td>
+                    }
                     </tr>
                     }
                 </tbody>
