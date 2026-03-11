@@ -144,22 +144,17 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
           // 🔥 التعديل هنا: نأخذ الـ ID من الاستجابة لبدء الفحص
           const urlId = response._id;
 
-          // 2. بدء الفحص باستخدام الـ ID
-          this._scanService.runNewScan(urlId).subscribe({
-            next: () => { }
-            // console.log('Scan started successfully')
-            ,
-            error: (err) =>
-              console.error('Error starting scan:', err),
-          });
-
-          // 3. التوجيه
+          // 2. التوجيه وبدء الفحص
           if (this.role === 'admin') {
-            this.router.navigate(['/dashboard/urls']); // الأفضل توجيهه لصفحة الروابط
+            // المسئول يبدأ الفحص ويروح للوحة التحكم
+            this._scanService.runNewScan(urlId).subscribe({
+              error: (err) => console.error('Error starting scan:', err),
+            });
+            this.router.navigate(['/dashboard/urls']);
           } else {
-            // توجيه اليوزر لصفحة الانتظار أو النتيجة (حسب اللوجيك بتاعك)
-            // هنا ممكن تبعت الـ ID كمان عشان الصفحة تعرض تفاصيله
-            this.router.navigate(['/scanning-wait', response._id]);
+            // توجيه اليوزر العادي لصفحة الانتظار (الصفحة دي هي اللي هتشغل الفحص عشان نتجنب الـ Double Scan)
+            // ونبعت state عشان نمنع الدخول المباشر من الـ URL
+            this.router.navigate(['/scanning-wait', urlId], { state: { authorized: true } });
           }
         },
         error: (error) =>

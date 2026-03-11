@@ -25,7 +25,14 @@ export class ScaningWait implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // 1. جلب الـ ID من الرابط
+    // 1. الحماية من الدخول المباشر عبر الـ URL
+    const isAuthorized = history.state?.authorized;
+    if (!isAuthorized) {
+       this.router.navigate(['/']);
+       return;
+    }
+
+    // 2. جلب الـ ID من الرابط
     this.targetUrlId = this.route.snapshot.paramMap.get('id') || '';
 
     if (this.targetUrlId) {
