@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://188.239.55.189:3000/api/'
+  apiUrl: "https://vulncraft.duckdns.org/api/"
 };
 
 /*
