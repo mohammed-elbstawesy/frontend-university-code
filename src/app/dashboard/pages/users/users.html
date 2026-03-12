@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (user of users; track user._id) {
+                    @for (user of users.slice().reverse(); track user._id) {
                     @if (pending(user._id)) {
                     <tr>
                         <td>

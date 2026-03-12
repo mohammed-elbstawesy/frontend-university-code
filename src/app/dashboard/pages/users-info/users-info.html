@@ -42,7 +42,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (user of filteredUsers; track user._id; let i = $index) {
+                    @for (user of filteredUsers.slice().reverse(); track user._id; let i = $index) {
                     <tr>
                         @if(user.userPending==='accepted') {
                         <td class="info-name">{{ i + 1 }}</td>

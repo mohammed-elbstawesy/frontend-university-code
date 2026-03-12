@@ -48,7 +48,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (report of filteredReports; track report.id) {
+                    @for (report of filteredReports.slice().reverse(); track report.id) {
                     <tr>
                         <td class="reports-name-cell">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"

@@ -33,7 +33,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (url of filteredUrls; track url._id; let i = $index) {
+                    @for (url of filteredUrls.slice().reverse(); track url._id; let i = $index) {
                     <tr>
                         <td class="urls-row-num">{{ i + 1 }}</td>
                         <td class="urls-site-name">{{ extractSiteName(url.originalUrl) }}</td>
