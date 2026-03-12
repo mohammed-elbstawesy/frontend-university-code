@@ -3,13 +3,14 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ScanService } from './core/services/scan.service';
 import { Toast } from './shared/components/toast/toast';
+import { ScrollTopComponent } from './shared/components/scroll-top/scroll-top';
 
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, Toast],
+  imports: [RouterOutlet, CommonModule, Toast, ScrollTopComponent],
 })
 export class App implements AfterViewInit {
   protected readonly title = signal('frontend');

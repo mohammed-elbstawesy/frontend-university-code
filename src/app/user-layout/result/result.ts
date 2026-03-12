@@ -11,6 +11,7 @@ import { ScanReport, ScanDetail } from '../../core/models/results.model';
 import { map, of, switchMap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router'; // 1. Added Router
 import { DowmloadFileService } from '../../core/services/dowmload-file.service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-result',
@@ -27,7 +28,8 @@ export class Result implements OnInit {
     private _results: ResultsService,
     private _route: ActivatedRoute,
     private router: Router, // 2. Injected Router for redirection
-    private _fileService: DowmloadFileService // 2. حقن الـ Service هنا
+    private _fileService: DowmloadFileService, // 2. حقن الـ Service هنا
+    private toastService: ToastService
   ) {}
 
   // Variables
@@ -54,8 +56,7 @@ export class Result implements OnInit {
     this.targetUrlId = this._route.snapshot.paramMap.get('id') || '';
 
     if (!this.targetUrlId) {
-        console.error('No ID provided in the URL');
-        this.router.navigate(['/user-urls']); // Redirect if no ID
+        this.router.navigate(['/user-urls']);
         return; 
     }
 
@@ -89,19 +90,14 @@ export class Result implements OnInit {
         this.numberOfvuln = this.vulns.length;
         this.numberOfCritical = this.vulns.filter(v => v.severity === 'Critical').length;
         this.numberOfHigh = this.vulns.filter(v => v.severity === 'High').length;
-        
-        // console.log('Final Vulnerabilities loaded:', this.vulns);
       },
-      // 🔥 Updated Error Handling Logic
       error: (err) => {
         console.error('Error fetching report:', err);
         
-        // Check for 403 Forbidden (Ownership check failed)
         if (err.status === 403) {
-          alert("⛔ Access Denied: You do not own this report.");
+          this.toastService.show('⛔ Access Denied: You do not own this report.', 'error');
           this.router.navigate(['/user-urls']); 
         } else {
-          // Handle other errors (e.g., 404 Not Found)
           this.router.navigate(['/']);
         }
       }

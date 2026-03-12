@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-reports',
@@ -10,6 +11,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./reports.css']
 })
 export class Reports {
+  private toastService = inject(ToastService);
   searchTerm = '';
   filterType = 'all';
 
@@ -43,6 +45,6 @@ export class Reports {
 
   download(id: number) {
     const report = this.reports.find(r => r.id === id);
-    alert(`📥 Downloading report: ${report?.name}`);
+    this.toastService.show(`📥 Downloading report: ${report?.name}`, 'info');
   }
 }

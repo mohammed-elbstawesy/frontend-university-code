@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Navbar } from '../home/navbar/navbar';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,7 @@ import { jwtDecode } from 'jwt-decode';
 import { AuthService } from '../../core/services/auth.service';
 import { Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-user-urls',
@@ -19,6 +20,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 })
 export class UserUrls implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+  private toastService = inject(ToastService);
   userUrls: any[] = [];
   filteredUrls: any[] = [];
 
@@ -210,7 +212,7 @@ export class UserUrls implements OnInit, OnDestroy {
   }
 
   exportReport(): void {
-    alert('Export functionality coming soon!');
+    this.toastService.show('Export functionality coming soon!', 'info');
   }
 
   // تنسيق الألوان بناءً على الحالة المعروضة

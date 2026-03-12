@@ -7,6 +7,7 @@ import { ResultsService } from '../../../core/services/results.service';
 import { Router } from '@angular/router';
 import { Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-urls',
@@ -20,7 +21,8 @@ export class Urls implements OnInit, OnDestroy {
   constructor(
     private _url: UrlService,
     private _result: ResultsService,
-    private _router: Router // 2. حقن Router
+    private _router: Router, // 2. حقن Router
+    private toastService: ToastService
   ) { }
 
   searchTerm = '';
@@ -96,13 +98,13 @@ export class Urls implements OnInit, OnDestroy {
 
     this._result.runNewScan(urlObj._id).subscribe({
       next: (response) => {
-        alert('Scan started successfully!');
+        this.toastService.show('Scan started successfully!', 'success');
         this.loadUrls();
       },
       error: (err) => {
         console.error(err);
         urlObj.status = 'Failed';
-        alert('Failed to start scan.');
+        this.toastService.show('Failed to start scan.', 'error');
       }
     });
   }

@@ -6,16 +6,18 @@ import { FormsModule } from '@angular/forms';
 import { Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
+import { FallbackImageDirective } from '../../../shared/directives/fallback-image.directive';
+import { ToastService } from '../../../core/services/toast.service';
 @Component({
   selector: 'app-users-info',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FallbackImageDirective],
   templateUrl: './users-info.html',
   styleUrls: ['./users-info.css']
 })
 export class UsersInfo implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  constructor(private _userService: UserService) { }
+  constructor(private _userService: UserService, private toastService: ToastService) { }
   allUsersCount: number = 0;
   users: User[] = []
   isUserModalOpen: boolean = false;
@@ -69,7 +71,7 @@ export class UsersInfo implements OnInit, OnDestroy {
   }
 
   delete(userId?: string) {
-    if (!userId) return alert('User id missing');
+    if (!userId) return this.toastService.show('User id missing', 'error');
     const user = this.users.find(u => u._id === userId); // نجد المستخدم
     if (confirm(`you are sure to stop ${this.users.find(u => u._id === userId)?.fristName} account's ?`)) {
       this._userService.editUserStatus(userId, { userActive: 'notActive', userPending: 'accepted', fristName: user?.fristName })
@@ -80,14 +82,14 @@ export class UsersInfo implements OnInit, OnDestroy {
           },
           error: err => {
             console.error(err);
-            alert('Failed to update user');
+            this.toastService.show('Failed to update user', 'error');
           }
         });
     }
   }
 
   restore(userId?: string) {
-    if (!userId) return alert('User id missing');
+    if (!userId) return this.toastService.show('User id missing', 'error');
     const user = this.users.find(u => u._id === userId);
     if (confirm(`you are sure to restore ${this.users.find(u => u._id === userId)?.fristName} account's ?`)) {
       this._userService.editUserStatus(userId, { userActive: 'active', fristName: user?.fristName })
@@ -98,7 +100,7 @@ export class UsersInfo implements OnInit, OnDestroy {
           },
           error: err => {
             console.error(err);
-            alert('Failed to update user');
+            this.toastService.show('Failed to update user', 'error');
           }
         });
     }
@@ -106,7 +108,7 @@ export class UsersInfo implements OnInit, OnDestroy {
 
 
   toUser(userId?: string) {
-    if (!userId) return alert('User id missing');
+    if (!userId) return this.toastService.show('User id missing', 'error');
     if (confirm(`you are sure to change ${this.users.find(u => u._id === userId)?.fristName} account's to be a user?`)) {
       this._userService.editUserStatus(userId, { role: 'user' })
         .subscribe({
@@ -116,14 +118,14 @@ export class UsersInfo implements OnInit, OnDestroy {
           },
           error: err => {
             console.error(err);
-            alert('Failed to update user');
+            this.toastService.show('Failed to update user', 'error');
           }
         });
     }
   }
 
   toAdmin(userId?: string) {
-    if (!userId) return alert('User id missing');
+    if (!userId) return this.toastService.show('User id missing', 'error');
     if (confirm(`you are sure to change ${this.users.find(u => u._id === userId)?.fristName} account's to be an admin?`)) {
       this._userService.editUserStatus(userId, { role: 'admin' })
         .subscribe({
@@ -132,7 +134,7 @@ export class UsersInfo implements OnInit, OnDestroy {
           },
           error: err => {
             console.error(err);
-            alert('Failed to update user');
+            this.toastService.show('Failed to update user', 'error');
           }
         });
     }

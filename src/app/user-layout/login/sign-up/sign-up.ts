@@ -4,6 +4,8 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractContro
 import { Router } from '@angular/router';
 import { ScanService } from '../../../core/services/scan.service';
 import { AuthService } from '../../../core/services/auth.service';
+import imageCompression from 'browser-image-compression';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -15,6 +17,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class SignUp {
   scanService = inject(ScanService);
   fb = inject(FormBuilder);
+  toastService = inject(ToastService);
 
   goToSignIn() {
     this.router.navigate(['/login/signin']);
@@ -49,6 +52,7 @@ export class SignUp {
   showRePassword = false;
 
   selectedFileName: string = 'No file chosen';
+  isCompressing: boolean = false;
 
   constructor(private _authService: AuthService, private router: Router) {
     this.signUpForm = this.fb.group({
@@ -132,11 +136,30 @@ export class SignUp {
     return 'checkbox-default';
   }
 
-  onFileSelected(event: any) {
+  async onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
-      this.signUpForm.patchValue({ image: file });
-      this.selectedFileName = file.name;
+      // ضغط الصورة قبل حفظها في الفورم عشان نوفر وقت الرفع ومساحة السيرفر
+      const options = {
+        maxSizeMB: 1,          // أقصى حجم للصورة بعد الضغط: 1 ميجا
+        maxWidthOrHeight: 1920, // أقصى عرض أو ارتفاع بالبكسل
+        useWebWorker: true      // استخدام Web Worker عشان الضغط ميعلقش الصفحة
+      };
+
+      try {
+        this.isCompressing = true;
+        this.selectedFileName = 'Compressing image...';
+        const compressedFile = await imageCompression(file, options);
+        this.signUpForm.patchValue({ image: compressedFile });
+        this.selectedFileName = file.name;
+        this.isCompressing = false;
+      } catch (error) {
+        console.error('Image compression failed, using original:', error);
+        // لو الضغط فشل، نستخدم الصورة الأصلية عادي
+        this.signUpForm.patchValue({ image: file });
+        this.selectedFileName = file.name;
+        this.isCompressing = false;
+      }
     } else {
       this.signUpForm.patchValue({ image: null });
       this.selectedFileName = 'No file chosen';
@@ -185,7 +208,7 @@ export class SignUp {
         console.error("Signup failed", err);
         // عرض رسالة خطأ لو الإيميل موجود
         if (err.error && err.error.message) {
-          alert(err.error.message); // هيطلع "Email already exists"
+          this.toastService.show(err.error.message, 'error');
         }
       }
     });

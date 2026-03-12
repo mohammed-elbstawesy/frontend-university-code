@@ -6,17 +6,19 @@ import { Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { environment } from '../../../../environments/environment';
+import { FallbackImageDirective } from '../../../shared/directives/fallback-image.directive';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FallbackImageDirective],
   templateUrl: './users.html',
   styleUrls: ['./users.css']
 })
 export class Users implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  constructor(private _userService: UserService) { }
+  constructor(private _userService: UserService, private toastService: ToastService) { }
   users: User[] = []
   allUsersCount: number = 0;
   isImageModalOpen: boolean = false;
@@ -41,7 +43,7 @@ export class Users implements OnInit, OnDestroy {
 
 
   acceptPending(userId?: string) {
-    if (!userId) return alert('User id missing');
+    if (!userId) return this.toastService.show('User id missing', 'error');
     if (confirm(`you are sure to accept ${this.users.find(u => u._id === userId)?.fristName} account's ?`)) {
       this._userService.editUserStatus(userId, { userPending: 'accepted' })
         .subscribe({
@@ -50,7 +52,7 @@ export class Users implements OnInit, OnDestroy {
           },
           error: err => {
             console.error(err);
-            alert('Failed to update user');
+            this.toastService.show('Failed to update user', 'error');
           }
         });
     }

@@ -98,7 +98,6 @@ export class SignIn {
       },
       error: (err) => {
         this.isLoading = false;
-        console.log(err);
 
         // 🔥🔥🔥 التعديل الجديد هنا 🔥🔥🔥
         // التحقق هل الحساب غير مفعل؟

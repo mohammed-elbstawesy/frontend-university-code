@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Navbar } from '../user-layout/home/navbar/navbar';
+import { ToastService } from '../core/services/toast.service';
 
 @Component({
   selector: 'app-checkout',
@@ -26,7 +27,7 @@ export class Checkout implements OnInit {
   isProcessing: boolean = false;
   paymentSuccess: boolean = false;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -69,7 +70,7 @@ export class Checkout implements OnInit {
     setTimeout(() => {
       this.isProcessing = false;
       this.paymentSuccess = true;
-      alert(`Payment Successful using ${method === 'card' ? 'Credit Card' : 'PayPal'}\nReceipt sent to email!`);
+      this.toastService.show(`Payment Successful using ${method === 'card' ? 'Credit Card' : 'PayPal'}! Receipt sent to email.`, 'success');
     }, 2000);
   }
 }

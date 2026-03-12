@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { VulnService } from '../../../core/services/vuln.service';
 import { Vulnerability } from '../../../core/models/vuln.model';
 import { Router } from '@angular/router';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-vulnerabilities',
@@ -23,7 +24,7 @@ export class Vulnerabilities implements OnInit {
   isEditModalOpen: boolean = false;
   editingVuln: Vulnerability | null = null; // لتخزين نسخة من الثغرة أثناء التعديل
 
-  constructor(private _vulnService: VulnService, private router: Router) { }
+  constructor(private _vulnService: VulnService, private router: Router, private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.fetchVulns();
@@ -96,14 +97,14 @@ export class Vulnerabilities implements OnInit {
             this.vulns[index].scriptFile = this.selectedFile.name;
           }
         }
-        alert("The Vulnerability of {" + this.editingVuln?.name + "} updated successfully ");
+        this.toastService.show('Vulnerability "' + this.editingVuln?.name + '" updated successfully', 'success');
 
         this.closeEditModal();
         this.selectedFile = null; // تصفير الملف
       },
       error: (err) => {
         console.error('Error updating vulnerability:', err);
-        alert('Failed to update vulnerability');
+        this.toastService.show('Failed to update vulnerability', 'error');
       }
     });
   }

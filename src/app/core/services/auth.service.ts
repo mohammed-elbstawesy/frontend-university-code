@@ -95,7 +95,6 @@ export class AuthService {
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
-        console.log('User data decoded & saved:', decoded);
         // يمكنك هنا تخزين الاسم أو الدور في متغيرات داخل الخدمة لو احتجت
       } catch (e) {
         console.error('Error decoding token', e);

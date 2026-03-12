@@ -6,6 +6,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { Navbar } from "../home/navbar/navbar";
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -26,7 +27,8 @@ export class Profile implements OnInit {
     private _router:Router,
     private fb: FormBuilder,
     private userService: UserService,
-    private _authService:AuthService
+    private _authService:AuthService,
+    private toastService: ToastService
   ) {
 
     this.profileForm = this.fb.group({
@@ -127,7 +129,7 @@ togglePasswordVisibility() {
 
   onSubmit() {
     if (this.profileForm.invalid) {
-      alert('Please fill all required fields correctly.');
+      this.toastService.show('Please fill all required fields correctly.', 'error');
       return;
     }
 
@@ -150,7 +152,7 @@ togglePasswordVisibility() {
         this.profileForm.get('confirmPassword')?.setValue('');
       },
       error: (err) => {
-        alert('error updating profile');
+        this.toastService.show('Error updating profile', 'error');
         console.error(err);
       }
     });
