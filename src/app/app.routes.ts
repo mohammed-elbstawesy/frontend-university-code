@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { adminGuard } from './core/guards/admin.guard';
 import { userGuard } from './core/guards/user-guard';
 import { notloginGuard } from './core/guards/notlogin-guard';
+import { scanWaitGuard } from './core/guards/scan-wait-guard';
 
 export const routes: Routes = [
     {
@@ -19,7 +20,7 @@ export const routes: Routes = [
                 ]
             },
             { path: 'result', loadComponent: () => import('./user-layout/result/result').then(m => m.Result), canActivate: [userGuard] },
-            { path: 'scanning-wait/:id', loadComponent: () => import('./user-layout/scaning-wait/scaning-wait').then(m => m.ScaningWait), canActivate: [userGuard] },
+            { path: 'scanning-wait/:id', loadComponent: () => import('./user-layout/scaning-wait/scaning-wait').then(m => m.ScaningWait), canActivate: [userGuard, scanWaitGuard] },
             { path: 'profile', loadComponent: () => import('./user-layout/profile/profile').then(m => m.Profile) },
             { path: 'user-urls', loadComponent: () => import('./user-layout/user-urls/user-urls').then(m => m.UserUrls), canActivate: [userGuard] },
             { path: 'checkout', loadComponent: () => import('./checkout/checkout').then(m => m.Checkout) },

@@ -26,6 +26,15 @@ export class UsersInfo implements OnInit, OnDestroy {
   searchTerm: string = '';
 
   baseImageUrl: string = environment.apiUrl.replace('/api/', '/');
+
+  getImageUrl(imagePath: string): string {
+    if (!imagePath) return '';
+    let path = imagePath.replace(/\\/g, '/');
+    if (!path.startsWith('uploads/')) {
+      path = 'uploads/' + path;
+    }
+    return this.baseImageUrl + path;
+  }
   get filteredUsers(): User[] {
     return this.users.filter(u => {
       // 1. منطق البحث (زي ما عملناه المرة اللي فاتت)

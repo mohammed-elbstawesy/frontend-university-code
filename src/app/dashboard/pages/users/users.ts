@@ -23,6 +23,15 @@ export class Users implements OnInit, OnDestroy {
   selectedImageUrl: string = '';
   baseImageUrl: string = environment.apiUrl.replace('/api/', '/');
 
+  getImageUrl(imagePath: string): string {
+    if (!imagePath) return '';
+    let path = imagePath.replace(/\\/g, '/');
+    if (!path.startsWith('uploads/')) {
+      path = 'uploads/' + path;
+    }
+    return this.baseImageUrl + path;
+  }
+
   pending(id?: String) {
     return this.users.find(u => u._id === id)?.userPending === 'pending'
   }
@@ -49,7 +58,7 @@ export class Users implements OnInit, OnDestroy {
   openImageModal(imagePath: string) {
     if (imagePath) {
       // نكون الرابط الكامل هنا
-      this.selectedImageUrl = this.baseImageUrl + imagePath;
+      this.selectedImageUrl = this.getImageUrl(imagePath);
       this.isImageModalOpen = true;
       document.body.style.overflow = 'hidden'; // منع السكرول الخلفي
     }
