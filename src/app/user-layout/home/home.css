@@ -48,6 +48,25 @@
     }
 }
 
+/* Pause infinite animations on mobile to prevent CPU/GPU drain */
+@media (max-width: 768px) {
+    .hero-shield-container {
+        animation: none !important;
+        transform: translateY(0) !important;
+    }
+    
+    .hero-shield-ring {
+        display: none !important;
+    }
+
+    /* Keep exactly ONE lightweight ring rotating very slowly for aesthetics */
+    .hero-shield-ring.mobile-ring {
+        display: block !important;
+        animation-duration: 24s !important;
+        border-color: rgba(14,212,196,0.15) !important;
+    }
+}
+
 /* c:\Users\yassa\Desktop\final-UI-vulnweb-main\index.css */
 
 /* ============================================================

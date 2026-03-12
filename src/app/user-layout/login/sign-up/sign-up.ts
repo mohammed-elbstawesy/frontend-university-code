@@ -25,7 +25,6 @@ export class SignUp {
   }
 
   readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
-  isLoading = false;
   signUpForm: FormGroup;
 
   countries = [
@@ -144,6 +143,8 @@ export class SignUp {
     }
   }
 
+  isLoading: boolean = false;
+
   onSubmit() {
     if (this.signUpForm.invalid) {
       this.signUpForm.markAllAsTouched();
@@ -186,7 +187,6 @@ export class SignUp {
         if (err.error && err.error.message) {
           alert(err.error.message); // هيطلع "Email already exists"
         }
-
       }
     });
   }

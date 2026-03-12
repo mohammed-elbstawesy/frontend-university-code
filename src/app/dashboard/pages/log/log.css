@@ -67,6 +67,11 @@
     min-height: 400px;
 }
 
+/* Force the table to take up enough space so it scrolls instead of squeezing text */
+.log-table-body .admin-table {
+    min-width: 800px;
+}
+
 .log-loading-cell {
     padding: 3rem;
     text-align: center;

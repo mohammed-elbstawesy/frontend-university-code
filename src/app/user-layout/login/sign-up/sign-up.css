@@ -13,6 +13,29 @@
     font-size: inherit;
 }
 
+/* --- Added for File Upload UX --- */
+.file-name {
+    color: var(--text-muted);
+}
+
+.file-name.has-file {
+    color: var(--text-primary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.spinner-icon {
+    color: var(--accent);
+}
+
+.uploading-text {
+    font-size: 0.8rem;
+    color: var(--accent);
+}
+
 /* --- Appended from auth.css --- */
 /* c:\Users\yassa\Desktop\final-UI-vulnweb-main\auth.css */
 

@@ -58,4 +58,19 @@
 }
 
 /* ============================================================
-*/
+   MOBILE PERFORMANCE OPTIMIZATION
+   ============================================================ */
+@media (max-width: 768px) {
+    /* Disable the heavy SVG distortion and reduce blur to save Mobile GPU */
+    .glass-filter {
+        filter: none !important;
+        backdrop-filter: blur(4px) saturate(100%) !important;
+        -webkit-backdrop-filter: blur(4px) saturate(100%) !important;
+    }
+
+    /* Disable rendering heavy drop-shadows on hover for mobile */
+    .glass:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+}
