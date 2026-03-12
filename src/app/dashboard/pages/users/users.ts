@@ -5,6 +5,8 @@ import { User } from '../../../core/models/users.model';
 import { Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
+import { environment } from '../../../../environments/environment';
+
 @Component({
   selector: 'app-users',
   standalone: true,
@@ -19,6 +21,7 @@ export class Users implements OnInit, OnDestroy {
   allUsersCount: number = 0;
   isImageModalOpen: boolean = false;
   selectedImageUrl: string = '';
+  baseImageUrl: string = environment.apiUrl.replace('/api/', '/');
 
   pending(id?: String) {
     return this.users.find(u => u._id === id)?.userPending === 'pending'
@@ -46,7 +49,7 @@ export class Users implements OnInit, OnDestroy {
   openImageModal(imagePath: string) {
     if (imagePath) {
       // نكون الرابط الكامل هنا
-      this.selectedImageUrl = 'http://localhost:3000/' + imagePath;
+      this.selectedImageUrl = this.baseImageUrl + imagePath;
       this.isImageModalOpen = true;
       document.body.style.overflow = 'hidden'; // منع السكرول الخلفي
     }

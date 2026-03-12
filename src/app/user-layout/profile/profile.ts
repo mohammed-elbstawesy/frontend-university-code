@@ -20,7 +20,7 @@ export class Profile implements OnInit {
   user: any = {}; 
   showPassword = false;
   showConfirmPassword = false;
-  readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
 
   constructor(
     private _router:Router,
@@ -35,7 +35,7 @@ export class Profile implements OnInit {
       password: ['', [Validators.pattern(this.passwordRegex), Validators.minLength(0)]],
       confirmPassword: [''],
       location: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern('^\\+?[0-9]+$')]],
+      phone: ['', [Validators.required, Validators.pattern('^\\+?[0-9\\s-]+$')]],
     }, { validators: this.passwordMatchValidator,
        updateOn: 'change'});
   }
@@ -137,6 +137,10 @@ togglePasswordVisibility() {
 
     if (!formData.password) {
       delete formData.password;
+    }
+    
+    if (formData.phone) {
+      formData.phone = formData.phone.replace(/[\s-]/g, '');
     }
 
     this.userService.updateUser(this.userId, formData).subscribe({

@@ -5,6 +5,7 @@ import { User } from '../../../core/models/users.model';
 import { FormsModule } from '@angular/forms';
 import { Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-users-info',
   standalone: true,
@@ -23,6 +24,8 @@ export class UsersInfo implements OnInit, OnDestroy {
   roleFilter: string = 'all';
   statusFilter: string = 'all';
   searchTerm: string = '';
+
+  baseImageUrl: string = environment.apiUrl.replace('/api/', '/');
   get filteredUsers(): User[] {
     return this.users.filter(u => {
       // 1. منطق البحث (زي ما عملناه المرة اللي فاتت)

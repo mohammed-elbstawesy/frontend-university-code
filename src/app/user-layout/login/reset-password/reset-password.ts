@@ -33,7 +33,7 @@ export class ResetPassword implements OnInit {
 
   showPassword = false;
   showConfirmPassword = false;
-  readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,}$/;
+  readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
 
   constructor() {
     this.resetForm = this.fb.group({

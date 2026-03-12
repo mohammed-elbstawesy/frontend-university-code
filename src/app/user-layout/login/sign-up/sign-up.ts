@@ -24,7 +24,7 @@ export class SignUp {
     this.router.navigate(['/login/signin']);
   }
 
-  readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,}$/;
+  readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
   isLoading = false;
   signUpForm: FormGroup;
 
@@ -62,7 +62,7 @@ export class SignUp {
       // تم تعطيل الحقل افتراضياً حتى يختار الدولة
       location: [{ value: '', disabled: true }, Validators.required],
       // تم تعديل الفاليديتور ليقبل الأرقام فقط (لأن الرمز + سيتم دمجه لاحقاً)
-      phone: [{ value: '', disabled: true }, [Validators.required, Validators.pattern('^[0-9]+$'), Validators.minLength(7)]],
+      phone: [{ value: '', disabled: true }, [Validators.required, Validators.pattern('^[0-9\\s-]+$'), Validators.minLength(7)]],
       nationalID: ['', [Validators.required, Validators.minLength(10)]],
       age: ['', [Validators.required, Validators.min(21)]],
       image: [null],
@@ -154,7 +154,8 @@ export class SignUp {
 
     const formData = new FormData();
     // دمج البيانات هنا قبل الإرسال (مهم جداً للباك إند)
-    const fullPhone = this.selectedCountryCode + this.signUpForm.value.phone;
+    const cleanPhone = this.signUpForm.value.phone ? this.signUpForm.value.phone.replace(/[\s-]/g, '') : '';
+    const fullPhone = this.selectedCountryCode + cleanPhone;
     const fullLocation = this.selectedCountryName + ', ' + this.signUpForm.value.location;
     // نرسل البيانات (بدون rePassword لأنه غير مطلوب في الباك إند عادة)
     formData.append('fristName', this.signUpForm.value.fristName);
