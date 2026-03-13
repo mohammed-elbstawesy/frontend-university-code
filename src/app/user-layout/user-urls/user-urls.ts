@@ -10,6 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { ToastService } from '../../core/services/toast.service';
+import { ConfirmService } from '../../core/services/confirm.service';
 
 @Component({
   selector: 'app-user-urls',
@@ -21,6 +22,7 @@ import { ToastService } from '../../core/services/toast.service';
 export class UserUrls implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private toastService = inject(ToastService);
+  private confirmService = inject(ConfirmService);
   userUrls: any[] = [];
   filteredUrls: any[] = [];
 
@@ -164,8 +166,15 @@ export class UserUrls implements OnInit, OnDestroy {
   }
 
   // 🔥 إعادة فحص الكل
-  handleRefreshAll(): void {
-    if (!confirm('Are you sure you want to rescan ALL assets? This might take time.')) return;
+  async handleRefreshAll() {
+    const confirmed = await this.confirmService.confirm({
+      title: 'Rescan All Assets',
+      message: 'Are you sure you want to rescan ALL assets? This might take time.',
+      type: 'warning',
+      confirmText: 'Rescan All'
+    });
+
+    if (!confirmed) return;
 
     // تغيير الحالة محلياً فوراً
     this.userUrls.forEach(url => {

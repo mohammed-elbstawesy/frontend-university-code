@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmService } from '../../../core/services/confirm.service';
 
 @Component({
   selector: 'app-urls',
@@ -21,8 +22,9 @@ export class Urls implements OnInit, OnDestroy {
   constructor(
     private _url: UrlService,
     private _result: ResultsService,
-    private _router: Router, // 2. حقن Router
-    private toastService: ToastService
+    private _router: Router,
+    private toastService: ToastService,
+    private _confirm: ConfirmService
   ) { }
 
   searchTerm = '';
@@ -90,9 +92,15 @@ export class Urls implements OnInit, OnDestroy {
 
   // ----------------------------------
 
-  // دالة إعادة الفحص (تركتها لك لو احتجتها لاحقاً)
-  rescan(urlObj: Url) {
-    if (!confirm(`Start scanning ${urlObj.originalUrl}?`)) return;
+  async rescan(urlObj: Url) {
+    const confirmed = await this._confirm.confirm({
+      title: 'Start New Scan',
+      message: `Are you sure you want to start scanning ${urlObj.originalUrl}?`,
+      type: 'info',
+      confirmText: 'Start Scan'
+    });
+
+    if (!confirmed) return;
 
     urlObj.status = 'Scanning';
 

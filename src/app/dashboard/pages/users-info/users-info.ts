@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/users.model';
+import { ConfirmService } from '../../../core/services/confirm.service';
 import { FormsModule } from '@angular/forms';
 import { Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -17,11 +18,17 @@ import { ToastService } from '../../../core/services/toast.service';
 })
 export class UsersInfo implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  constructor(private _userService: UserService, private toastService: ToastService) { }
+  constructor(
+    private _userService: UserService, 
+    private toastService: ToastService,
+    private _confirm: ConfirmService
+  ) { }
   allUsersCount: number = 0;
   users: User[] = []
   isUserModalOpen: boolean = false;
   selectedUser: User | null = null;
+  isImageModalOpen: boolean = false;
+  selectedImageUrl: string = '';
 
   roleFilter: string = 'all';
   statusFilter: string = 'all';
@@ -64,38 +71,68 @@ export class UsersInfo implements OnInit, OnDestroy {
     document.body.style.overflow = 'hidden'; // منع السكرول الخلفي
   }
 
+  openImageModal(imagePath: string) {
+    if (imagePath) {
+      this.selectedImageUrl = this.getImageUrl(imagePath);
+      this.isImageModalOpen = true;
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closeImageModal() {
+    this.isImageModalOpen = false;
+    this.selectedImageUrl = '';
+    document.body.style.overflow = 'auto';
+  }
+
   closeUserModal() {
     this.isUserModalOpen = false;
     this.selectedUser = null;
     document.body.style.overflow = 'auto';
   }
 
-  delete(userId?: string) {
-    if (!userId) return this.toastService.show('User id missing', 'error');
-    const user = this.users.find(u => u._id === userId); // نجد المستخدم
-    if (confirm(`you are sure to stop ${this.users.find(u => u._id === userId)?.fristName} account's ?`)) {
-      this._userService.editUserStatus(userId, { userActive: 'notActive', userPending: 'accepted', fristName: user?.fristName })
-        .subscribe({
-          next: updated => {
-            // alert(`User updated: ${updated.email}`);
-            this.ngOnInit();
-          },
-          error: err => {
-            console.error(err);
-            this.toastService.show('Failed to update user', 'error');
-          }
-        });
-    }
-  }
-
-  restore(userId?: string) {
+  async delete(userId?: string) {
     if (!userId) return this.toastService.show('User id missing', 'error');
     const user = this.users.find(u => u._id === userId);
-    if (confirm(`you are sure to restore ${this.users.find(u => u._id === userId)?.fristName} account's ?`)) {
+    
+    const confirmed = await this._confirm.confirm({
+      title: 'Stop Account',
+      message: `Are you sure you want to stop ${user?.fristName}'s account?`,
+      type: 'danger',
+      confirmText: 'Stop Account'
+    });
+
+    if (confirmed) {
+      this._userService.editUserStatus(userId, { userActive: 'notActive', userPending: 'accepted', fristName: user?.fristName })
+        .subscribe({
+          next: () => {
+            this.toastService.show('Account stopped successfully', 'success');
+            this.ngOnInit();
+          },
+          error: err => {
+            console.error(err);
+            this.toastService.show('Failed to update user', 'error');
+          }
+        });
+    }
+  }
+
+  async restore(userId?: string) {
+    if (!userId) return this.toastService.show('User id missing', 'error');
+    const user = this.users.find(u => u._id === userId);
+    
+    const confirmed = await this._confirm.confirm({
+      title: 'Restore Account',
+      message: `Are you sure you want to restore ${user?.fristName}'s account?`,
+      type: 'success',
+      confirmText: 'Restore'
+    });
+
+    if (confirmed) {
       this._userService.editUserStatus(userId, { userActive: 'active', fristName: user?.fristName })
         .subscribe({
-          next: updated => {
-            // alert(`User updated: ${updated.email}`);
+          next: () => {
+            this.toastService.show('Account restored successfully', 'success');
             this.ngOnInit();
           },
           error: err => {
@@ -106,14 +143,22 @@ export class UsersInfo implements OnInit, OnDestroy {
     }
   }
 
-
-  toUser(userId?: string) {
+  async toUser(userId?: string) {
     if (!userId) return this.toastService.show('User id missing', 'error');
-    if (confirm(`you are sure to change ${this.users.find(u => u._id === userId)?.fristName} account's to be a user?`)) {
+    const user = this.users.find(u => u._id === userId);
+
+    const confirmed = await this._confirm.confirm({
+      title: 'Change Role',
+      message: `Are you sure you want to change ${user?.fristName}'s account to be a user?`,
+      type: 'warning',
+      confirmText: 'Change to User'
+    });
+
+    if (confirmed) {
       this._userService.editUserStatus(userId, { role: 'user' })
         .subscribe({
-          next: updated => {
-            // alert(`User updated: ${updated.email}`);
+          next: () => {
+            this.toastService.show('Role changed to User', 'success');
             this.ngOnInit();
           },
           error: err => {
@@ -124,12 +169,22 @@ export class UsersInfo implements OnInit, OnDestroy {
     }
   }
 
-  toAdmin(userId?: string) {
+  async toAdmin(userId?: string) {
     if (!userId) return this.toastService.show('User id missing', 'error');
-    if (confirm(`you are sure to change ${this.users.find(u => u._id === userId)?.fristName} account's to be an admin?`)) {
+    const user = this.users.find(u => u._id === userId);
+
+    const confirmed = await this._confirm.confirm({
+      title: 'Promote to Admin',
+      message: `Are you sure you want to change ${user?.fristName}'s account to be an admin?`,
+      type: 'warning',
+      confirmText: 'Promote to Admin'
+    });
+
+    if (confirmed) {
       this._userService.editUserStatus(userId, { role: 'admin' })
         .subscribe({
           next: () => {
+            this.toastService.show('User promoted to Admin', 'success');
             this.ngOnInit();
           },
           error: err => {

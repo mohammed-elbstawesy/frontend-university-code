@@ -32,7 +32,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   // FAQ accordion
   faqOpen: boolean[] = [false, false, false, false];
 
-  readonly urlRegex = /^(https?:\/\/)?(([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|localhost|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/[^\s]*)?$/;
+  readonly urlRegex = /^\s*(https?:\/\/)?(([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|localhost|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/[^\s]*)?\s*$/;
 
 
 
@@ -132,7 +132,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    const urlInput = this.urlForm.value.originalUrl;
+    const urlInput = (this.urlForm.value.originalUrl || '').trim();
 
     if (this.islogin) {
 

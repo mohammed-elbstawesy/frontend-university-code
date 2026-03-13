@@ -100,6 +100,7 @@
     </div>
 </section>
 
+
 @if (isUserModalOpen && selectedUser) {
 <div class="admin-modal-backdrop animate-fade-in" (click)="closeUserModal()">
     <div class="admin-modal users-info-style-1"  (click)="$event.stopPropagation()">
@@ -126,9 +127,9 @@
         <div class="admin-modal-body info-modal-content">
             <!-- Left: Avatar + Role/Status -->
             <div class="info-profile-left">
-                <div>
-                    <img [src]="getImageUrl(selectedUser.image)" alt="User Profile" appFallbackImage
-                        class="info-profile-avatar">
+                <div class="users-img-wrap" (click)="openImageModal(selectedUser.image)">
+                    <img [src]="getImageUrl(selectedUser.image)" [alt]="selectedUser.image"
+                         appFallbackImage class="avatar-sm info-profile-avatar">
                 </div>
                 <div class="info-profile-center">
                     <h4 class="info-profile-name">{{ selectedUser.fristName }} {{ selectedUser.lastName }}</h4>
@@ -222,3 +223,21 @@
     </div>
 </div>
 }
+
+@if (isImageModalOpen) {
+    <div class="admin-modal-backdrop animate-fade-in image-zoom-layer" (click)="closeImageModal()">
+        <div class="admin-modal users-style-1" (click)="$event.stopPropagation()">
+            <div class="users-close-wrap">
+                <button title="close" (click)="closeImageModal()" class="btn-ghost users-close-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="users-modal-img-wrap">
+                <img [src]="selectedImageUrl" alt="User Full Image" class="users-modal-img">
+            </div>
+        </div>
+    </div>
+}

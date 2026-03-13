@@ -8,6 +8,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { FallbackImageDirective } from '../../../shared/directives/fallback-image.directive';
 import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmService } from '../../../core/services/confirm.service';
 
 @Component({
   selector: 'app-users',
@@ -18,7 +19,11 @@ import { ToastService } from '../../../core/services/toast.service';
 })
 export class Users implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  constructor(private _userService: UserService, private toastService: ToastService) { }
+  constructor(
+    private _userService: UserService, 
+    private toastService: ToastService,
+    private _confirm: ConfirmService
+  ) { }
   users: User[] = []
   allUsersCount: number = 0;
   isImageModalOpen: boolean = false;
@@ -44,18 +49,18 @@ export class Users implements OnInit, OnDestroy {
 
   acceptPending(userId?: string) {
     if (!userId) return this.toastService.show('User id missing', 'error');
-    if (confirm(`you are sure to accept ${this.users.find(u => u._id === userId)?.fristName} account's ?`)) {
-      this._userService.editUserStatus(userId, { userPending: 'accepted' })
-        .subscribe({
-          next: () => {
-            this.ngOnInit();
-          },
-          error: err => {
-            console.error(err);
-            this.toastService.show('Failed to update user', 'error');
-          }
-        });
-    }
+    
+    this._userService.editUserStatus(userId, { userPending: 'accepted' })
+      .subscribe({
+        next: () => {
+          this.toastService.show('User accepted successfully!', 'success');
+          this.ngOnInit();
+        },
+        error: err => {
+          console.error(err);
+          this.toastService.show('Failed to update user', 'error');
+        }
+      });
   }
   openImageModal(imagePath: string) {
     if (imagePath) {

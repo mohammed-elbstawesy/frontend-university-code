@@ -150,12 +150,15 @@ export class SignUp {
         this.isCompressing = true;
         this.selectedFileName = 'Compressing image...';
         const compressedFile = await imageCompression(file, options);
-        this.signUpForm.patchValue({ image: compressedFile });
+        
+        // 🔥 إنشاء File جديد بالاسم الأصلي لضمان وجود امتداد (.jpg, .png...)
+        const finalFile = new File([compressedFile], file.name, { type: file.type });
+        
+        this.signUpForm.patchValue({ image: finalFile });
         this.selectedFileName = file.name;
         this.isCompressing = false;
       } catch (error) {
         console.error('Image compression failed, using original:', error);
-        // لو الضغط فشل، نستخدم الصورة الأصلية عادي
         this.signUpForm.patchValue({ image: file });
         this.selectedFileName = file.name;
         this.isCompressing = false;
@@ -193,7 +196,9 @@ export class SignUp {
     formData.append('age', this.signUpForm.value.age);
 
     if (this.signUpForm.value.image) {
-      formData.append('image', this.signUpForm.value.image);
+      // نستخدم الاسم المخزن للتأكيد على الامتداد
+      const imageFile = this.signUpForm.value.image;
+      formData.append('image', imageFile, this.selectedFileName);
     }
 
     this._authService.signup(formData).subscribe({
