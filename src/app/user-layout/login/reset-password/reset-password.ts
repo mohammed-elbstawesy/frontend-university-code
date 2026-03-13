@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -16,6 +17,7 @@ export class ResetPassword implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   authService = inject(AuthService);
+  toastService = inject(ToastService);
   resetToken = ''
 
   resetForm: FormGroup;
@@ -84,11 +86,13 @@ export class ResetPassword implements OnInit {
       next: () => {
         this.isResending = false;
         this.message = 'A new code has been sent to your email.';
+        this.toastService.show(this.message, 'success');
         this.startTimer();
       },
       error: (err) => {
         this.isResending = false;
         this.error = err.error?.message || 'Failed to resend code';
+        this.toastService.show(this.error, 'error');
       }
     });
   }
@@ -168,6 +172,7 @@ export class ResetPassword implements OnInit {
           this.resetToken = res.resetToken; 
           this.step = 2;
           this.isLoading = false;
+          this.toastService.show('Code verified! Set your new password.', 'success');
         },
         error: (err) => {
           this.isLoading = false;
@@ -182,6 +187,7 @@ export class ResetPassword implements OnInit {
           } else {
             this.error = 'Something went wrong. Please try again later.';
           }
+          this.toastService.show(this.error, 'error');
         }
       });
     }
@@ -209,6 +215,7 @@ export class ResetPassword implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.message = 'Password reset successfully! Redirecting...';
+        this.toastService.show('Password has been reset successfully!', 'success');
         setTimeout(() => this.router.navigate(['/login/signin']), 2000);
       },
       error: (err) => {
@@ -225,6 +232,7 @@ export class ResetPassword implements OnInit {
           this.error = err.error?.message || 'An error occurred. Please try again.';
 
         }
+        this.toastService.show(this.error, 'error');
       }
     });
   }

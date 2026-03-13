@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResultsService } from '../../core/services/results.service';
 import { Navbar } from "../home/navbar/navbar";
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-scaning-wait',
@@ -21,7 +22,8 @@ export class ScaningWait implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private _resultService: ResultsService
+    private _resultService: ResultsService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -46,12 +48,14 @@ export class ScaningWait implements OnInit, OnDestroy {
         
         // ننتظر 1.5 ثانية عشان اليوزر يشوف الـ 100% ورسالة النجاح
         setTimeout(() => {
+          this.toastService.show('Scan completed! Viewing results...', 'success');
           this.router.navigate(['/result', this.targetUrlId], { replaceUrl: true });
         }, 1500);
       },
       error: (err) => {
         console.error(err);
         this.statusMessage = 'CONNECTION_FAILED_RETRYING';
+        this.toastService.show('Connection failed. Retrying scan...', 'error');
         this.stopSimulation();
       }
     });

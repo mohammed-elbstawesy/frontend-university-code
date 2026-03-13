@@ -183,14 +183,25 @@ export class UserUrls implements OnInit, OnDestroy {
     });
     this.applyFilters();
 
+    this.toastService.show('Scanning all assets started...', 'info');
+
     // إرسال الطلبات للباك إند
     // (يمكن تحسينها بـ Promise.all لو العدد كبير، لكن الـ Loop تفي بالغرض حالياً)
+    let completedCount = 0;
+    const totalCount = this.filteredUrls.length;
+    
     this.filteredUrls.forEach(urlItem => {
       this._resultService.runNewScan(urlItem.id).subscribe({
         next: () => {
-          // console.log(`Started scan for ${urlItem.url}`)
+          completedCount++;
+          if(completedCount === totalCount) {
+             this.toastService.show('All assets scanned successfully!', 'success');
+          }
         },
-        error: (err) => console.error(err)
+        error: (err) => {
+          console.error(err);
+          this.toastService.show(`Failed to scan ${urlItem.url}.`, 'error');
+        }
       });
     });
   }
@@ -202,15 +213,17 @@ export class UserUrls implements OnInit, OnDestroy {
     urlItem.isScanning = true;
     urlItem.status = 'Scanning';
 
+    this.toastService.show(`Scan started for ${urlItem.url}`, 'info');
+    
     this._resultService.runNewScan(urlItem.id).subscribe({
       next: () => {
-        // لا نحتاج لعمل شيء، الباك إند شغال
-        // يمكنك عمل reload للداتا بعد فترة أو ترك المستخدم يعمل refresh
+        this.toastService.show(`Scan completed for ${urlItem.url}`, 'success');
       },
       error: (err) => {
         console.error(err);
         urlItem.isScanning = false;
         urlItem.status = 'Failed'; // لو السيرفر رفض الطلب
+        this.toastService.show(`Failed to complete scan for ${urlItem.url}.`, 'error');
       }
     });
   }

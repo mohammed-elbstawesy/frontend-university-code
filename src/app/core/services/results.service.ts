@@ -1,16 +1,17 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { map, Observable } from 'rxjs';
 import { ScanReport } from '../models/results.model'; // استدعاء الموديل الجديد
 import { ApiResponse } from '../models/apiResponse.model'; // تأكد من المسار
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResultsService {
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient, private _auth: AuthService) {}
   
   // تأكد أن المسار الأساسي صحيح حسب الباك إند
   // غالباً في routes.js انت معرف الراوتر تحت /api/results/
@@ -54,5 +55,14 @@ export class ResultsService {
     // لكن للإحصائيات العامة، يفضل يكون عندك في الباك إند: router.get('/', controller.getAllResults)
     
     return this._http.get<ScanReport[]>(this.url); 
+  }
+
+  // --- 4. تحميل تقرير الـ AI ---
+  downloadReport(scanId: string): Observable<Blob> {
+    const token = this._auth.getToken();
+    return this._http.get(`${environment.apiUrl}report/${scanId}`, {
+      responseType: 'blob',
+      headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
+    });
   }
 }

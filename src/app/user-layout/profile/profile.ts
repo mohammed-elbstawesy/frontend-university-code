@@ -150,6 +150,7 @@ togglePasswordVisibility() {
         this.user = { ...this.user, ...formData };
         this.isEditMode = false; 
         this.profileForm.get('confirmPassword')?.setValue('');
+        this.toastService.show('Profile updated successfully!', 'success');
       },
       error: (err) => {
         this.toastService.show('Error updating profile', 'error');

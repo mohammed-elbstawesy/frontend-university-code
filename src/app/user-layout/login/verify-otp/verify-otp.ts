@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-verify-otp',
@@ -16,6 +17,7 @@ export class VerifyOtp implements OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
   authService = inject(AuthService);
+  toastService = inject(ToastService);
 
   otpForm: FormGroup;
   isLoading = false;
@@ -54,12 +56,14 @@ export class VerifyOtp implements OnInit {
     this.authService.verifyAccount(data).subscribe({
       next: (res) => {
         this.isLoading = false;
+        this.toastService.show('Account verified successfully! Welcome.', 'success');
         localStorage.setItem('token', res.token);
         this.router.navigate(['/']);
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = err.error.message || 'Verification failed';
+        this.toastService.show(this.errorMessage, 'error');
       }
     });
   }
@@ -73,10 +77,12 @@ export class VerifyOtp implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.successMessage = 'New code sent successfully!';
+        this.toastService.show(this.successMessage, 'success');
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = err.error.message || 'Failed to resend code';
+        this.toastService.show(this.errorMessage, 'error');
       }
     });
   }

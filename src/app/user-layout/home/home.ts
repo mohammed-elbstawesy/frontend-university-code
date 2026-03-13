@@ -6,6 +6,7 @@ import { ScanService } from '../../core/services/scan.service';
 import { UrlService } from '../../core/services/url.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ResultsService } from '../../core/services/results.service';
+import { ToastService } from '../../core/services/toast.service';
 import { AboutComponent } from './about/about.component';
 import { ServicesComponent } from './services/services.component';
 @Component({
@@ -20,6 +21,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   private el = inject(ElementRef);
   scanService = inject(ScanService);
   router = inject(Router);
+  private toastService = inject(ToastService);
 
   urlForm!: FormGroup;
   errorMessage: string = '';
@@ -147,13 +149,21 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
           // 2. التوجيه وبدء الفحص
           if (this.role === 'admin') {
             // المسئول يبدأ الفحص ويروح للوحة التحكم
+            this.toastService.show(`Scan started for ${urlInput}...`, 'info');
             this._scanService.runNewScan(urlId).subscribe({
-              error: (err) => console.error('Error starting scan:', err),
+              next: () => {
+                this.toastService.show(`Scan completed for ${urlInput}!`, 'success');
+              },
+              error: (err) => {
+                console.error('Error starting scan:', err);
+                this.toastService.show(`Scan failed for ${urlInput}.`, 'error');
+              }
             });
             this.router.navigate(['/dashboard/urls']);
           } else {
             // توجيه اليوزر العادي لصفحة الانتظار (الصفحة دي هي اللي هتشغل الفحص عشان نتجنب الـ Double Scan)
             // ونبعت state عشان نمنع الدخول المباشر من الـ URL
+            this.toastService.show(`Preparing scan for ${urlInput}...`, 'info');
             this.router.navigate(['/scanning-wait', urlId], { state: { authorized: true } });
           }
         },

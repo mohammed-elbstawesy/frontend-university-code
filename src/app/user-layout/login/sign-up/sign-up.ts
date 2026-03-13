@@ -204,6 +204,7 @@ export class SignUp {
     this._authService.signup(formData).subscribe({
       next: (res) => {
         this.isLoading = false;
+        this.toastService.show('Account created successfully! Please verify your email.', 'success');
         this.router.navigate(['/login/verify'], {
           queryParams: { email: this.signUpForm.value.email }
         });

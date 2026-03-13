@@ -6,6 +6,7 @@ import { ScanService } from '../../../core/services/scan.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
 import { UrlService } from '../../../core/services/url.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -20,7 +21,8 @@ export class SignIn {
     private _authService: AuthService,
     private router: Router,
     private _urlService: UrlService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastService: ToastService
   ) { }
   showPassword = false;
   scanService = inject(ScanService);
@@ -58,6 +60,7 @@ export class SignIn {
 
     this._authService.login(data).subscribe({
       next: (res) => {
+        this.toastService.show('Welcome back!', 'success');
         const token = this._authService.getToken();
         let role = null;
         if (token) {
@@ -112,8 +115,10 @@ export class SignIn {
         // إظهار رسائل الخطأ العادية
         if (err.error && err.error.message) {
           this.errorMessage = err.error.message;
+          this.toastService.show(this.errorMessage, 'error');
         } else {
           this.errorMessage = 'Login failed. Please check your email or password.';
+          this.toastService.show(this.errorMessage, 'error');
         }
       },
     });

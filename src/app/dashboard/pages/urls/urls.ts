@@ -104,15 +104,17 @@ export class Urls implements OnInit, OnDestroy {
 
     urlObj.status = 'Scanning';
 
+    this.toastService.show('Scan started for ' + urlObj.originalUrl, 'info');
+
     this._result.runNewScan(urlObj._id).subscribe({
       next: (response) => {
-        this.toastService.show('Scan started successfully!', 'success');
+        this.toastService.show('Scan completed successfully!', 'success');
         this.loadUrls();
       },
       error: (err) => {
         console.error(err);
         urlObj.status = 'Failed';
-        this.toastService.show('Failed to start scan.', 'error');
+        this.toastService.show('Failed to complete scan.', 'error');
       }
     });
   }
