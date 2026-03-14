@@ -60,7 +60,7 @@ export class ResultsService {
   // --- 4. تحميل تقرير الـ AI ---
   downloadReport(scanId: string): Observable<Blob> {
     const token = this._auth.getToken();
-    return this._http.get(`${environment.apiUrl}report/${scanId}`, {
+    return this._http.get(`${this.url}report/${scanId}/download`, {
       responseType: 'blob',
       headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
     });

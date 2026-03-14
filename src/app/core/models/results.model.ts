@@ -54,6 +54,7 @@ export interface ScanReport {
     highestSeverity: string;
   };
   details: ScanDetail[]; // المصفوفة التي سنستخرج منها النتائج
+  pdfFilename?: string; // أضفنا هذا الحقل لتتبع ملف الـ PDF
   createdAt?: Date;
   updatedAt?: Date;
 }
