@@ -1,11 +1,11 @@
 // export const environment = {
 //   production: true,
-//   apiUrl: "https://vulncraft-backend.onrender.com/api/"
+//   apiUrl: "https://vulncraft.duckdns.org/api/"
 // };
 
 export const environment = {
   production: true,
-  apiUrl: "https://vulncraft.duckdns.org/api/"
+  apiUrl: "http://localhost:3000/api/"
 };
 
 // export const environment = {
