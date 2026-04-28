@@ -2,15 +2,8 @@
     <header class="reports-header">
         <div class="page-header">
             <h2>Reports</h2>
-            <p>Generate and view vulnerability reports.</p>
+            <p>View and download vulnerability scan reports.</p>
         </div>
-        <button class="btn-admin-primary">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round">
-                <path d="M8 3V13M3 8H13" />
-            </svg>
-            Generate Report
-        </button>
     </header>
 
     <div class="admin-table-wrap">
@@ -23,13 +16,12 @@
                         <circle cx="7" cy="7" r="5" />
                         <path d="M11 11L14 14" />
                     </svg>
-                    <input [(ngModel)]="searchTerm" type="text" placeholder="Search reports...">
+                    <input [(ngModel)]="searchTerm" type="text" placeholder="Search by URL...">
                 </div>
-                <select title="date" [(ngModel)]="filterType" class="admin-select">
-                    <option value="all">All Types</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="custom">Custom</option>
+                <select title="filter" [(ngModel)]="filterType" class="admin-select">
+                    <option value="all">All Reports</option>
+                    <option value="vulnerable">Vulnerable Only</option>
+                    <option value="safe">Safe Only</option>
                 </select>
             </div>
         </div>
@@ -38,25 +30,24 @@
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th>Report Name</th>
-                        <th>Type</th>
-                        <th>Generated At</th>
+                        <th>Target URL</th>
+                        <th>Severity</th>
+                        <th>Scan Date</th>
                         <th>Vulnerabilities</th>
                         <th>Critical</th>
-                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (isLoading) {
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 2rem;">
+                            <td colspan="6" style="text-align: center; padding: 2rem;">
                                 Loading reports...
                             </td>
                         </tr>
                     } @else if (filteredReports.length === 0) {
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 2rem;">
+                            <td colspan="6" style="text-align: center; padding: 2rem;">
                                 No reports found.
                             </td>
                         </tr>
@@ -84,20 +75,13 @@
                             </td>
                             <td><span class="reports-vulns-count">{{ report.summary.totalVulnerabilities || 0 }}</span></td>
                             <td>
-                                <!-- Critical count: we'd need to calculate this from details if needed, for now showing a generic badge or highest severity -->
                                 <span class="badge" [ngClass]="{'badge-danger': report.summary.highestSeverity === 'Critical', 'badge-info': report.summary.highestSeverity !== 'Critical'}">
                                     {{ report.summary.highestSeverity === 'Critical' ? 'Yes' : 'No' }}
                                 </span>
                             </td>
-                            <td><span [class]="'badge ' + getStatusClass(report.pdfFilename)">
-                                {{ report.pdfFilename ? 'Ready' : 'Generating...' }}
-                            </span></td>
                             <td>
-                                <button (click)="download(report._id, report.pdfFilename)" 
-                                        class="btn-action" 
-                                        [ngClass]="report.pdfFilename ? 'btn-action-info' : ''"
-                                        [disabled]="!report.pdfFilename"
-                                        [style.opacity]="!report.pdfFilename ? '0.5' : '1'">
+                                <button (click)="download(report._id)" 
+                                        class="btn-action btn-action-info">
                                     <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor"
                                         stroke-width="1.5">
                                         <path d="M7 2V10M7 10L4 7M7 10L10 7M2 12H12" />

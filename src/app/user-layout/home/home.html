@@ -73,10 +73,17 @@
 </section>
 
 
-<app-about></app-about>
+@defer (on viewport) {
+  <app-about></app-about>
+} @placeholder {
+  <div style="min-height: 200px;"></div>
+}
 
-
-<app-services></app-services>
+@defer (on viewport) {
+  <app-services></app-services>
+} @placeholder {
+  <div style="min-height: 200px;"></div>
+}
 
 
 

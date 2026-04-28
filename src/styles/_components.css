@@ -168,3 +168,25 @@
 
 /* ============================================================
 */
+
+/* ============================================================
+   MOBILE PERFORMANCE — Disable backdrop-filter on small elements
+   ============================================================ */
+@media (max-width: 768px) {
+    .btn-outline {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(var(--accent-rgb), 0.08);
+    }
+
+    .form-input {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* Disable button pulse animation on mobile — saves GPU cycles */
+    .hero-form .btn-primary {
+        animation: none;
+    }
+}

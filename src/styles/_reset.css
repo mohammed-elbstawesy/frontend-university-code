@@ -74,4 +74,13 @@ button {
 }
 
 /* ============================================================
-*/
+   MOBILE PERFORMANCE — Skip rendering off-screen sections
+   ============================================================ */
+@media (max-width: 768px) {
+    .section-dark,
+    .section,
+    .trust-section {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 600px;
+    }
+}

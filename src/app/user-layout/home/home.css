@@ -1260,6 +1260,44 @@
     .faq-answer p {
         padding: 0 1.2rem 1.1rem;
     }
+
+    /* ── MOBILE PERFORMANCE: disable non-essential infinite animations ── */
+
+    /* Disable hero gradient animation */
+    .hero-title .accent {
+        animation: none;
+        background-size: 100% auto;
+    }
+
+    /* Disable featured pricing card pulse */
+    .price-card.featured {
+        animation: none;
+    }
+
+    /* Disable dot pulse */
+    .hero-heading .section-label .dot {
+        animation: none;
+    }
+
+    /* Disable shield glow pulse */
+    .hero-shield-glow {
+        animation: none;
+    }
+
+    /* Slow down trust scroller significantly */
+    .trust-track {
+        animation-duration: 60s;
+    }
+
+    /* Disable service card hover glow line animation */
+    .service-card:hover::before {
+        animation: none;
+    }
+
+    /* Use GPU-optimized transforms */
+    .animate-on-scroll {
+        will-change: opacity, transform;
+    }
 }
 
 @media (max-width: 480px) {

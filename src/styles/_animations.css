@@ -203,8 +203,9 @@
    RESPONSIVE - DISABLE HEAVY EFFECTS ON MOBILE
    ============================================================ */
 @media (max-width: 768px) {
+    /* Fully remove blobs from render tree — blur(100px) is extremely GPU-heavy */
     .bg-blobs {
-        opacity: 0.04;
+        display: none !important;
     }
 
     .noise-overlay {
@@ -213,6 +214,24 @@
 
     .glass::after {
         display: none;
+    }
+
+    /* Disable shimmer pseudo-element animations */
+    .section-label-center::after,
+    .about-content .section-label::after {
+        display: none;
+    }
+}
+
+@media (max-width: 1024px) {
+    /* Reduce blob intensity on tablets */
+    .bg-blobs {
+        opacity: 0.03;
+    }
+
+    .blob {
+        filter: blur(60px);
+        animation-play-state: paused;
     }
 }
 

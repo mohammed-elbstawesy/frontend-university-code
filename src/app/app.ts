@@ -30,11 +30,20 @@ export class App implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.initParticles();
-    this.initCursorGlow();
+    const screenWidth = window.innerWidth;
+
+    // Skip particles entirely on mobile — they cause major frame drops
+    if (screenWidth > 768) {
+      this.initParticles(screenWidth);
+    }
+
+    // Cursor glow is useless on touch devices
+    if (screenWidth > 1024) {
+      this.initCursorGlow();
+    }
   }
 
-  private initParticles(): void {
+  private initParticles(screenWidth: number): void {
     const canvas = document.getElementById('particles-canvas') as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -48,7 +57,8 @@ export class App implements AfterViewInit {
     window.addEventListener('resize', resize);
 
     const particles: { x: number; y: number; r: number; dx: number; dy: number; o: number }[] = [];
-    const count = Math.min(60, Math.floor(window.innerWidth / 20));
+    // Reduce count on tablets (768-1024), full on desktop
+    const count = screenWidth <= 1024 ? 15 : Math.min(60, Math.floor(screenWidth / 20));
 
     for (let i = 0; i < count; i++) {
       particles.push({
